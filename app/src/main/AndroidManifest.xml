@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR">
         <activity
-            android:name=".MainActivity"
+            android:name=".Presenters.MainActivityPresenter"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

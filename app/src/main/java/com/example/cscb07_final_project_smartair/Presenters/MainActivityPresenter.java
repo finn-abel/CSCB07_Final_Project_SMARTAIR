@@ -1,4 +1,4 @@
-package com.example.cscb07_final_project_smartair;
+package com.example.cscb07_final_project_smartair.Presenters;
 
 import android.os.Bundle;
 
@@ -8,7 +8,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.cscb07_final_project_smartair.R;
+
+public class MainActivityPresenter extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
