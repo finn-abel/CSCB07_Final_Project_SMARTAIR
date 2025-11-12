@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboarding_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fillViewport="true"
+    tools:context=".view.OnboardingActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/space_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- App Title -->
+        <TextView
+            android:id="@+id/onboarding_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textColor="@android:color/black"
+            android:text="@string/onboarding_title"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/space_medium"/>
+
+        <!-- Intro -->
+        <TextView
+            android:id="@+id/onboarding_intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/onboarding_intro"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:layout_marginBottom="@dimen/space_large"/>
+
+        <!-- Roles Section -->
+        <TextView
+            android:id="@+id/roles_title"
+            android:text="@string/roles_title"
+            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/roles_text"
+            android:text="@string/roles_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_large"/>
+
+        <!-- Key Terms -->
+        <TextView
+            android:id="@+id/terms_title"
+            android:text="@string/terms_title"
+            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/terms_text"
+            android:text="@string/terms_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_large"/>
+
+        <!-- Core Features -->
+        <TextView
+            android:id="@+id/features_title"
+            android:text="@string/features_title"
+            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/features_text"
+            android:text="@string/features_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_large"/>
+
+        <!-- Privacy Note -->
+        <TextView
+            android:id="@+id/privacy_text"
+            android:text="@string/privacy_text"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="#555555"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_large"/>
+
+        <!-- Continue Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/onboarding_cta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cta_text"
+            android:layout_marginTop="@dimen/space_medium"/>
+    </LinearLayout>
+</ScrollView>
