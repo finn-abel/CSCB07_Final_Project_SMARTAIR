@@ -11,15 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR">
+
         <activity
             android:name=".Presenters.MainActivityPresenter"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".Views.R1_Views.OnboardingView"
+            android:exported="false"
+            android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR" />
+
     </application>
 
 </manifest>
