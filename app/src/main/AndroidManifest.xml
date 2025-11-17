@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,8 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR">
 
+        <activity android:name=".Views.LoginActivity"
+            android:exported="false" />
+        <activity android:name=".Views.SignUpActivity"
+            android:exported="false" />
+        <activity android:name=".Views.MainActivityView"
+            android:exported="false" />
+
         <activity
-            android:name=".Presenters.MainActivityPresenter"
+            android:name=".Views.LauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
