@@ -19,10 +19,32 @@ public class SignUpModel {
         void onSignUpFailure(String errorMessage);
     }
 
-    public void createUser(String email, String password, OnSignUpFinishedListener listener) {
-        // Validation for Liam here.
+    public int passwordcheck(String pw){     //check password strength
+        if((pw==null)||(pw.length()<7))             //no password or too short
+            return -2; //password too short
+        int caps =0, lwr=0, num=0, sym=0, inv=0;
+        String symbols = "!@#$%&";                  //valid symbols
+        for(int x=0;x<pw.length();x++){             //iterate through string
+            char c=pw.charAt(x);
+            if(Character.isUpperCase(c))            //check uppercase
+                caps++;
+            else if(Character.isLowerCase(c))       //check lowercase
+                lwr++;
+            else if(Character.isDigit(c))           //check numbers
+                num++;
+            else if(symbols.indexOf(c)!=-1)         //check for symbols
+                sym++;
+            else
+                inv++;                              //invalid character found
+        }
 
-        //Assuming valid credentials
+        if( (pw.length()>=8) && (caps>=1) && (lwr>=1) && (num>=1) && (sym>=1) && (inv==0) )
+            return 1; //valid password
+        return -1;  // invalid password
+    }
+
+    public void createUser(String email, String password, OnSignUpFinishedListener listener) {
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
