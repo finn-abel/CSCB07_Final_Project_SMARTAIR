@@ -94,7 +94,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void navigateToSignUpScreen() {
+
         startActivity(new Intent(this, SignUpActivity.class));
     }
+
 }
 

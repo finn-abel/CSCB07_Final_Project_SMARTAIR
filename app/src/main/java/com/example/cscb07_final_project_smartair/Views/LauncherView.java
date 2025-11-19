@@ -6,7 +6,7 @@ package com.example.cscb07_final_project_smartair.Views;
  */
 public interface LauncherView {
     void navigateToLoginScreen();
-    // void navigateToMainScreen(); -- We define and implement this later
+    void navigateToMainScreen();
 }
 
 

@@ -24,9 +24,10 @@ public class LauncherPresenter {
     public void decideNextActivity() {
         if (!model.isUserLoggedIn()) {
             view.navigateToLoginScreen();
-        } /*else {
-            //view.navigateToMainScreen(); --We will implement this later.
-        }*/
+        }
+        else {
+            view.navigateToMainScreen();
+        }
     }
 }
 

@@ -28,6 +28,7 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     }
 
     public void onSignUpButtonClicked() {
+
         view.navigateToSignUpScreen();
     }
 
