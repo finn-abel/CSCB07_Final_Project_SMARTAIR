@@ -23,5 +23,6 @@ public class LauncherModel {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         return currentUser != null;
     }
+
 }
 

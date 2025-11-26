@@ -32,6 +32,15 @@ public class LoginModel {
     public void signInUser(String email, String password, OnLoginFinishedListener listener) {
         // Credential Validation by Liam
 
+        if (email.isEmpty()){
+            listener.onLoginFailure("Email cannot be empty.");
+            return;
+        }
+        if (password.isEmpty()){
+            listener.onLoginFailure("Password cannot be empty.");
+            return;
+        }
+
         //Assuming Credentials are valid
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -49,7 +58,11 @@ public class LoginModel {
     }
 
     public void sendPasswordResetEmail(String email, OnResetPasswordFinishedListener listener) {
-        //email validation to go here.
+
+        if (email.isEmpty()) {
+            listener.onResetPasswordFailure("Email cannot be empty.");
+            return;
+        }
 
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
