@@ -41,44 +41,6 @@ public class ParentAlertsActivity extends AppCompatActivity {
         }
     }
 
-    private void loadRescueTrend(String childId, int days) {
-
-        long now = System.currentTimeMillis();
-
-        // Load last 30 days
-        long startTime = now - (30L * 24 * 60 * 60 * 1000);
-
-        // Goes to the rescueLogs branch of the requested child based on the childId
-        DatabaseReference rescueRef =
-                mdatabase.child("children").child(childId).child("rescueLogs");
-
-        ValueEventListener rescueListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot receiver) {
-
-                // Array size based on 7 days or 30 days
-                int[] counts = new int[days];
-
-                for (DataSnapshot childSnap : receiver.getChildren()) {
-                    Long timestamp = childSnap.child("timestamp").getValue(Long.class);
-                    if (timestamp == null) continue;
-
-                    if (timestamp >= startTime) {
-                        int dayIndex = (int)((now - timestamp) / (24 * 60 * 60 * 1000));
-                        if (dayIndex < days) {
-                            counts[(days - 1) - dayIndex]++;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        };
-
-        rescueRef.addListenerForSingleValueEvent(rescueListener);
-    }
-
     // Listens to alerts for each child
     private void listenForChildrenAlerts() {
 
@@ -94,9 +56,6 @@ public class ParentAlertsActivity extends AppCompatActivity {
 
                         if (activeChildId == null) {
                             activeChildId = childId;
-
-                            // Load default 7-day trend
-                            loadRescueTrend(activeChildId, 7);
                         }
 
                         // Listeners for each alert category
