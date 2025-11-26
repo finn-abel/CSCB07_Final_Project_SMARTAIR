@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 
 
-public class SignUpActivity extends AppCompatActivity implements SignUpView {
+public class SignUpActivity extends BaseActivity implements SignUpView {
 
     private TextInputEditText new_user_email;
     private TextInputEditText new_user_password;
@@ -47,7 +47,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
             presenter.onSignInButtonClicked();
         });
 
-        user_password_signup.addTextChangedListener(new TextWatcher() { //monitor changes to password
+        new_user_password.addTextChangedListener(new TextWatcher() { //monitor changes to password
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -85,12 +85,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
     @Override
     public void showPasswordError(String message){
-        user_password_signup.setError(message); //display error message
+        new_user_password.setError(message); //display error message
     }
 
     @Override
     public void clearPasswordError(){
-        user_password_signup.setError(null); //clear error message
+        new_user_password.setError(null); //clear error message
     }
 
     @Override

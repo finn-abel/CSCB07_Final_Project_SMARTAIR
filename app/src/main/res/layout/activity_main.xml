@@ -7,6 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".Presenters.MainActivityPresenter">
 
+    <Button
+        android:id="@+id/triage_button"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="TRIAGE BUTTON"
+        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.11" />
+
     <TextView
         android:id="@+id/textView8"
         android:layout_width="110dp"

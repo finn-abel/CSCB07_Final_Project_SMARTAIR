@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class CheckInActivity extends AppCompatActivity implements CheckInView{
+public class CheckInActivity extends BaseActivity implements CheckInView{
 
     private EditText symptoms;
     private EditText other_triggers;

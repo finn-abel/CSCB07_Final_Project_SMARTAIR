@@ -10,7 +10,7 @@ import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
 import com.example.cscb07_final_project_smartair.R;
 
-public class MainActivityView extends AppCompatActivity implements MainView{
+public class MainActivityView extends BaseActivity implements MainView{
     private MainActivityPresenter presenter;
 
 

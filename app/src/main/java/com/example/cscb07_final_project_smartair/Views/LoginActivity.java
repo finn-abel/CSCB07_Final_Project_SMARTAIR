@@ -14,7 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 
 
-public class LoginActivity extends AppCompatActivity implements LoginView {
+public class LoginActivity extends BaseActivity implements LoginView {
 
     private TextInputEditText user_email;
     private TextInputEditText user_password;

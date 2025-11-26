@@ -13,7 +13,7 @@ import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Presenters.RoleSelectionPresenter;
 import com.example.cscb07_final_project_smartair.Views.RoleSelectionView;
 
-public class RoleSelectionActivity extends AppCompatActivity implements RoleSelectionView {
+public class RoleSelectionActivity extends BaseActivity implements RoleSelectionView {
 
     private RoleSelectionPresenter presenter;
 
