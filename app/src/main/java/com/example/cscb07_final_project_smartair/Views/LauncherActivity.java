@@ -26,7 +26,7 @@ public class LauncherActivity extends BaseActivity implements LauncherView {
         finish();
     }
 
-    @Override
+   @Override
     public void navigateToMainScreen() {
         startActivity(new Intent(this, MainActivityView.class));
         finish();

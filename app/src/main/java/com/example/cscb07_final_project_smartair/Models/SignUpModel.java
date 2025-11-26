@@ -45,6 +45,17 @@ public class SignUpModel {
 
     public void createUser(String email, String password, OnSignUpFinishedListener listener) {
 
+        if (email.isEmpty()){
+            listener.onSignUpFailure("Email cannot be empty");
+            return;
+        }
+
+        if (password.isEmpty()){
+            listener.onSignUpFailure("Password cannot be empty");
+            return;
+        }
+
+        //Assuming valid credentials
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override

@@ -6,8 +6,44 @@
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/new_password" android:layout_width="409dp" android:layout_height="wrap_content" android:layout_marginBottom="70dp" app:layout_constraintBottom_toTopOf="@+id/textView4" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/new_email">
         <com.google.android.material.textfield.TextInputEditText android:id="@+id/new_user_password" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter Password"/>
     </com.google.android.material.textfield.TextInputLayout>
-    <Button android:id="@+id/sign_up_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="15dp" android:text="Sign Up" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/new_password"/>
-    <TextView android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="80dp" android:text="Already a user?" android:textAppearance="@style/TextAppearance.AppCompat.Body1" app:layout_constraintBottom_toBottomOf="@+id/SIB" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
-    <Button android:id="@+id/SIB" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="30dp" android:text="Sign In" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/sign_up_button"
+        android:layout_width="390dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="SIGN UP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_password" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="68dp"
+        android:text="Already a user?"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintBottom_toBottomOf="@+id/SIB"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.452"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/SIB"
+        android:layout_width="401dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="36dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="SIGN IN"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView android:id="@+id/Login" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sign Up" android:textAppearance="@style/TextAppearance.AppCompat.Display1" app:layout_constraintBottom_toTopOf="@+id/new_email" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
