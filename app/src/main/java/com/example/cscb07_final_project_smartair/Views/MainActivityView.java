@@ -1,6 +1,6 @@
 package com.example.cscb07_final_project_smartair.Views;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
 
 import android.content.Intent;
 import android.os.Bundle;

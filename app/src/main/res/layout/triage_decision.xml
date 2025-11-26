@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/homeRemedyButton"
+        android:layout_width="204sp"
+        android:layout_height="100sp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:adjustViewBounds="false"
+        android:background="#00FFFFFF"
+        android:contentDescription="An emergency department sign"
+        android:cropToPadding="false"
+        android:labelFor="@id/emergencyLabel"
+        android:outlineProvider="bounds"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_wrapBehaviorInParent="included"
+        app:srcCompat="@drawable/pexels_cottonbro_5858855" />
+
+    <TextView
+        android:id="@+id/remedyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Conduct at-home remedies"
+        app:layout_constraintBottom_toTopOf="@+id/homeRemedyButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="10dp"
+        android:text="Please choose an option:"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/emergencyLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.348" />
+
+    <ImageButton
+        android:id="@+id/emergencyButton"
+        android:layout_width="204sp"
+        android:layout_height="102sp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:adjustViewBounds="false"
+        android:background="#00FFFFFF"
+        android:contentDescription="An emergency department sign"
+        android:cropToPadding="false"
+        android:labelFor="@id/emergencyLabel"
+        android:outlineProvider="bounds"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/remedyLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_wrapBehaviorInParent="included"
+        app:srcCompat="@drawable/pexels_pixabay_263402" />
+
+    <TextView
+        android:id="@+id/emergencyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Call Emergency Services"
+        app:layout_constraintBottom_toTopOf="@+id/emergencyButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

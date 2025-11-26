@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -37,6 +38,9 @@
             android:exported="false"
             android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR" />
 
+        <receiver
+            android:name=".Receivers.TriageReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>
