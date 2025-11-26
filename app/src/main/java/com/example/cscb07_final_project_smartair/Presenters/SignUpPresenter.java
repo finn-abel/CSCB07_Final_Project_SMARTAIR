@@ -13,12 +13,28 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
         this.model = new SignUpModel();
     }
 
+    public void onPasswordEdit(String password) {
+        int strength = model.passwordcheck(password);
+
+        if(strength == 1){
+            view.clearPasswordError();
+            view.enableSignUp(true);
+        } else if (strength == 0){
+            view.showPasswordError("Password is too short");
+            view.enableSignUp(false);
+        } else {
+            view.showPasswordError(
+                    "Password invalid. Passwords must have at least 8 characters," +
+                            "at least one upper and lower case character, " +
+                            "one number, and at least one symbol of !@#$%&"
+            );
+            view.enableSignUp(false);
+        }
+
+    }
     public void onSignUpButtonClicked() {
         String email = view.getEmail();
         String password = view.getPassword();
-
-        // Input Validation by Liam to go here
-
         model.createUser(email, password, this);
     }
 
