@@ -10,7 +10,7 @@ import com.example.cscb07_final_project_smartair.Presenters.LauncherPresenter;
  * the user's login status and navigate to the appropriate screen.
  * It implements the LauncherView interface and contains no logic.
  */
-public class LauncherActivity extends AppCompatActivity implements LauncherView {
+public class LauncherActivity extends BaseActivity implements LauncherView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +26,11 @@ public class LauncherActivity extends AppCompatActivity implements LauncherView 
         finish();
     }
 
-   /* @Override
+    @Override
     public void navigateToMainScreen() {
-        startActivity(new Intent(this, MainActivity.class));
-        finish(); --We will implement this later
-    }*/
+        startActivity(new Intent(this, MainActivityView.class));
+        finish();
+    }
 }
 
 

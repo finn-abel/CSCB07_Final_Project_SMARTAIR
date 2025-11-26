@@ -1,6 +1,16 @@
 package com.example.cscb07_final_project_smartair.Views;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
 
-public class MainActivityView extends AppCompatActivity {
+import com.example.cscb07_final_project_smartair.R;
+
+public class MainActivityView extends BaseActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.temphome);
+
+    }
 }
