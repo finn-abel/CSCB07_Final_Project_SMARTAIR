@@ -5,4 +5,5 @@
 - **Project Type:** Final Project (Android Application)  
 - **App Name:** SMART AIR  
 - **Development Methodology:** Agile  
-- **Scrum Master:** Finn  
+- **Scrum Master:** Finn
+- **Full Group** Liam Kitsingh, Prathab Bhatti, Lyronne Sealy, Finn Abel, Alexander Zhu

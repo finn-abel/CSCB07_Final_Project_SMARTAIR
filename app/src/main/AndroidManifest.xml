@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-<!--    <uses-permission android:name="android.permission.INTERNET" />-->
-<!--    <uses-permission android:name="android.permission.WAKE_LOCK" />-->
-
-<!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -16,12 +14,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR">
+
+        <activity android:name=".Views.LoginActivity"
+            android:exported="false" />
+        <activity android:name=".Views.CheckInActivity"
+            android:exported = "false" />
+        <activity android:name=".Views.SignUpActivity"
+            android:exported="false" />
+        <activity android:name=".Views.MainActivityView"
+            android:exported="false" />
+
         <activity
-            android:name=".ParentHomeActivity"
+            android:name=".Views.LauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,16 +36,16 @@
         <activity
             android:name=".Presenters.MainActivityPresenter"
             android:exported="true">
+          
         </activity>
 
-<!--        <service-->
-<!--            android:name=".notifications.MyFirebaseMessagingService"-->
-<!--            android:exported="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
-<!--            </intent-filter>-->
-<!--        </service>-->
+            android:name=".Views.R1_Views.OnboardingView"
+            android:exported="false"
+            android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR" />
 
+        <receiver
+            android:name=".Receivers.TriageReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>
