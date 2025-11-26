@@ -2,6 +2,8 @@ package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -42,6 +44,23 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
         sign_in_button.setOnClickListener(view -> {
             presenter.onSignInButtonClicked();
         });
+
+        user_password_signup.addTextChangedListener(new TextWatcher() { //monitor changes to password
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                presenter.onPasswordEdit(s.toString()); //pass text to checker
+            }
+        });
+
+
     }
 
 
@@ -55,6 +74,22 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
         return Objects.requireNonNull(user_password_signup.getText()).toString();
     }
 
+    @Override
+    public void enableSignUp(boolean status){
+        Button sign_up_button=findViewById(R.id.sign_up_button);
+        sign_up_button.setEnabled(status); // enable/disable button
+        sign_up_button.setAlpha(status ? 1.0f : 0.5f); //change transparency based on status
+    }
+
+    @Override
+    public void showPasswordError(String message){
+        user_password_signup.setError(message); //display error message
+    }
+
+    @Override
+    public void clearPasswordError(){
+        user_password_signup.setError(null); //clear error message
+    }
 
     @Override
     public void showSignUpSuccess(String message) {
