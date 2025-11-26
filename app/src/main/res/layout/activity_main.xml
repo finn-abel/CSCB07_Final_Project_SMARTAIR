@@ -5,28 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Presenters.MainActivityPresenter">
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="110dp"
-        android:layout_height="22dp"
-        android:text="Wow Wow Wow!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".Presenters.MainPresenter">
 
     <Button
         android:id="@+id/logout"
         android:layout_width="244dp"
         android:layout_height="63dp"
-        android:backgroundTint = "#5C8AF2"
-        android:layout_marginBottom="50dp"
+        android:backgroundTint="#5C8AF2"
+        android:layout_marginBottom="24dp"
         android:text="SIGN OUT"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/checkin"
@@ -34,9 +24,32 @@
         android:layout_height="62dp"
         android:backgroundTint="#5C8AF2"
         android:text="DAILY CHECK IN"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/logout"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnMedicineLogs"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="MEDICINE LOGS"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/checkin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnInventory"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="INVENTORY"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnMedicineLogs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
