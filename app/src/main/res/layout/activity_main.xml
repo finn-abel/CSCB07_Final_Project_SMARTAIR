@@ -5,10 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Presenters.MainActivityPresenter">
+    tools:context=".Presenters.MainPresenter">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
     <TextView
-        android:id="@+id/textView8"
         android:layout_width="110dp"
         android:layout_height="22dp"
         android:text="Wow Wow Wow!"
