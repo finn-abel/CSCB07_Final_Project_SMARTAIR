@@ -4,19 +4,17 @@ package com.example.cscb07_final_project_smartair.Presenters;
 import com.example.cscb07_final_project_smartair.Views.InventoryView;
 import com.example.cscb07_final_project_smartair.Models.Items.InventoryItem;
 import com.example.cscb07_final_project_smartair.Models.InventoryModel;
-import com.example.cscb07_final_project_smartair.Repository.R3_Repository;
 import com.example.cscb07_final_project_smartair.Repository.RepositoryCallback;
 
 import java.util.List;
 
 public class InventoryPresenter{
-
     private final InventoryView view;
     private final InventoryModel model;
 
-    public InventoryPresenter(InventoryView view, R3_Repository repo) {
+    public InventoryPresenter(InventoryView view) {
         this.view = view;
-        this.model = new InventoryModel(repo);
+        this.model = new InventoryModel();
     }
 
     public void onBackClicked() {

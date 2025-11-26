@@ -8,11 +8,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cscb07_final_project_smartair.R;
-import com.example.cscb07_final_project_smartair.Views.MedicineLogsView;
 import com.example.cscb07_final_project_smartair.Models.Items.ControllerLogEntry;
 import com.example.cscb07_final_project_smartair.Models.Items.RescueLogEntry;
 import com.example.cscb07_final_project_smartair.Presenters.MedicineLogsPresenter;
-import com.example.cscb07_final_project_smartair.Repository.R3_FirebaseRepository;
 
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class MedicineLogsActivity extends AppCompatActivity implements MedicineL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicine_logs);
 
-        presenter = new MedicineLogsPresenter(this, new R3_FirebaseRepository());
+        presenter = new MedicineLogsPresenter(this);
 
         presenter.loadLogs(childId);
 
@@ -56,7 +54,6 @@ public class MedicineLogsActivity extends AppCompatActivity implements MedicineL
     public void showRescueLogs(List<RescueLogEntry> logs) {
         // TODO: get logs
     }
-
     @Override
     public void showControllerLogs(List<ControllerLogEntry> logs) {
         // TODO: get logs
@@ -71,5 +68,8 @@ public class MedicineLogsActivity extends AppCompatActivity implements MedicineL
     public void showError(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
+    //TODO: add dose logging
+    //TODO: add better after rescue rating, need check db
 }
 

@@ -4,7 +4,6 @@ import com.example.cscb07_final_project_smartair.Models.Items.ControllerLogEntry
 import com.example.cscb07_final_project_smartair.Models.Items.RescueLogEntry;
 import com.example.cscb07_final_project_smartair.Models.MedicineLogsModel;
 import com.example.cscb07_final_project_smartair.Views.MedicineLogsView;
-import com.example.cscb07_final_project_smartair.Repository.R3_Repository;
 import com.example.cscb07_final_project_smartair.Repository.RepositoryCallback;
 
 import java.util.List;
@@ -14,15 +13,14 @@ public class MedicineLogsPresenter {
     private final MedicineLogsView view;
     private final MedicineLogsModel model;
 
-    public MedicineLogsPresenter(MedicineLogsView view, R3_Repository repo) {
+    public MedicineLogsPresenter(MedicineLogsView view) {
         this.view = view;
-        this.model = new MedicineLogsModel(repo);
+        this.model = new MedicineLogsModel();
     }
     public void onBackClicked() {
         view.navigateBack();
     }
     public void loadLogs(String childId) {
-
         model.getRescueLogs(childId, new RepositoryCallback<List<RescueLogEntry>>() {
             @Override
             public void onSuccess(List<RescueLogEntry> result) {

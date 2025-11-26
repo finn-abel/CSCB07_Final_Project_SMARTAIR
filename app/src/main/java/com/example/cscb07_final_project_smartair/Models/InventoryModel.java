@@ -1,32 +1,80 @@
 package com.example.cscb07_final_project_smartair.Models;
 
-import com.example.cscb07_final_project_smartair.Repository.R3_Repository;
-import com.example.cscb07_final_project_smartair.Repository.RepositoryCallback;
-import com.example.cscb07_final_project_smartair.Models.Items.InventoryItem;
+import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.Models.Items.InventoryItem;
+import com.example.cscb07_final_project_smartair.Repository.RepositoryCallback;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryModel {
-    private final R3_Repository repo;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public InventoryModel(R3_Repository repo) {
-        this.repo = repo;
+    public InventoryModel() {
+        // Empty constructor
     }
-
     public void getInventory(String childId, RepositoryCallback<List<InventoryItem>> cb) {
-        repo.getInventory(childId, cb);
+        db.collection("children")
+                .document(childId)
+                .collection("inventory")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<InventoryItem> list = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        InventoryItem item = doc.toObject(InventoryItem.class);
+                        list.add(item);
+                    }
+                    cb.onSuccess(list);
+                })
+                .addOnFailureListener(cb::onFailure);
+    }
+    public void addItem(String childId, @NonNull InventoryItem item, RepositoryCallback<Void> cb) {
+        db.collection("children")
+                .document(childId)
+                .collection("inventory")
+                .document(item.name)  // use name as key
+                .set(item)
+                .addOnSuccessListener(unused -> cb.onSuccess(null))
+                .addOnFailureListener(cb::onFailure);
+    }
+    public void updateItem(String childId, @NonNull InventoryItem item, RepositoryCallback<Void> cb) {
+        db.collection("children")
+                .document(childId)
+                .collection("inventory")
+                .document(item.name)
+                .set(item)
+                .addOnSuccessListener(unused -> cb.onSuccess(null))
+                .addOnFailureListener(cb::onFailure);
     }
 
-    public void addItem(String childId, InventoryItem item, RepositoryCallback<Void> cb) {
-        repo.addInventoryItem(childId, item, cb);
-    }
+    public void updateInventoryAfterDose(String childId, String medName, int amountUsed, RepositoryCallback<Void> cb) {
+        db.collection("children")
+                .document(childId)
+                .collection("inventory")
+                .document(medName)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (!snapshot.exists()) {
+                        cb.onFailure(new Exception("Medication not in inventory"));
+                        return;
+                    }
 
-    public void updateItem(String childId, InventoryItem item, RepositoryCallback<Void> cb) {
-        repo.updateInventoryItem(childId, item, cb);
-    }
+                    InventoryItem item = snapshot.toObject(InventoryItem.class);
+                    if (item == null) {
+                        cb.onFailure(new Exception("Invalid inventory item"));
+                        return;
+                    }
+                    item.amountLeft = Math.max(item.amountLeft - amountUsed, 0);
 
-    public void reduceItemFromUsage(String childId, String medName, int amountUsed, RepositoryCallback<Void> cb) {
-        repo.updateInventoryAfterDose(childId, medName, amountUsed, cb);
+                    snapshot.getReference()
+                            .set(item)
+                            .addOnSuccessListener(unused -> cb.onSuccess(null))
+                            .addOnFailureListener(cb::onFailure);
+
+                })
+                .addOnFailureListener(cb::onFailure);
     }
 }
-
