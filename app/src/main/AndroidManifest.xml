@@ -34,6 +34,11 @@
         </activity>
 
         <activity
+            android:name=".Presenters.MainActivityPresenter"
+            android:exported="true">
+          
+        </activity>
+
             android:name=".Views.R1_Views.OnboardingView"
             android:exported="false"
             android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR" />
