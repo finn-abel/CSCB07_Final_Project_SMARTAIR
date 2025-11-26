@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Section: Add Medicine Usage -->
         <TextView
             android:text="Log Medicine Use"
             android:textSize="20sp"
@@ -70,7 +69,6 @@
             android:padding="12dp"/>
 
 
-        <!-- Section: Rescue Logs -->
         <TextView
             android:text="Rescue Logs"
             android:textSize="18sp"
@@ -85,7 +83,6 @@
             android:layout_height="200dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Section: Controller Logs -->
         <TextView
             android:text="Controller Logs"
             android:textSize="18sp"

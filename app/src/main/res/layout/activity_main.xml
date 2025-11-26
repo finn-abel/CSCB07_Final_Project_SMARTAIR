@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Presenters.MainPresenter">
 
-    <!-- SIGN OUT Button (bottom-most) -->
     <Button
         android:id="@+id/logout"
         android:layout_width="244dp"
@@ -19,7 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- DAILY CHECK-IN Button (above logout) -->
     <Button
         android:id="@+id/checkin"
         android:layout_width="254dp"
@@ -31,7 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- MEDICINE LOGS Button (above check-in) -->
     <Button
         android:id="@+id/btnMedicineLogs"
         android:layout_width="254dp"
@@ -43,7 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- INVENTORY Button (above medicine logs) -->
     <Button
         android:id="@+id/btnInventory"
         android:layout_width="254dp"
