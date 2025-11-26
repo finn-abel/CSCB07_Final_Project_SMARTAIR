@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:fillViewport="true"
-    tools:context=".view.OnboardingActivity">
+    tools:context=".Views.OnboardingActivity">
 
     <LinearLayout
         android:orientation="vertical"

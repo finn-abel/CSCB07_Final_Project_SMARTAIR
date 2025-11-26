@@ -4,4 +4,6 @@ public interface MainView {
 
     void navigateToLoginScreen();
     void navigateToCheckInScreen();
+    void navigateToMedicineLogs();
+    void navigateToInventory();
 }
