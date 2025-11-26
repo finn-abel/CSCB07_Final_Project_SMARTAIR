@@ -13,6 +13,7 @@ public class MainActivityModel {
     public void signOut() {
         mAuth.signOut();
     }
+
     //redirect to onboarding
     //redirect to child/parent home
 }

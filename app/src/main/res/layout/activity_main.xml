@@ -8,6 +8,7 @@
     tools:context=".Presenters.MainActivityPresenter">
 
     <TextView
+        android:id="@+id/textView8"
         android:layout_width="110dp"
         android:layout_height="22dp"
         android:text="Wow Wow Wow!"
@@ -26,5 +27,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/checkin"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="DAILY CHECK IN"
+        app:layout_constraintBottom_toTopOf="@+id/logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

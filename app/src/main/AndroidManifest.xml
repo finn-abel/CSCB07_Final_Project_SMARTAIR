@@ -16,6 +16,8 @@
 
         <activity android:name=".Views.LoginActivity"
             android:exported="false" />
+        <activity android:name=".Views.CheckInActivity"
+            android:exported = "false" />
         <activity android:name=".Views.SignUpActivity"
             android:exported="false" />
         <activity android:name=".Views.MainActivityView"

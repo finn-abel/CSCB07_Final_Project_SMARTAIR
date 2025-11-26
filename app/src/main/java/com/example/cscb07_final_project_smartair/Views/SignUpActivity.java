@@ -18,8 +18,8 @@ import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
-    private TextInputEditText user_email_signup;
-    private TextInputEditText user_password_signup;
+    private TextInputEditText new_user_email;
+    private TextInputEditText new_user_password;
 
 
     private SignUpPresenter presenter;
@@ -29,10 +29,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        user_email_signup = findViewById(R.id.new_user_email);
-        user_password_signup = findViewById(R.id.new_user_password);
+        new_user_email = findViewById(R.id.new_user_email);
+        new_user_password = findViewById(R.id.new_user_password);
         Button sign_up_button = findViewById(R.id.sign_up_button);
         Button sign_in_button = findViewById(R.id.SIB);
+        //Button child_account_button = findViewById(R.id.child_account_button);
+
 
 
         presenter = new SignUpPresenter(this);
@@ -66,12 +68,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
     @Override
     public String getEmail() {
-        return Objects.requireNonNull(user_email_signup.getText()).toString().trim();
+        return Objects.requireNonNull(new_user_email.getText()).toString().trim();
     }
 
     @Override
     public String getPassword() {
-        return Objects.requireNonNull(user_password_signup.getText()).toString();
+        return Objects.requireNonNull(new_user_password.getText()).toString();
     }
 
     @Override
@@ -109,6 +111,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
         startActivity(intent);
         finish();
     }
+
+    /* To be implemented later
+    @Override
+    public void navigateToChildSignUpScreen() {
+        Intent intent = new Intent(this, ChildSignUpActivity.class);
+        startActivity(intent);
+    } */
+
 }
 
 

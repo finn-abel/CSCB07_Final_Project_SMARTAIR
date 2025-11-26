@@ -15,5 +15,7 @@ public interface SignUpView {
 
 
     void navigateToLoginScreen();
+
+    //void navigateToChildSignUpScreen();--to be worked on later
 }
 
