@@ -20,6 +20,7 @@ public class MainActivityView extends AppCompatActivity implements MainView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button check_in_button = findViewById(R.id.checkin);
 
         Button logout_button = findViewById(R.id.logout);
 
@@ -28,6 +29,11 @@ public class MainActivityView extends AppCompatActivity implements MainView{
         logout_button.setOnClickListener(view -> {
             presenter.onLogoutButtonClicked();
         });
+
+        check_in_button.setOnClickListener(view -> {
+            presenter.onCheckInButtonClicked();
+        });
+
     }
 
     @Override
@@ -35,6 +41,11 @@ public class MainActivityView extends AppCompatActivity implements MainView{
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void navigateToCheckInScreen(){
+        startActivity(new Intent(this, CheckInActivity.class));
     }
 
 

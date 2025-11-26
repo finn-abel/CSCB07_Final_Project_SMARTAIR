@@ -41,4 +41,8 @@ public class MainActivityPresenter extends AppCompatActivity {
         model.signOut();
         view.navigateToLoginScreen();
     }
+
+    public void onCheckInButtonClicked() {
+        view.navigateToCheckInScreen();
+    }
 }

@@ -14,5 +14,7 @@ public interface LoginView {
 
     void showPasswordResetSuccess(String message);
     void showPasswordResetFailure(String message);
+
+
 }
 
