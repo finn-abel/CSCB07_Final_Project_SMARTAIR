@@ -63,4 +63,12 @@ public class MainActivityPresenter extends AppCompatActivity {
     public void onCheckInButtonClicked() {
         view.navigateToCheckInScreen();
     }
+
+    public void onMedicineLogsClicked() {
+        view.navigateToMedicineLogs();
+    }
+
+    public void onInventoryClicked() {
+        view.navigateToInventory();
+    }
 }
