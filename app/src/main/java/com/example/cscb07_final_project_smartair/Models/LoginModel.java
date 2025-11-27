@@ -41,7 +41,6 @@ public class LoginModel {
             return;
         }
 
-        //Assuming Credentials are valid
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
