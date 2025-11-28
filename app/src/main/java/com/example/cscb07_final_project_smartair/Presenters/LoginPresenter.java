@@ -17,8 +17,6 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
         String email = view.getEmail();
         String password = view.getPassword();
 
-        //Credential Validation here
-
         model.signInUser(email, password, this);
     }
 

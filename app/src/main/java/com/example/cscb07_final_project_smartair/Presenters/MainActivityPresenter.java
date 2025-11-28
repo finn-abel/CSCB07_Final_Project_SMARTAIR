@@ -60,6 +60,10 @@ public class MainActivityPresenter extends AppCompatActivity {
         view.navigateToLoginScreen();
     }
 
+    public void onPEFButtonClicked(){
+        view.navigateToPEFEntry();
+    }
+
     public void onCheckInButtonClicked() {
         view.navigateToCheckInScreen();
     }

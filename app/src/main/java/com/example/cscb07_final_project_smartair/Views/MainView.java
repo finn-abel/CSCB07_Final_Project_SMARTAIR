@@ -6,4 +6,6 @@ public interface MainView {
     void navigateToCheckInScreen();
     void navigateToMedicineLogs();
     void navigateToInventory();
+    void navigateToPEFEntry();
 }
+

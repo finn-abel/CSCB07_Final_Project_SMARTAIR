@@ -27,6 +27,11 @@ public class MainActivityView extends BaseActivity implements MainView{
         Button logout_button = findViewById(R.id.logout);
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
         Button btnInventory = findViewById(R.id.btnInventory);
+        Button btnPEF = findViewById(R.id.btnPEF);
+
+        btnPEF.setOnClickListener(view -> {
+            presenter.onPEFButtonClicked();
+        });
 
 
         logout_button.setOnClickListener(view -> {
@@ -56,6 +61,10 @@ public class MainActivityView extends BaseActivity implements MainView{
     @Override
     public void navigateToMedicineLogs() {
         startActivity(new Intent(this, MedicineLogsActivity.class));
+    }
+    @Override
+    public void navigateToPEFEntry() {
+        startActivity(new Intent(this, PEFActivity.class));
     }
 
     @Override
