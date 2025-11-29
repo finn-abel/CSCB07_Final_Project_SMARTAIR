@@ -3,17 +3,13 @@ package com.example.cscb07_final_project_smartair.Views;
 import android.os.Bundle;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
+import com.example.cscb07_final_project_smartair.Helpers.ProviderReportGenerator;
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
-import com.example.cscb07_final_project_smartair.Presenters.MainPresenter;
 import com.example.cscb07_final_project_smartair.R;
 
-public class MainActivityView extends BaseActivity implements MainView{
+public class MainActivityView extends BaseParentActivity implements MainView{ // TO CHANGE; CHANGED TO PARENTACTIVITY
     private MainActivityPresenter presenter;
 
     @Override
@@ -28,6 +24,7 @@ public class MainActivityView extends BaseActivity implements MainView{
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
         Button btnInventory = findViewById(R.id.btnInventory);
         Button btnPEF = findViewById(R.id.btnPEF);
+        Button btnProviderReport = findViewById(R.id.btnProviderReport);
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
@@ -44,6 +41,10 @@ public class MainActivityView extends BaseActivity implements MainView{
 
         btnLogs.setOnClickListener(v -> presenter.onMedicineLogsClicked());
         btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
+
+        btnProviderReport.setOnClickListener(view -> {
+            presenter.onProviderReportClicked();
+        });
     }
 
     @Override
@@ -70,5 +71,9 @@ public class MainActivityView extends BaseActivity implements MainView{
     @Override
     public void navigateToInventory() {
         startActivity(new Intent(this, InventoryActivity.class));
+    }
+
+    public void navigateToProviderReport() {
+        startActivity(new Intent(this, ProviderReportSelectionActivity.class));
     }
 }

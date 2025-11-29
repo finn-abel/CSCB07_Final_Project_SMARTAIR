@@ -37,7 +37,7 @@
         android:backgroundTint="#5C8AF2"
         android:text="DAILY CHECK IN"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/logout"
+        app:layout_constraintBottom_toTopOf="@+id/btnProviderReport"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -60,6 +60,17 @@
         android:text="INVENTORY"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/btnMedicineLogs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnProviderReport"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="PROVIDER REPORT"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/logout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -22,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ParentHomeActivity extends AppCompatActivity {
+public class ParentHomeActivity extends BaseParentActivity {
 
     private LineChart trendChart;
     private TextView toggleText;
@@ -60,7 +61,7 @@ public class ParentHomeActivity extends AppCompatActivity {
         long now = System.currentTimeMillis();
 
         // Load last 30 days
-        long startTime = now - (30L * 24 * 60 * 60 * 1000);
+        long startTime = now - ((long) 30 * 24 * 60 * 60 * 1000);
 
         // Goes to the rescueLogs branch of the requested child based on the childId
         DatabaseReference rescueRef =

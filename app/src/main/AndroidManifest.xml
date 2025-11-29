@@ -44,6 +44,10 @@
             android:name=".Views.InventoryActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".Views.ProviderReportSelectionActivity"
+            android:exported="false" />
+
 
         <receiver
             android:name=".Receivers.TriageReceiver"
