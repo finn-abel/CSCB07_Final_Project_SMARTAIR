@@ -17,11 +17,11 @@ public class ProviderReportSelectionActivity extends BaseParentActivity {
         Button btn6Months = findViewById(R.id.btn6Months);
 
         btn3Months.setOnClickListener(view -> {
-            new ProviderReportGenerator().generateReport(this, "child1", 3);
+            new ProviderReportGenerator().generateReport(this, "l1Z0u0INnMZxsjae4MdRCOj8oqJ3", 3);
         });
 
         btn6Months.setOnClickListener(view -> {
-            new ProviderReportGenerator().generateReport(this, "child1", 6);
+            new ProviderReportGenerator().generateReport(this, "l1Z0u0INnMZxsjae4MdRCOj8oqJ3", 6);
         });
     }
 }
