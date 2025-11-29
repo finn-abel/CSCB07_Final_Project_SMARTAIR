@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -67,6 +66,12 @@ public class ProviderReportGenerator {
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
                 .getReference("pef")  // pef folder
                 .child(childId);  // childID's PEF logs
+
+        DatabaseReference nameRef = FirebaseDatabase.getInstance()
+                .getReference("users")  // user folder
+                .child("children")  // children folder
+                .child(childId)  // node matching child's id
+                .child("name"); // name of the child
 
         long now = System.currentTimeMillis();
 
@@ -165,22 +170,24 @@ public class ProviderReportGenerator {
                             }
                         }
 
-                        if (!dataBeforeExists2) {
-                            Toast.makeText(context, "Not enough data 2.1", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if (!dataAfterExists2) {
-                            Toast.makeText(context, "Not enough data 2.2", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
                         if (!dataBeforeExists2 || !dataAfterExists2) {
                             Toast.makeText(context, "Not enough data 2", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        generatePdf(context, childId, months, dailyFrequency, zoneEntries);
+                        nameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot nameReceiver) {
+                                String name = nameReceiver.getValue(String.class);
+
+                                generatePdf(context, childId, months, dailyFrequency, zoneEntries, name);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -196,7 +203,7 @@ public class ProviderReportGenerator {
     }
 
     public void generatePdf(Context context, String childId, int months, int[] dailyFrequency,
-                            ArrayList<Entry> zoneEntries) {
+                            ArrayList<Entry> zoneEntries, String name) {
 
         // Creates an object for the PDF document
         PdfDocument document = new PdfDocument();
@@ -222,12 +229,10 @@ public class ProviderReportGenerator {
         canvas.drawText("Provider Report", 50, 50, paint);
 
         paint.setTextSize(20);
-        paint.setFakeBoldText(false);
-        canvas.drawText("Child: " + childId, 50, 80, paint);
+        canvas.drawText("Child: " + name, 50, 80, paint);
         canvas.drawText("Period: Last " + months + " Months", 50, 110, paint);
 
-        paint.setFakeBoldText(true);
-        canvas.drawText("Rescue Frequency (Usage Per Day)", 50, 160, paint);
+        canvas.drawText("Rescue Frequency (Usage By Day)", 50, 160, paint);
 
         // Rescue frequency, time series chart
         LineChart lineChart = new LineChart(context);
@@ -358,7 +363,7 @@ public class ProviderReportGenerator {
 
         YAxis leftZoneAxis = zoneChart.getAxisLeft();
         leftZoneAxis.setAxisMinimum(0f);
-        leftZoneAxis.setAxisMaximum(120f);
+        leftZoneAxis.setAxisMaximum(100f);
         zoneChart.getXAxis().setDrawGridLines(false);
         zoneChart.getAxisLeft().setDrawGridLines(false);
         zoneChart.getAxisLeft().setGranularity(10f); // 10 unit increments
@@ -415,9 +420,13 @@ public class ProviderReportGenerator {
         Canvas zoneBitmapCanvas = new Canvas(zoneBitmap);
 
         zoneChart.draw(zoneBitmapCanvas);
-        canvas2.drawText("Zone Distribution Over Time", 50, 120, paint);
-        canvas2.drawText("Note: a value of 0 indicates no data for that day", 50, 150, paint);
-        canvas2.drawBitmap(zoneBitmap, 50, 160, null);
+        canvas2.drawText("Zone Distribution Over Time (Zone By Day)", 50, 120, paint);
+        canvas2.drawText("Zone Percentage Breakdown", 50, 150, paint);
+        canvas2.drawText("  Green:      ≥80%", 50, 180, paint);
+        canvas2.drawText("  Yellow:     50%-79%", 50, 210, paint);
+        canvas2.drawText("  Red:          1%-50%", 50, 240, paint);
+        canvas2.drawText("  No Data:   0%", 50, 270, paint);
+        canvas2.drawBitmap(zoneBitmap, 50, 280, null);
         // End of zone distribution over time
 
         document.finishPage(page2); // End of page 2
