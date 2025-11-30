@@ -28,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MainActivityView extends BaseParentActivity implements MainView{ // TO CHANGE; CHANGED TO PARENTACTIVITY
+public class MainActivityView extends BaseParentActivity implements MainView { // TO CHANGE; CHANGED TO PARENTACTIVITY
     private MainActivityPresenter presenter;
     private LineChart trendChart; // to delete
     private TextView toggleText; // to delete
