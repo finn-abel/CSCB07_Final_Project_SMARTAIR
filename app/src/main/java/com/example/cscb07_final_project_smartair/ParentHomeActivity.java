@@ -68,10 +68,9 @@ public class ParentHomeActivity extends BaseParentActivity {
 
         // Goes to the rescueLogs branch of the requested child based on the childId
         DatabaseReference rescueRef = mdatabase
-                .child("users")
-                .child("children")
-                .child(childId)
-                .child("rescueLogs");
+                .child("medicine")
+                .child("rescue")
+                .child(activeChildId);
 
         ValueEventListener rescueListener = new ValueEventListener() {
             @Override
@@ -248,10 +247,9 @@ public class ParentHomeActivity extends BaseParentActivity {
 
     public void getLastRescueTime() {
         DatabaseReference rescueRef = mdatabase
-                .child("users")
-                .child("children")
-                .child(activeChildId)
-                .child("rescueLogs");
+                .child("medicine")
+                .child("rescue")
+                .child(activeChildId);
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

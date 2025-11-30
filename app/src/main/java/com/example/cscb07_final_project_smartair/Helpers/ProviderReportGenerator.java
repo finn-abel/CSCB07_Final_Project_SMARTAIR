@@ -35,6 +35,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProviderReportGenerator {
 
@@ -57,10 +61,9 @@ public class ProviderReportGenerator {
         }
 
         DatabaseReference rescueRef = FirebaseDatabase.getInstance()
-                .getReference("users")  // users folder
-                .child("children")  // children folder
-                .child(childId)  // child id's folder
-                .child("rescueLogs"); // rescue logs of the child
+                .getReference("medicine")  // medicine folder
+                .child("rescue")  // rescue folder
+                .child(childId);  // child id's folder
 
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
                 .getReference("pef")  // pef folder
@@ -80,9 +83,19 @@ public class ProviderReportGenerator {
 
         DatabaseReference symptomRef = FirebaseDatabase.getInstance()
                 .getReference("check_in") // check in folder
-                .child(childId) // children folder
-                .child(childId) // child id's folder
-                .child("permissions"); // permissions folder
+                .child(childId); // children folder
+
+        DatabaseReference scheduleRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child("children")
+                .child(childId)
+                .child("schedule")
+                .child("controller");
+
+        DatabaseReference logsRef = FirebaseDatabase.getInstance()
+                .getReference("medicine")
+                .child("controller")
+                .child(childId);
 
         long now = System.currentTimeMillis();
 
@@ -191,35 +204,155 @@ public class ProviderReportGenerator {
                             public void onDataChange(@NonNull DataSnapshot nameReceiver) {
                                 String name = nameReceiver.getValue(String.class);
 
-                                // Checks if permissions are enabled for triage sharing
-                                triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                symptomRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot triageReceiver) {
-                                        Boolean triageIncidentsEnabled = triageReceiver
-                                                        .child("triageIncidents")
-                                                        .getValue(Boolean.class);
+                                    public void onDataChange(@NonNull DataSnapshot symptomReceiver) {
+                                        Set<Long> problemDays = new HashSet<>();
 
-                                        ArrayList<String> triageList = new ArrayList<>();
+                                        for (DataSnapshot child : symptomReceiver.getChildren()) {
+                                            Long timestamp = child.child("timestamp").getValue(Long.class);
+                                            if (timestamp == null || timestamp < startTime) continue;
+                                            // Invalid timestamp
 
-                                        if (triageIncidentsEnabled != null && triageIncidentsEnabled) {
-                                            getTriageIncidents(childId, new TriageIncidentCallback() {
-                                                        @Override
-                                                        public void onTriageIncidentsLoaded(ArrayList<String> triageList) {
-                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList);
+                                            DataSnapshot symptomsSnap = child.child("symptoms");
+
+                                            // if any symptoms present
+                                            if (symptomsSnap.exists() && symptomsSnap.getChildrenCount() > 0) {
+                                                // add only midnight times to problemDays as only one symptom per
+                                                // day is required
+                                                Calendar calendar = Calendar.getInstance();
+                                                calendar.setTimeInMillis(timestamp);
+                                                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                                                calendar.set(Calendar.MINUTE, 0);
+                                                calendar.set(Calendar.SECOND, 0);
+                                                calendar.set(Calendar.MILLISECOND, 0);
+                                                problemDays.add(calendar.getTimeInMillis());
+                                            }
+                                        }
+
+                                        int totalProblemDays = problemDays.size();
+
+                                        scheduleRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot scheduleReceiver) {
+                                                // find doses per weekday
+                                                HashMap<Integer, Integer> weekdayRequiredDoses = new HashMap<>();
+                                                for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
+                                                    weekdayRequiredDoses.put(i, 0); // default 0
+                                                }
+
+                                                DataSnapshot scheduleNode = scheduleReceiver.child("schedule");
+                                                for (DataSnapshot scheduleChild : scheduleNode.getChildren()) {
+                                                    String dayName = scheduleChild.getKey();
+                                                    int calendarDay = dayNameToCalendar(dayName);
+
+                                                    int totalDose = 0;
+                                                    for (DataSnapshot doseChild : scheduleChild.getChildren()) {
+                                                        Integer doseAmount = doseChild.child("doseAmount").getValue(Integer.class);
+                                                        if (doseAmount != null) {
+                                                            totalDose += doseAmount;
                                                         }
-                                                    });
-                                        }
+                                                    }
 
-                                        else {
-                                            generatePdf(context, childId, months,
-                                                    dailyFrequency,zoneEntries, name, triageList);
-                                        }
+                                                    weekdayRequiredDoses.put(calendarDay, totalDose);
+                                                }
+
+                                                // Calculate planned days
+                                                int plannedDays = 0;
+                                                Calendar calendar = Calendar.getInstance();
+                                                // increment by days from start time
+                                                for (long time = startTime; time <= System.currentTimeMillis(); time += 24L * 60 * 60 * 1000) {
+                                                    calendar.setTimeInMillis(time);
+                                                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                                                    if (weekdayRequiredDoses.get(dayOfWeek) > 0) {
+                                                        plannedDays++;
+                                                    }
+                                                }
+
+                                                // Calculate taken days
+                                                logsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot logsReceiver) {
+                                                        HashMap<Long, Integer> dosesPerDay = new HashMap<>();
+
+                                                        for (DataSnapshot logsChild : logsReceiver.getChildren()) {
+                                                            Long timestamp = logsChild.child("timestamp").getValue(Long.class);
+                                                            Integer doseAmount = logsChild.child("doseAmount").getValue(Integer.class);
+
+                                                            if (timestamp == null || doseAmount == null) continue;
+                                                            // skip if null
+
+                                                            if (timestamp < startTime) continue;
+                                                            // skip if out of time range
+
+                                                            // make all days' time midnight for consistency
+                                                            calendar.setTimeInMillis(timestamp);
+                                                            calendar.set(Calendar.HOUR_OF_DAY, 0);
+                                                            calendar.set(Calendar.MINUTE, 0);
+                                                            calendar.set(Calendar.SECOND, 0);
+                                                            calendar.set(Calendar.MILLISECOND, 0);
+                                                            long day = calendar.getTimeInMillis();
+
+                                                            dosesPerDay.put(day, dosesPerDay.getOrDefault(day, 0) + doseAmount);
+                                                        }
+
+                                                        int takenDays = 0;
+                                                        for (long time = startTime; time <= System.currentTimeMillis(); time += 24L * 60 * 60 * 1000) {
+                                                            calendar.setTimeInMillis(time);
+                                                            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                                                            int requiredDose = weekdayRequiredDoses.get(dayOfWeek);
+                                                            if (requiredDose == 0) continue; // not a planned day
+
+                                                            long dayKey = calendar.getTimeInMillis();
+                                                            int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
+                                                            if (takenDose >= requiredDose) takenDays++;
+                                                        }
+
+                                                        // Checks if permissions are enabled for triage sharing
+                                                        triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot triageReceiver) {
+                                                                Boolean triageIncidentsEnabled = triageReceiver
+                                                                        .child("triageIncidents")
+                                                                        .getValue(Boolean.class);
+
+                                                                ArrayList<String> triageList = new ArrayList<>();
+
+                                                                if (triageIncidentsEnabled != null && triageIncidentsEnabled) {
+                                                                    getTriageIncidents(childId, new TriageIncidentCallback() {
+                                                                        @Override
+                                                                        public void onTriageIncidentsLoaded(ArrayList<String> triageList) {
+
+
+                                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays);
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                                else {
+                                                                    generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays);
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {}
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {}
+                                        });
                                     }
 
                                     @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
+                                    public void onCancelled(@NonNull DatabaseError error) {}
                                 });
                             }
 
@@ -293,8 +426,22 @@ public class ProviderReportGenerator {
             }
         });
     }
+
+    public int dayNameToCalendar(String dayName) {
+        switch (dayName) {
+            case "Sunday": return Calendar.SUNDAY;
+            case "Monday": return Calendar.MONDAY;
+            case "Tuesday": return Calendar.TUESDAY;
+            case "Wednesday": return Calendar.WEDNESDAY;
+            case "Thursday": return Calendar.THURSDAY;
+            case "Friday": return Calendar.FRIDAY;
+            case "Saturday": return Calendar.SATURDAY;
+            default: return -1;
+        }
+    }
+
     public void generatePdf(Context context, String childId, int months, int[] dailyFrequency,
-                            ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList) {
+                            ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList, int totalProblemDays) {
 
         // Creates an object for the PDF document
         PdfDocument document = new PdfDocument();
@@ -434,10 +581,8 @@ public class ProviderReportGenerator {
         Canvas canvas2 = page2.getCanvas();
 
         // Symptom burden
-        int problemDays = 100; // To be calculated; may consider different kinds of problems
-
         canvas2.drawText("Symptom Burden (Problem Days)", 50, 50, paint);
-        canvas2.drawText("Total Problem Days: " + problemDays, 50, 80, paint);
+        canvas2.drawText("Total Problem Days: " + totalProblemDays, 50, 80, paint);
         // End of symptom burden
 
         // Zone distribution over time, time series chart
@@ -527,7 +672,7 @@ public class ProviderReportGenerator {
             // Create page 3
             PdfDocument.PageInfo pageInfo3 = new PdfDocument
                     .PageInfo.Builder(612, 792, 2).create();
-            PdfDocument.Page page3 = document.startPage(pageInfo2);
+            PdfDocument.Page page3 = document.startPage(pageInfo3);
             Canvas canvas3 = page3.getCanvas();
 
             canvas3.drawText("Notable Triage Incidents", 50, 50, paint);
