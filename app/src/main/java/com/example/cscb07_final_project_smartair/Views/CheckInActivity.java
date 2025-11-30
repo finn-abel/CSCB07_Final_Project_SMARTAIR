@@ -12,6 +12,7 @@ import com.example.cscb07_final_project_smartair.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Objects;
 
 public class CheckInActivity extends BaseActivity implements CheckInView{
@@ -64,19 +65,19 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     public ArrayList<String> getTriggers(){
         ArrayList<String> triggers = new ArrayList<>();
         if(dust.isChecked()){
-            triggers.add(dust.getText().toString());
+            triggers.add(dust.getText().toString().toLowerCase());
         }
         if(smoke.isChecked()){
-            triggers.add(smoke.getText().toString());
+            triggers.add(smoke.getText().toString().toLowerCase());
         }
         if(pets.isChecked()){
-            triggers.add(pets.getText().toString());
+            triggers.add(pets.getText().toString().toLowerCase());
         }
         if(cold_air.isChecked()){
-            triggers.add(cold_air.getText().toString());
+            triggers.add(cold_air.getText().toString().toLowerCase());
         }
         if(odour.isChecked()){
-            triggers.add(odour.getText().toString());
+            triggers.add(odour.getText().toString().toLowerCase());
         }
 
         if(other.isChecked()) {
@@ -94,13 +95,28 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     @Override
     public ArrayList<String> getOtherTriggers(){
         String[] split_triggers = Objects.requireNonNull(other_triggers.getText()).toString().split(",");
-        return new ArrayList<>(Arrays.asList(split_triggers));
+        ArrayList<String> triggers = new ArrayList<>();
+        for (String trigger : split_triggers) {
+            if (!trigger.isEmpty()) {
+                triggers.add(trigger.trim().toLowerCase());
+            }
+        }
+
+        return triggers;
     }
+
 
     @Override
     public ArrayList<String> getSymptoms(){
         String[] split_symptoms = Objects.requireNonNull(symptoms.getText()).toString().split(",");
-        return new ArrayList<>(Arrays.asList(split_symptoms));
+        ArrayList<String> symptoms = new ArrayList<>();
+        for (String symptom : split_symptoms) {
+            if (!symptom.isEmpty()) {
+                symptoms.add(symptom.trim().toLowerCase());
+            }
+        }
+
+        return symptoms;
     }
 
     @Override

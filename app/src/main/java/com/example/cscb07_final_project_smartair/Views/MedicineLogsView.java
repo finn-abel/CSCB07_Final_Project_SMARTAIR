@@ -1,14 +1,33 @@
 package com.example.cscb07_final_project_smartair.Views;
 
-import com.example.cscb07_final_project_smartair.Models.Items.ControllerLogEntry;
-import com.example.cscb07_final_project_smartair.Models.Items.RescueLogEntry;
+import com.example.cscb07_final_project_smartair.DataObjects.ControllerDose;
+import com.example.cscb07_final_project_smartair.DataObjects.RescueDose;
 
 import java.util.List;
 
 public interface MedicineLogsView {
-    void showRescueLogs(List<RescueLogEntry> logs);
-    void showControllerLogs(List<ControllerLogEntry> logs);
-    void showSuccess(String msg);
+    String getControllerDoseAmount();
+    String getRescueDoseAmount();
+    String getBreathingBefore();
+    String getBreathingAfter();
+    String getShortnessOfBreath();
+
+    void showControllerPopup();
+    void showRescuePopup();
+    void closeControllerPopup();
+    void closeRescuePopup();
+
+    void clearRescueLogs();
+    void clearControllerLogs();
+    void addRescueLog(String text);
+    void addControllerLog(String text);
+    void showNoRescueLogs();
+    void showNoControllerLogs();
+
+    void displayRescueLogs(List<RescueDose> logs);
+    void displayControllerLogs(List<ControllerDose> logs);
+
     void showError(String msg);
-    void navigateBack();
+    void showSuccess(String msg);
+    void navigateToMainActivity();
 }

@@ -8,11 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
-import com.example.cscb07_final_project_smartair.Presenters.MainPresenter;
 import com.example.cscb07_final_project_smartair.R;
 
 public class MainActivityView extends BaseActivity implements MainView{
@@ -30,9 +26,19 @@ public class MainActivityView extends BaseActivity implements MainView{
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
         Button btnInventory = findViewById(R.id.btnInventory);
         Button btnPEF = findViewById(R.id.btnPEF);
+        Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
+
+        Button btnSchedule = findViewById(R.id.btnSchedule);
+        Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
+        });
+        btnBadgeSettings.setOnClickListener(view -> {
+            presenter.onBadgeSettingsClicked();
+        });
+        btnSchedule.setOnClickListener(view -> {
+            presenter.onScheduleButtonClicked();
         });
 
 
@@ -43,6 +49,7 @@ public class MainActivityView extends BaseActivity implements MainView{
         check_in_button.setOnClickListener(view -> {
             presenter.onCheckInButtonClicked();
         });
+        btnCheckInHistory.setOnClickListener(v -> presenter.onCheckInHistoryClicked());
 
         btnLogs.setOnClickListener(v -> presenter.onMedicineLogsClicked());
         btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
@@ -61,12 +68,25 @@ public class MainActivityView extends BaseActivity implements MainView{
     }
 
     @Override
+    public void navigateToCheckInHistoryScreen(){
+        startActivity(new Intent(this, CheckInHistoryActivity.class));
+    }
+
+    @Override
     public void navigateToMedicineLogs() {
         startActivity(new Intent(this, MedicineLogsActivity.class));
     }
     @Override
+    public void navigateToBadgeSettings() {
+        startActivity(new Intent(this, BadgeSettingsActivity.class));
+    }
+    @Override
     public void navigateToPEFEntry() {
         startActivity(new Intent(this, PEFActivity.class));
+    }
+    @Override
+    public void navigateToSchedule() {
+        startActivity(new Intent(this, ScheduleActivity.class));
     }
 
     @Override

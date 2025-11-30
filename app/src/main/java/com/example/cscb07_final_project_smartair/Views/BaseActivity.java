@@ -25,6 +25,7 @@ implementation of additional functions shared between all activities
  */
 public abstract class BaseActivity extends AppCompatActivity implements TriageView{
 
+
     private TriagePresenter Tpresenter;
 
     @Override

@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="12dp"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@android:color/white">
 
     <TextView
-        android:id="@+id/controllerDoseText"
-        android:text="Dose: 1"
+        android:id="@+id/tvControllerDoseAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Dose: 2 puffs"
         android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/controllerTimestampText"
-        android:text="Date: 2025-11-12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+        android:id="@+id/tvControllerTimestamp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Time: 12:45 PM"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvControllerDoseAmount"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
