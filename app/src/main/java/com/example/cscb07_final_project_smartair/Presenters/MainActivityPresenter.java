@@ -3,6 +3,7 @@ package com.example.cscb07_final_project_smartair.Presenters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cscb07_final_project_smartair.Models.MainActivityModel;
 import com.example.cscb07_final_project_smartair.Models.SignUpModel;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.example.cscb07_final_project_smartair.Views.MainActivityView;
@@ -80,6 +82,9 @@ public class MainActivityPresenter extends AppCompatActivity {
     public void onInventoryClicked() {
         view.navigateToInventory();
     }
+
+    public void onProviderReportClicked() { view.navigateToProviderReport(); }
+  
     public void onCheckInHistoryClicked() {
         view.navigateToCheckInHistoryScreen();
     }

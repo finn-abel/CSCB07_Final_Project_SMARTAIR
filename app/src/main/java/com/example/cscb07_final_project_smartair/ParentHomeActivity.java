@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -20,15 +21,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class ParentHomeActivity extends AppCompatActivity {
+public class ParentHomeActivity extends BaseParentActivity {
 
     private LineChart trendChart;
     private TextView toggleText;
     private boolean showThirtyDays = false;
     private DatabaseReference mdatabase;
-    String activeChildId = null;
+    String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +64,13 @@ public class ParentHomeActivity extends AppCompatActivity {
         long now = System.currentTimeMillis();
 
         // Load last 30 days
-        long startTime = now - (30L * 24 * 60 * 60 * 1000);
+        long startTime = now - ((long) days * 24 * 60 * 60 * 1000);
 
         // Goes to the rescueLogs branch of the requested child based on the childId
-        DatabaseReference rescueRef =
-                mdatabase.child("children").child(childId).child("rescueLogs");
+        DatabaseReference rescueRef = mdatabase
+                .child("medicine")
+                .child("rescue")
+                .child(activeChildId);
 
         ValueEventListener rescueListener = new ValueEventListener() {
             @Override
@@ -182,5 +188,125 @@ public class ParentHomeActivity extends AppCompatActivity {
         rightAxis.setEnabled(false);
 
         trendChart.invalidate();
+    }
+
+    public void getTodayZone() {
+        DatabaseReference pefRef = mdatabase
+                .child("pef")
+                .child(activeChildId);
+
+        long now = System.currentTimeMillis();
+
+        TextView tvTodayZoneValue = findViewById(R.id.tv_today_zone_value);
+
+        // Find the time the day started in milliseconds to find if there is
+        // any pef log today
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        long startOfToday = cal.getTimeInMillis();
+
+        pefRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot pefReceiver) {
+                double ratio = -1024;
+                for (DataSnapshot child : pefReceiver.getChildren()) {
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
+                    Integer current = child.child("current").getValue(Integer.class);
+                    Integer pb = child.child("pb").getValue(Integer.class);
+
+                    // if valid daya
+                    if (timestamp != null && current != null && pb != null &&
+                            timestamp >= startOfToday && timestamp <= now) {
+
+                        ratio = (double) current / pb;
+                        break;
+                    }
+                }
+
+                String zone = "No Data Today";
+
+                if (ratio >= 0.8) {
+                    zone = "Green";
+                }
+                else if (ratio >= 0.5) {
+                    zone = "Yellow";
+                }
+
+                else zone = "Red";
+
+                tvTodayZoneValue.setText(zone);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    public void getLastRescueTime() {
+        DatabaseReference rescueRef = mdatabase
+                .child("medicine")
+                .child("rescue")
+                .child(activeChildId);
+
+        rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                long latestTimestamp = 0;
+
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
+                    if (timestamp != null && timestamp > latestTimestamp) {
+                        latestTimestamp = timestamp;
+                    }
+                }
+
+                if (latestTimestamp > 0) {
+                    java.text.SimpleDateFormat date = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm a");
+                    String formattedTime = date.format(new java.util.Date(latestTimestamp));
+                    TextView tvLastRescue = findViewById(R.id.tv_tile_rescue_value);
+                    tvLastRescue.setText(formattedTime);
+                }
+
+                else {
+                    TextView tvLastRescue = findViewById(R.id.tv_tile_rescue_value);
+                    tvLastRescue.setText("No Data");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    public void getWeeklyRescueCount() {
+        long now = System.currentTimeMillis();
+        long lastWeek = now - ((long)7 * 24 * 60 * 60 * 1000);
+
+        DatabaseReference rescueRef = mdatabase
+                .child("medicine")
+                .child("rescue")
+                .child(activeChildId);
+
+        rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                int count = 0;
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
+                    if (timestamp != null && timestamp >= lastWeek) {
+                        count++;
+                    }
+                }
+
+                TextView tvWeeklyCount = findViewById(R.id.tv_tile_weekly_value);
+                tvWeeklyCount.setText(String.valueOf(count));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 }

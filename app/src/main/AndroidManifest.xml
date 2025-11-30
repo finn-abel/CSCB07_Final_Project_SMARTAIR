@@ -43,11 +43,15 @@
             android:exported="false" />
 
         <activity
+            android:name=".ParentHomeActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".Views.InventoryActivity"
             android:exported="false" />
 
         <activity
-            android:name=".Views.PEFActivity"
+            android:name=".Views.ProviderReportSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".Views.ChildSignUpActivity"
