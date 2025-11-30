@@ -63,5 +63,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/btnCheckInHistory"
+        android:layout_width="250dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="10dp"
+        android:text="DAILY CHECK IN HISTORY"
+        android:backgroundTint="#5C8AF2"
+        app:layout_constraintBottom_toTopOf="@+id/btnPEF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,14 +3,9 @@ package com.example.cscb07_final_project_smartair.Views;
 import android.os.Bundle;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
-import com.example.cscb07_final_project_smartair.Presenters.MainPresenter;
 import com.example.cscb07_final_project_smartair.R;
 
 public class MainActivityView extends BaseActivity implements MainView{
@@ -28,6 +23,8 @@ public class MainActivityView extends BaseActivity implements MainView{
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
         Button btnInventory = findViewById(R.id.btnInventory);
         Button btnPEF = findViewById(R.id.btnPEF);
+        Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
+
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
@@ -41,6 +38,7 @@ public class MainActivityView extends BaseActivity implements MainView{
         check_in_button.setOnClickListener(view -> {
             presenter.onCheckInButtonClicked();
         });
+        btnCheckInHistory.setOnClickListener(v -> presenter.onCheckInHistoryClicked());
 
         btnLogs.setOnClickListener(v -> presenter.onMedicineLogsClicked());
         btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
@@ -56,6 +54,11 @@ public class MainActivityView extends BaseActivity implements MainView{
     @Override
     public void navigateToCheckInScreen(){
         startActivity(new Intent(this, CheckInActivity.class));
+    }
+
+    @Override
+    public void navigateToCheckInHistoryScreen(){
+        startActivity(new Intent(this, CheckInHistoryActivity.class));
     }
 
     @Override

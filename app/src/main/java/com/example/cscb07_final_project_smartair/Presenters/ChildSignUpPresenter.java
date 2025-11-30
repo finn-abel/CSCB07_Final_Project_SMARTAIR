@@ -1,16 +1,19 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import com.example.cscb07_final_project_smartair.Models.ChildSignUpModel;
 import com.example.cscb07_final_project_smartair.Models.SignUpModel;
+import com.example.cscb07_final_project_smartair.Views.ChildSignUpView;
 import com.example.cscb07_final_project_smartair.Views.SignUpView;
 
-public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
+public class ChildSignUpPresenter implements ChildSignUpModel.OnSignUpFinishedListener {
 
-    private final SignUpView view;
-    private final SignUpModel model;
+    private final ChildSignUpView view;
+    private final ChildSignUpModel model;
 
-    public SignUpPresenter(SignUpView view) {
+
+    public ChildSignUpPresenter(ChildSignUpView view) {
         this.view = view;
-        this.model = new SignUpModel();
+        this.model = new ChildSignUpModel();
     }
 
     public void onPasswordEdit(String password) {
@@ -44,7 +47,6 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
     }
 
 
-
     @Override
     public void onSignUpSuccess() {
         if (view != null) {
@@ -60,4 +62,5 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
         }
     }
 }
+
 

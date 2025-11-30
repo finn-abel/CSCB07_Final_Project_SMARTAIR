@@ -1,7 +1,6 @@
 package com.example.cscb07_final_project_smartair.Views;
 
-// This interface defines the contract for the Sign-Up screen.
-public interface SignUpView {
+public interface ChildSignUpView {
 
     String getEmail();
     String getPassword();
@@ -15,7 +14,4 @@ public interface SignUpView {
 
 
     void navigateToLoginScreen();
-
-
 }
-

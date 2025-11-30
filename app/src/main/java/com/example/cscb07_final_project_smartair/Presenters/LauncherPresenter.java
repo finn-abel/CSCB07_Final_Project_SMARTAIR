@@ -23,7 +23,7 @@ public class LauncherPresenter {
      */
     public void decideNextActivity() {
         if (!model.isUserLoggedIn()) {
-            view.navigateToLoginScreen();
+            view.navigateToRoleLauncherScreen();
         }
         else {
             view.navigateToMainScreen();
