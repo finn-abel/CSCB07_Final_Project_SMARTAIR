@@ -5,8 +5,11 @@ package com.example.cscb07_final_project_smartair.Views;
  * Its only responsibility is navigation.
  */
 public interface LauncherView {
-    void navigateToLoginScreen();
+    void navigateToRoleSelectionScreen();
+    void navigateToRoleLauncherScreen();
+
     void navigateToMainScreen();
+
 }
 
 

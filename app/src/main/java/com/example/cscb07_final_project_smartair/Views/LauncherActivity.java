@@ -20,17 +20,25 @@ public class LauncherActivity extends BaseActivity implements LauncherView {
     }
 
 
-    @Override
-    public void navigateToLoginScreen() {
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
-    }
 
     @Override
     public void navigateToMainScreen() {
         startActivity(new Intent(this, MainActivityView.class));
         finish();
     }
+
+    @Override
+    public void navigateToRoleLauncherScreen() {
+        startActivity(new Intent(this, RoleLauncherActivity.class));
+        finish();
+    }
+
+    @Override
+    public void navigateToRoleSelectionScreen() {
+        startActivity(new Intent(this, RoleSelectionActivity.class));
+        finish();
+    }
+
 }
 
 

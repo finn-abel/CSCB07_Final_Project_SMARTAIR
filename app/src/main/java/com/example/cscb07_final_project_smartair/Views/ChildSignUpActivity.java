@@ -7,34 +7,32 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.cscb07_final_project_smartair.Presenters.ChildSignUpPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.SignUpPresenter;
 import com.example.cscb07_final_project_smartair.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
-
-public class SignUpActivity extends BaseActivity implements SignUpView {
-
-    private TextInputEditText new_user_email;
+public class ChildSignUpActivity extends BaseActivity implements ChildSignUpView{
+    private TextInputEditText new_username;
     private TextInputEditText new_user_password;
 
 
-    private SignUpPresenter presenter;
+    private ChildSignUpPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_child_sign_up);
 
-        new_user_email = findViewById(R.id.new_user_email);
+        new_username = findViewById(R.id.new_username);
         new_user_password = findViewById(R.id.new_user_password);
         Button sign_up_button = findViewById(R.id.sign_up_button);
         Button sign_in_button = findViewById(R.id.SIB);
 
 
-
-        presenter = new SignUpPresenter(this);
+        presenter = new ChildSignUpPresenter(this);
 
         sign_up_button.setOnClickListener(view -> {
             presenter.onSignUpButtonClicked();
@@ -67,7 +65,7 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
 
     @Override
     public String getEmail() {
-        return Objects.requireNonNull(new_user_email.getText()).toString().trim();
+        return Objects.requireNonNull(new_username.getText()).toString().trim()+"@smartair.com";
     }
 
     @Override
@@ -105,12 +103,11 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
 
     @Override
     public void navigateToLoginScreen() {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, ChildLoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
+
 }
-
-

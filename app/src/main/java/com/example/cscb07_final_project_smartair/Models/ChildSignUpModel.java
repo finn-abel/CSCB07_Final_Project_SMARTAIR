@@ -6,47 +6,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignUpModel {
+public class ChildSignUpModel extends SignUpModel {
 
-    protected final FirebaseAuth mAuth;
 
-    public SignUpModel() {
-        this.mAuth = FirebaseAuth.getInstance();
-    }
-
-    public interface OnSignUpFinishedListener {
-        void onSignUpSuccess();
-        void onSignUpFailure(String errorMessage);
+    public ChildSignUpModel() {
+        super();
     }
 
     public int passwordcheck(String pw){     //check password strength
-        if((pw==null)||(pw.length()<7))             //no password or too short
-            return -2; //password too short
-        int caps =0, lwr=0, num=0, sym=0, inv=0;
-        String symbols = "!@#$%&";                  //valid symbols
-        for(int x=0;x<pw.length();x++){             //iterate through string
-            char c=pw.charAt(x);
-            if(Character.isUpperCase(c))            //check uppercase
-                caps++;
-            else if(Character.isLowerCase(c))       //check lowercase
-                lwr++;
-            else if(Character.isDigit(c))           //check numbers
-                num++;
-            else if(symbols.indexOf(c)!=-1)         //check for symbols
-                sym++;
-            else
-                inv++;                              //invalid character found
-        }
-
-        if( (pw.length()>=8) && (caps>=1) && (lwr>=1) && (num>=1) && (sym>=1) && (inv==0) )
-            return 1; //valid password
-        return -1;  // invalid password
+        return super.passwordcheck(pw);
     }
 
+    @Override
     public void createUser(String email, String password, OnSignUpFinishedListener listener) {
 
         if (email.isEmpty()){
-            listener.onSignUpFailure("Email cannot be empty");
+            listener.onSignUpFailure("Username cannot be empty");
             return;
         }
 
@@ -73,5 +48,4 @@ public class SignUpModel {
                 });
     }
 }
-
 
