@@ -1,5 +1,8 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.example.cscb07_final_project_smartair.Models.LoginModel;
 import com.example.cscb07_final_project_smartair.Views.LoginView;
 
@@ -34,6 +37,7 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     @Override
     public void onLoginSuccess() {
         if (view != null) {
+
             view.showLoginSuccess("Sign in successful!");
             view.navigateToMainScreen();
         }

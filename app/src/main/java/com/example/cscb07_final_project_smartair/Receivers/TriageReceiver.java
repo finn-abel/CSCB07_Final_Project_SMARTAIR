@@ -8,20 +8,27 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.cscb07_final_project_smartair.Views.BaseActivity;
+
 public class TriageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent){
-        triggerNotification(context);     //send notification
+        String childID = intent.getStringExtra("CHILD_ID");
+        triggerNotification(context,childID);     //send notification
     }
 
-    private void triggerNotification(Context context){
+    private void triggerNotification(Context context, String childID){
         String chID = "TRIAGE_RECHECK_CHANNEL"; //channel ID
 
         Intent appInt = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         if(appInt != null){
-            appInt.putExtra("SHOW_TRIAGE_RECHECK", true);
+            appInt.putExtra("SHOW_TRIAGE_RECHECK", true); //add flag to open triage
             appInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            if (childID != null) {
+                appInt.putExtra("CHILD_ID", childID); //add child when necessary from parent side
+            }
         } else {
             return;
         }//setup tap action

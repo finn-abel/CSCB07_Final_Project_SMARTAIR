@@ -43,11 +43,7 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
 
     }
 
-    /*
-    public void onChildAccountButtonClicked() {
-        view.navigateToChildSignUpScreen();
 
-    } -- to be implemented later*/
 
     @Override
     public void onSignUpSuccess() {

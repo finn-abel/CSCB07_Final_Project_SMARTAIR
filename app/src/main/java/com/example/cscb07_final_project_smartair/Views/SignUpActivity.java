@@ -7,8 +7,6 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.cscb07_final_project_smartair.Presenters.SignUpPresenter;
 import com.example.cscb07_final_project_smartair.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -33,7 +31,6 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
         new_user_password = findViewById(R.id.new_user_password);
         Button sign_up_button = findViewById(R.id.sign_up_button);
         Button sign_in_button = findViewById(R.id.SIB);
-        //Button child_account_button = findViewById(R.id.child_account_button);
 
 
 
@@ -46,6 +43,8 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
         sign_in_button.setOnClickListener(view -> {
             presenter.onSignInButtonClicked();
         });
+
+
 
         new_user_password.addTextChangedListener(new TextWatcher() { //monitor changes to password
             @Override
@@ -111,13 +110,6 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
         startActivity(intent);
         finish();
     }
-
-    /* To be implemented later
-    @Override
-    public void navigateToChildSignUpScreen() {
-        Intent intent = new Intent(this, ChildSignUpActivity.class);
-        startActivity(intent);
-    } */
 
 }
 

@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginModel {
 
-    private FirebaseAuth mAuth;
+    protected FirebaseAuth mAuth;
 
     public interface OnResetPasswordFinishedListener {
         void onResetPasswordSuccess(String message);

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="287dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:text="Daily Check In History"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/check_in_items"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_button" />
+
+    <EditText
+        android:id="@+id/symptom_filter"
+        android:layout_width="276dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="Filter by Symptoms"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+    <EditText
+        android:id="@+id/trigger_filter"
+        android:layout_width="280dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Filter by Triggers"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/symptom_filter" />
+
+    <EditText
+        android:id="@+id/date_range"
+        android:layout_width="279dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Filter by Date Range"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trigger_filter" />
+
+    <Button
+        android:id="@+id/filter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="FILTER"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/check_in_items"
+        app:layout_constraintTop_toBottomOf="@+id/date_range" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

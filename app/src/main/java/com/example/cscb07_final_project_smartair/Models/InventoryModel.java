@@ -2,79 +2,136 @@ package com.example.cscb07_final_project_smartair.Models;
 
 import androidx.annotation.NonNull;
 
-import com.example.cscb07_final_project_smartair.Models.Items.InventoryItem;
-import com.example.cscb07_final_project_smartair.Repository.RepositoryCallback;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.cscb07_final_project_smartair.DataObjects.InventoryItem;
+import com.example.cscb07_final_project_smartair.Presenters.InventoryPresenter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryModel {
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final InventoryPresenter presenter;
 
-    public InventoryModel() {
-        // Empty constructor
-    }
-    public void getInventory(String childId, RepositoryCallback<List<InventoryItem>> cb) {
-        db.collection("children")
-                .document(childId)
-                .collection("inventory")
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    List<InventoryItem> list = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        InventoryItem item = doc.toObject(InventoryItem.class);
-                        list.add(item);
-                    }
-                    cb.onSuccess(list);
-                })
-                .addOnFailureListener(cb::onFailure);
-    }
-    public void addItem(String childId, @NonNull InventoryItem item, RepositoryCallback<Void> cb) {
-        db.collection("children")
-                .document(childId)
-                .collection("inventory")
-                .document(item.name)  // use name as key
-                .set(item)
-                .addOnSuccessListener(unused -> cb.onSuccess(null))
-                .addOnFailureListener(cb::onFailure);
-    }
-    public void updateItem(String childId, @NonNull InventoryItem item, RepositoryCallback<Void> cb) {
-        db.collection("children")
-                .document(childId)
-                .collection("inventory")
-                .document(item.name)
-                .set(item)
-                .addOnSuccessListener(unused -> cb.onSuccess(null))
-                .addOnFailureListener(cb::onFailure);
+    public InventoryModel(InventoryPresenter presenter) {
+        this.presenter = presenter;
     }
 
-    public void updateInventoryAfterDose(String childId, String medName, int amountUsed, RepositoryCallback<Void> cb) {
-        db.collection("children")
-                .document(childId)
-                .collection("inventory")
-                .document(medName)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (!snapshot.exists()) {
-                        cb.onFailure(new Exception("Medication not in inventory"));
-                        return;
-                    }
+    public void getChildren() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                    InventoryItem item = snapshot.toObject(InventoryItem.class);
-                    if (item == null) {
-                        cb.onFailure(new Exception("Invalid inventory item"));
-                        return;
-                    }
-                    item.amountLeft = Math.max(item.amountLeft - amountUsed, 0);
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
 
-                    snapshot.getReference()
-                            .set(item)
-                            .addOnSuccessListener(unused -> cb.onSuccess(null))
-                            .addOnFailureListener(cb::onFailure);
+        String parentID = user.getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("parents")
+                .child(parentID)
+                .child("children");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> names = new ArrayList<>();
+                List<String> ids = new ArrayList<>();
 
-                })
-                .addOnFailureListener(cb::onFailure);
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String name = ds.child("name").getValue(String.class);
+                    names.add(name);
+                    ids.add(ds.getKey());
+                }
+                //TESTING
+                names.add("Test Child");
+                ids.add("l1Z0u0INnMZxsjae4MdRCOj8oqJ3");
+
+                presenter.onChildrenLoaded(names, ids);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                presenter.onFailure(error.getMessage());
+            }
+        });
+    }
+
+    public void getInventory(String childId) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
+
+        String parentID = user.getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("parents")
+                .child(parentID)
+                .child("children")
+                .child(childId)
+                .child("inventory");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<InventoryItem> list = new ArrayList<>();
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    InventoryItem item = ds.getValue(InventoryItem.class);
+                    if (item != null) list.add(item);
+                }
+
+                presenter.onInventoryLoaded(list);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                presenter.onFailure(error.getMessage());
+            }
+        });
+    }
+
+    public void saveItem(String childId, InventoryItem item) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
+        String parentID = user.getUid();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("parents")
+                .child(parentID)
+                .child("children")
+                .child(childId)
+                .child("inventory")
+                .child(item.medicationName);
+
+        ref.setValue(item)
+                .addOnSuccessListener(aVoid -> presenter.onSaveSuccess())
+                .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
+    }
+
+    public void deleteItem(String childId, String medicationName) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
+        String parentID = user.getUid();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("parents")
+                .child(parentID)
+                .child("children")
+                .child(childId)
+                .child("inventory")
+                .child(medicationName);
+
+        ref.removeValue()
+                .addOnSuccessListener(aVoid -> presenter.onDeleteSuccess())
+                .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
     }
 }
