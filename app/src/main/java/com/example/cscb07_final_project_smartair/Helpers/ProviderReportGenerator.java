@@ -47,7 +47,6 @@ public class ProviderReportGenerator {
     // Checks if the report is generatable
     // I.e. checks if there is enough data for the last 'months' months
 
-    // Note: still have to check for every item, not just rescue frequency
     public void generateReport(Context context, String childId, int months) {
 
         if (childId == null)
@@ -76,6 +75,12 @@ public class ProviderReportGenerator {
         DatabaseReference triageRef = FirebaseDatabase.getInstance()
                 .getReference("users") // users folder
                 .child("children") // children folder
+                .child(childId) // child id's folder
+                .child("permissions"); // permissions folder
+
+        DatabaseReference symptomRef = FirebaseDatabase.getInstance()
+                .getReference("check_in") // check in folder
+                .child(childId) // children folder
                 .child(childId) // child id's folder
                 .child("permissions"); // permissions folder
 
@@ -242,7 +247,7 @@ public class ProviderReportGenerator {
         void onTriageIncidentsLoaded(ArrayList<String> triageList);
     }
 
-    public ArrayList<String> getTriageIncidents(String childId, TriageIncidentCallback callback) {
+    public void getTriageIncidents(String childId, TriageIncidentCallback callback) {
         DatabaseReference triageRef = FirebaseDatabase.getInstance()
                 .getReference("triage_incidents") // triage incidents folder
                 .child(childId); // child id's folder
@@ -287,8 +292,6 @@ public class ProviderReportGenerator {
 
             }
         });
-
-        return triageList;
     }
     public void generatePdf(Context context, String childId, int months, int[] dailyFrequency,
                             ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList) {
@@ -478,7 +481,7 @@ public class ProviderReportGenerator {
         zoneChart.getXAxis().setAxisMaximum(totalDays);
 
         LineDataSet zoneDataSet = new LineDataSet(finalZoneEntries, "Zone Distribution Over Time");
-        zoneDataSet.setMode(LineDataSet.Mode.LINEAR); // Maybe linear
+        zoneDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         zoneDataSet.setColor(Color.parseColor("#5C8AF2"));
         zoneDataSet.setLineWidth(2f);
         zoneDataSet.setDrawCircles(false);
@@ -545,7 +548,7 @@ public class ProviderReportGenerator {
 
                 String[] triageParts = triageIncident.split("!!");
 
-                // add the associated check marks
+                // add the associated check marks and info
                 canvas3.drawText(String.valueOf(i + 1), 50, y, paint); // incident number
                 canvas3.drawText(triageParts[0], 135, y, paint); // chest
                 canvas3.drawText(triageParts[1], 200, y, paint); // lips
