@@ -58,9 +58,9 @@ public class ProviderReportGenerator {
         }
 
         DatabaseReference rescueRef = FirebaseDatabase.getInstance()
-                .getReference("users")  // user folder
+                .getReference("users")  // users folder
                 .child("children")  // children folder
-                .child(childId)  // node matching child's id
+                .child(childId)  // child id's folder
                 .child("rescueLogs"); // rescue logs of the child
 
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
@@ -72,6 +72,12 @@ public class ProviderReportGenerator {
                 .child("children")  // children folder
                 .child(childId)  // node matching child's id
                 .child("name"); // name of the child
+
+        DatabaseReference triageRef = FirebaseDatabase.getInstance()
+                .getReference("users") // users folder
+                .child("children") // children folder
+                .child(childId) // child id's folder
+                .child("permissions"); // permissions folder
 
         long now = System.currentTimeMillis();
 
@@ -180,7 +186,36 @@ public class ProviderReportGenerator {
                             public void onDataChange(@NonNull DataSnapshot nameReceiver) {
                                 String name = nameReceiver.getValue(String.class);
 
-                                generatePdf(context, childId, months, dailyFrequency, zoneEntries, name);
+                                // Checks if permissions are enabled for triage sharing
+                                triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot triageReceiver) {
+                                        Boolean triageIncidentsEnabled = triageReceiver
+                                                        .child("triageIncidents")
+                                                        .getValue(Boolean.class);
+
+                                        ArrayList<String> triageList = new ArrayList<>();
+
+                                        if (triageIncidentsEnabled != null && triageIncidentsEnabled) {
+                                            getTriageIncidents(childId, new TriageIncidentCallback() {
+                                                        @Override
+                                                        public void onTriageIncidentsLoaded(ArrayList<String> triageList) {
+                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList);
+                                                        }
+                                                    });
+                                        }
+
+                                        else {
+                                            generatePdf(context, childId, months,
+                                                    dailyFrequency,zoneEntries, name, triageList);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
 
                             @Override
@@ -202,8 +237,61 @@ public class ProviderReportGenerator {
         });
     }
 
+    // Callback for triage incidents
+    public interface TriageIncidentCallback {
+        void onTriageIncidentsLoaded(ArrayList<String> triageList);
+    }
+
+    public ArrayList<String> getTriageIncidents(String childId, TriageIncidentCallback callback) {
+        DatabaseReference triageRef = FirebaseDatabase.getInstance()
+                .getReference("triage_incidents") // triage incidents folder
+                .child(childId); // child id's folder
+
+        ArrayList<String> triageList = new ArrayList<>();
+
+        triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot triageReceiver) {
+                String chestStatus = null;
+                String lipsStatus = null;
+                String speakStatus = null;
+                String triageIncident = null;
+
+                for (DataSnapshot childSnap : triageReceiver.getChildren()) {
+                    Boolean chest = childSnap.child("chest").getValue(Boolean.class);
+                    String decision = childSnap.child("decision").getValue(String.class);
+                    String guidance = childSnap.child("guidance").getValue(String.class);
+                    Boolean lips = childSnap.child("lips").getValue(Boolean.class);
+                    Boolean speak = childSnap.child("speak").getValue(Boolean.class);
+
+                    if (chest) chestStatus = "☑";
+                    else chestStatus = "☐";
+
+                    if (lips) lipsStatus = "☑";
+                    else lipsStatus = "☐";
+
+                    if (speak) speakStatus = "☑";
+                    else speakStatus = "☐";
+
+                    triageIncident = chestStatus + "!!" + lipsStatus + "!!" +
+                            speakStatus + "!!" + decision + "!!" + guidance;
+
+                    triageList.add(triageIncident);
+                }
+
+                callback.onTriageIncidentsLoaded(triageList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return triageList;
+    }
     public void generatePdf(Context context, String childId, int months, int[] dailyFrequency,
-                            ArrayList<Entry> zoneEntries, String name) {
+                            ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList) {
 
         // Creates an object for the PDF document
         PdfDocument document = new PdfDocument();
@@ -429,7 +517,71 @@ public class ProviderReportGenerator {
         canvas2.drawBitmap(zoneBitmap, 50, 280, null);
         // End of zone distribution over time
 
-        document.finishPage(page2); // End of page 2
+        // Notable triage incidents, checklist chart
+        if (!triageList.isEmpty()) {
+            document.finishPage(page2); // End of page 2
+
+            // Create page 3
+            PdfDocument.PageInfo pageInfo3 = new PdfDocument
+                    .PageInfo.Builder(612, 792, 2).create();
+            PdfDocument.Page page3 = document.startPage(pageInfo2);
+            Canvas canvas3 = page3.getCanvas();
+
+            canvas3.drawText("Notable Triage Incidents", 50, 50, paint);
+
+            paint.setTextSize(16);
+
+            canvas3.drawText("Incident", 50, 80, paint);
+            canvas3.drawText("Chest", 135, 80, paint);
+            canvas3.drawText("Lips", 200, 80, paint);
+            canvas3.drawText("Speak", 260, 80, paint);
+            canvas3.drawText("Decision", 330, 80, paint);
+            canvas3.drawText("Guidance", 460, 80, paint);
+
+            int y = 110;
+
+            for (int i = 0; i < triageList.size(); i++) {
+                String triageIncident = triageList.get(i);
+
+                String[] triageParts = triageIncident.split("!!");
+
+                // add the associated check marks
+                canvas3.drawText(String.valueOf(i + 1), 50, y, paint); // incident number
+                canvas3.drawText(triageParts[0], 135, y, paint); // chest
+                canvas3.drawText(triageParts[1], 200, y, paint); // lips
+                canvas3.drawText(triageParts[2], 260, y, paint); // speak
+                canvas3.drawText(triageParts[3], 330, y, paint); // decision
+                canvas3.drawText(triageParts[4], 460, y, paint); // guidance
+
+                y += 30;
+
+                // If the page is full, continue creating new pages as needed
+
+                if (y > 700) {
+                    document.finishPage(page3);
+                    page3 = document.startPage(pageInfo3); // same name so easier to close
+                    canvas3 = page3.getCanvas();
+
+                    y = 50;
+
+                    canvas3.drawText("Incident", 50, 50, paint);
+                    canvas3.drawText("Chest", 135, 50, paint);
+                    canvas3.drawText("Lips", 200, 50, paint);
+                    canvas3.drawText("Speak", 260, 50, paint);
+                    canvas3.drawText("Decision", 330, 50, paint);
+                    canvas3.drawText("Guidance", 460, 50, paint);
+
+                    y = 80;
+                }
+            }
+
+            document.finishPage(page3); // end of page 3
+        }
+
+        else {
+            canvas2.drawText("No Notable Triage Incidents", 50, 620, paint);
+            document.finishPage(page2); // End of page 2
+        }
 
         // Download the pdf into the downloads folder
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment
