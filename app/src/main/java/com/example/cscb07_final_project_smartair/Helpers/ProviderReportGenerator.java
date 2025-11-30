@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -60,10 +61,11 @@ public class ProviderReportGenerator {
             return;
         }
 
-        DatabaseReference rescueRef = FirebaseDatabase.getInstance()
-                .getReference("medicine")  // medicine folder
-                .child("rescue")  // rescue folder
-                .child(childId);  // child id's folder
+        DatabaseReference rescueRef = FirebaseDatabase.getInstance() // temp changed
+                .getReference("users")  // medicine folder
+                .child("children")
+                .child(childId)
+                .child("rescueLogs");  // rescue folder
 
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
                 .getReference("pef")  // pef folder
@@ -86,11 +88,9 @@ public class ProviderReportGenerator {
                 .child(childId); // children folder
 
         DatabaseReference scheduleRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child("children")
-                .child(childId)
+                .getReference("medicine")
                 .child("schedule")
-                .child("controller");
+                .child(childId);
 
         DatabaseReference logsRef = FirebaseDatabase.getInstance()
                 .getReference("medicine")
@@ -138,7 +138,7 @@ public class ProviderReportGenerator {
                 }
 
                 if (!dataBeforeExists || !dataAfterExists) {
-                    Toast.makeText(context, "Not enough data 1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Not enough data", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -241,7 +241,7 @@ public class ProviderReportGenerator {
                                                     weekdayRequiredDoses.put(i, 0); // default 0
                                                 }
 
-                                                DataSnapshot scheduleNode = scheduleReceiver.child("schedule");
+                                                DataSnapshot scheduleNode = scheduleReceiver;
                                                 for (DataSnapshot scheduleChild : scheduleNode.getChildren()) {
                                                     String dayName = scheduleChild.getKey();
                                                     int calendarDay = dayNameToCalendar(dayName);
@@ -271,6 +271,7 @@ public class ProviderReportGenerator {
                                                 }
 
                                                 int finalPlannedDays = plannedDays;
+                                                Log.d("PlannedDays", "PlannedDays: " + finalPlannedDays);
 
                                                 // Calculate taken days
                                                 logsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -317,6 +318,8 @@ public class ProviderReportGenerator {
                                                         }
 
                                                         int finalTakenDays = takenDays;
+
+                                                        Log.d("TakenDays", "TakenDays: " + finalPlannedDays);
                                                         // Checks if permissions are enabled for triage sharing
                                                         triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -533,6 +536,7 @@ public class ProviderReportGenerator {
         // End of rescue frequency
 
         // Controller adherence, pie chart
+        takenDays = 5;
         int missedDays = plannedDays - takenDays;
 
         PieChart pieChart = new PieChart(context);
