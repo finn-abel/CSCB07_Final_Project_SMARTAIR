@@ -6,7 +6,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Presenters.MainPresenter">
+    <LinearLayout
+        android:id="@+id/childBadgeSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:background="#EEF3FF">
 
+        <!-- STREAKS -->
+        <TextView
+            android:id="@+id/tvControllerStreak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Controller Streak: 0 days"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTechniqueStreak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Technique Streak: 0 days"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold" />
+
+        <!-- BADGES TITLE -->
+        <TextView
+            android:id="@+id/tvBadgesTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Badges"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:textStyle="bold" />
+
+        <!-- BADGES -->
+        <LinearLayout
+            android:id="@+id/badgeContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnBadgeSettings"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="BADGE SETTINGS"
+        app:layout_constraintBottom_toTopOf="@+id/btnSchedule"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
+    <Button
+        android:id="@+id/btnSchedule"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="CHILD SCHEDULE"
+        app:layout_constraintBottom_toTopOf="@+id/btnPEF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
     <Button
         android:id="@+id/btnPEF"
         android:layout_width="254dp"
@@ -46,7 +114,7 @@
         android:layout_width="254dp"
         android:layout_height="62dp"
         android:backgroundTint="#5C8AF2"
-        android:text="MEDICINE LOGS"
+        android:text="LOG MEDICINE"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/checkin"
         app:layout_constraintStart_toStartOf="parent"

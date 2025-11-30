@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Controller Dose"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/controllerDoseAmount"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Dose Amount"
+        android:inputType="number"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/submitControllerDose"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="SUBMIT"
+        android:backgroundTint="#5C8AF2"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

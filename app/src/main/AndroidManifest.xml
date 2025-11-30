@@ -47,6 +47,12 @@
         <activity
             android:name=".Views.PEFActivity"
             android:exported="false" />
+        <activity
+            android:name=".Views.ScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.BadgeSettingsActivity"
+            android:exported="false" />
 
 
         <receiver

@@ -1,85 +1,86 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
-import com.example.cscb07_final_project_smartair.Models.Items.ControllerLogEntry;
-import com.example.cscb07_final_project_smartair.Models.Items.RescueLogEntry;
+import com.example.cscb07_final_project_smartair.DataObjects.ControllerDose;
+import com.example.cscb07_final_project_smartair.DataObjects.RescueDose;
 import com.example.cscb07_final_project_smartair.Models.MedicineLogsModel;
 import com.example.cscb07_final_project_smartair.Views.MedicineLogsView;
-import com.example.cscb07_final_project_smartair.Repository.RepositoryCallback;
 
 import java.util.List;
 
 public class MedicineLogsPresenter {
-
     private final MedicineLogsView view;
     private final MedicineLogsModel model;
 
     public MedicineLogsPresenter(MedicineLogsView view) {
         this.view = view;
-        this.model = new MedicineLogsModel();
-    }
-    public void onBackClicked() {
-        view.navigateBack();
-    }
-    public void loadLogs(String childId) {
-        model.getRescueLogs(childId, new RepositoryCallback<List<RescueLogEntry>>() {
-            @Override
-            public void onSuccess(List<RescueLogEntry> result) {
-                view.showRescueLogs(result);
-            }
-            @Override
-            public void onFailure(Exception e) {
-                view.showError("Failed to load rescue logs");
-            }
-        });
-
-        model.getControllerLogs(childId, new RepositoryCallback<List<ControllerLogEntry>>() {
-            @Override
-            public void onSuccess(List<ControllerLogEntry> result) {
-                view.showControllerLogs(result);
-            }
-            @Override
-            public void onFailure(Exception e) {
-                view.showError("Failed to load controller logs");
-            }
-        });
+        this.model = new MedicineLogsModel(this);
     }
 
-    public void addRescueLog(String childId, int doseCount, boolean betterAfter) {
+    public void onLogControllerClicked() {
+        String doseText = view.getControllerDoseAmount();
 
-        RescueLogEntry entry = new RescueLogEntry(
-                System.currentTimeMillis(), doseCount, betterAfter
-        );
+        if (doseText.isEmpty()) {
+            view.showError("Dose amount cannot be empty");
+            return;
+        }
 
-        model.addRescueLog(childId, entry, new RepositoryCallback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                view.showSuccess("Rescue log saved!");
-                loadLogs(childId);
-            }
-            @Override
-            public void onFailure(Exception e) {
-                view.showError("Failed to save rescue log");
-            }
-        });
+        try {
+            int dose = Integer.parseInt(doseText);
+            model.logController(dose);
+        } catch (Exception e) {
+            view.showError("Invalid dose amount");
+        }
     }
 
-    public void addControllerLog(String childId, int doseCount) {
+    public void onControllerLogSuccess() {
+        view.showSuccess("Controller dose logged!");
+        view.closeControllerPopup();
+        model.getControllerDoses();
+    }
 
-        ControllerLogEntry entry = new ControllerLogEntry(
-                System.currentTimeMillis(), doseCount
-        );
+    public void onLogRescueClicked() {
+        String doseText = view.getRescueDoseAmount();
+        String beforeText = view.getBreathingBefore();
+        String afterText = view.getBreathingAfter();
+        String sobText = view.getShortnessOfBreath();
 
-        model.addControllerLog(childId, entry, new RepositoryCallback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                view.showSuccess("Controller log saved!");
-                loadLogs(childId);
-            }
-            @Override
-            public void onFailure(Exception e) {
-                view.showError("Failed to save controller log");
-            }
-        });
+        if (doseText.isEmpty() || beforeText.isEmpty() || afterText.isEmpty() || sobText.isEmpty()) {
+            view.showError("All rescue fields must be filled");
+            return;
+        }
+
+        try {
+            int dose = Integer.parseInt(doseText);
+            int before = Integer.parseInt(beforeText);
+            int after = Integer.parseInt(afterText);
+            int sob = Integer.parseInt(sobText);
+
+            model.logRescue(dose, before, after, sob);
+        } catch (Exception e) {
+            view.showError("Invalid rescue input values");
+        }
+    }
+
+    public void onRescueLogSuccess() {
+        view.showSuccess("Rescue dose logged!");
+        view.closeRescuePopup();
+        model.getRescueDoses();
+    }
+
+    public void loadLogs() {
+        model.getControllerDoses();
+        model.getRescueDoses();
+    }
+
+    public void onControllerLogsLoaded(List<ControllerDose> logs) {
+        view.displayControllerLogs(logs);
+    }
+
+    public void onRescueLogsLoaded(List<RescueDose> logs) {
+        view.displayRescueLogs(logs);
+    }
+
+    public void onFailure(String msg) {
+        view.showError(msg);
     }
 }
-
