@@ -7,11 +7,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.cscb07_final_project_smartair.Presenters.CheckInPresenter;
 import com.example.cscb07_final_project_smartair.R;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +43,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
         cold_air = findViewById(R.id.cold_air);
         odour = findViewById(R.id.odour);
         other = findViewById(R.id.other);
-        Button submit = findViewById(R.id.submit);
+        Button submit = findViewById(R.id.submit_triage);
 
         presenter = new CheckInPresenter(this);
 

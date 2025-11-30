@@ -1,9 +1,11 @@
 package com.example.cscb07_final_project_smartair.Views;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;

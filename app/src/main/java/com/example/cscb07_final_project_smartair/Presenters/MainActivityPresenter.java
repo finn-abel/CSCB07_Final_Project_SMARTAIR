@@ -1,5 +1,7 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
