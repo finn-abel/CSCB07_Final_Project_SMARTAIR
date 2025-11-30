@@ -60,6 +60,9 @@ public class MainActivityPresenter extends AppCompatActivity {
         view.navigateToLoginScreen();
     }
 
+    public void onScheduleButtonClicked(){
+        view.navigateToSchedule();
+    }
     public void onPEFButtonClicked(){
         view.navigateToPEFEntry();
     }
@@ -77,5 +80,8 @@ public class MainActivityPresenter extends AppCompatActivity {
     }
     public void onCheckInHistoryClicked() {
         view.navigateToCheckInHistoryScreen();
+    }
+    public void onBadgeSettingsClicked() {
+        view.navigateToBadgeSettings();
     }
 }

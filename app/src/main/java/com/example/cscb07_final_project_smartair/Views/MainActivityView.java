@@ -25,9 +25,17 @@ public class MainActivityView extends BaseActivity implements MainView{
         Button btnPEF = findViewById(R.id.btnPEF);
         Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
 
+        Button btnSchedule = findViewById(R.id.btnSchedule);
+        Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
+        });
+        btnBadgeSettings.setOnClickListener(view -> {
+            presenter.onBadgeSettingsClicked();
+        });
+        btnSchedule.setOnClickListener(view -> {
+            presenter.onScheduleButtonClicked();
         });
 
 
@@ -66,8 +74,16 @@ public class MainActivityView extends BaseActivity implements MainView{
         startActivity(new Intent(this, MedicineLogsActivity.class));
     }
     @Override
+    public void navigateToBadgeSettings() {
+        startActivity(new Intent(this, BadgeSettingsActivity.class));
+    }
+    @Override
     public void navigateToPEFEntry() {
         startActivity(new Intent(this, PEFActivity.class));
+    }
+    @Override
+    public void navigateToSchedule() {
+        startActivity(new Intent(this, ScheduleActivity.class));
     }
 
     @Override
