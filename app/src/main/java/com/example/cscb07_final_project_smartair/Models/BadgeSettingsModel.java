@@ -36,6 +36,9 @@ public class BadgeSettingsModel {
                     childIDs.add(ds.getKey());
                     childNames.add(ds.child("name").getValue(String.class));
                 }
+                //TO:DO Remove these line!!!!
+                childNames.add("Test Child");
+                childIDs.add("l1Z0u0INnMZxsjae4MdRCOj8oqJ3");
 
                 presenter.onChildrenLoaded(childIDs, childNames);
             }
