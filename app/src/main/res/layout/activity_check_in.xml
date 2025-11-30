@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/triage_intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
@@ -24,7 +24,7 @@
         android:text="Please describe any symptoms you have experienced today and check off all associated triggers."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/triage_intro" />
 
     <EditText
         android:id="@+id/symptoms"
@@ -124,13 +124,13 @@
         android:hint="Date (dd/mm/yyyy)"
         android:inputType="date"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/submit"
+        app:layout_constraintEnd_toStartOf="@+id/submit_triage"
         app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/other_text" />
 
     <Button
-        android:id="@+id/submit"
+        android:id="@+id/submit_triage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
