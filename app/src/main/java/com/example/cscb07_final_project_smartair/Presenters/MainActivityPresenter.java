@@ -78,4 +78,7 @@ public class MainActivityPresenter extends AppCompatActivity {
     public void onInventoryClicked() {
         view.navigateToInventory();
     }
+    public void onBadgeSettingsClicked() {
+        view.navigateToBadgeSettings();
+    }
 }

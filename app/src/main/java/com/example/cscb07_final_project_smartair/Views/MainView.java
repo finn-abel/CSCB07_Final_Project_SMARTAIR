@@ -8,5 +8,6 @@ public interface MainView {
     void navigateToInventory();
     void navigateToPEFEntry();
     void navigateToSchedule();
+    void navigateToBadgeSettings();
 }
 
