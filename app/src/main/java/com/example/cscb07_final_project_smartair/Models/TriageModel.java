@@ -32,7 +32,10 @@ public class TriageModel {
                 capture.lips,
                 capture.chest,
                 capture.pef,
-                escalation);
+                escalation,
+                rescue_count);
+
+        //find decision type based on pef and decision == remedy or emergency
 
         DatabaseReference logsRef = FirebaseDatabase.getInstance()
                 .getReference("triage_incidents")
