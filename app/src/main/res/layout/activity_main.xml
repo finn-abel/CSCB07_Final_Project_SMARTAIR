@@ -8,6 +8,17 @@
     tools:context=".Presenters.MainPresenter">
 
     <Button
+        android:id="@+id/btnSchedule"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="CHILD SCHEDULE"
+        app:layout_constraintBottom_toTopOf="@+id/btnPEF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
+    <Button
         android:id="@+id/btnPEF"
         android:layout_width="254dp"
         android:layout_height="62dp"
