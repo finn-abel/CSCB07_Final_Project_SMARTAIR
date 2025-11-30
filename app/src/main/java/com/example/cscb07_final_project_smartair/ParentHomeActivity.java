@@ -32,7 +32,7 @@ public class ParentHomeActivity extends BaseParentActivity {
     private TextView toggleText;
     private boolean showThirtyDays = false;
     private DatabaseReference mdatabase;
-    String activeChildId = null;
+    String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +57,6 @@ public class ParentHomeActivity extends BaseParentActivity {
                 showThirtyDays = true;
             }
         });
-
-        getTodayZone();
-        getLastRescueTime();
-        getWeeklyRescueCount();
     }
 
     private void loadRescueTrend(String childId, int days) {
@@ -292,10 +288,9 @@ public class ParentHomeActivity extends BaseParentActivity {
         long lastWeek = now - ((long)7 * 24 * 60 * 60 * 1000);
 
         DatabaseReference rescueRef = mdatabase
-                .child("users")
-                .child("children")
-                .child(activeChildId)
-                .child("rescueLogs");
+                .child("medicine")
+                .child("rescue")
+                .child(activeChildId);
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

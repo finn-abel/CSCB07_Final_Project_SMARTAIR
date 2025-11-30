@@ -1,21 +1,17 @@
 package com.example.cscb07_final_project_smartair.Views;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.cscb07_final_project_smartair.R;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Objects;
+import java.util.HashMap;
 
 public class BaseParentActivity extends BaseActivity {
 
@@ -35,253 +31,265 @@ public class BaseParentActivity extends BaseActivity {
         parentId = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
                 .getString("PARENT_ID", null);
 
-        if (parentId != null)
-        {
-            alertListeners();
+        if (activeChildId != null) {
+            allAlerts(activeChildId);
         }
     }
 
-    private void alertListeners() {
-        listenForChildrenAlerts();
+    // Below used to avoid duplicate alerts
+    private final HashMap<String, Long> lastAlertMap = new HashMap<>();
+
+    private long getLast(String key) {
+        return lastAlertMap.getOrDefault(key, 0L);
     }
 
-    // Listens to alerts for each child
+    private void setLast(String key, long value) {
+        lastAlertMap.put(key, value);
+    }
+
     private void listenForChildrenAlerts() {
+        DatabaseReference ref = mdatabase
+                .child("users")
+                .child("parents")
+                .child(parentId);
 
-        ValueEventListener childListener = new ValueEventListener() {
-
-            // Iterates through all children and runs whenever child/data is added,
-            // removed or updated
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnap : dataSnapshot.getChildren()) {
-
-                    // Gets current child's ID so activeChildId is never null
-                    String childId = childSnap.getKey();
-                    if (childSnap.hasChild(parentId)) {
-
-                        if (activeChildId == null) {
-                            activeChildId = childId;
-                        }
-
-                        // Listeners for each alert category
-                        listenTriage(childId);
-                        listenTodayZone(childId);
-                        listenRapidRescue(childId);
-                        listenInventory(childId);
-                    }
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                for (DataSnapshot child : receiver.getChildren()) {
+                    String childId = child.getKey();
+                    allAlerts(childId);
                 }
             }
-
-            // Handles read errors
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("ParentListener", "Failed to read children",
-                        databaseError.toException());
-            }
-        };
-
-        // Listens to the data in the 'parentsByChild' node
-        DatabaseReference childrenRef = mdatabase.child("parentsByChild");
-        childrenRef.addValueEventListener(childListener);
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
+
+    private void allAlerts(String childId) {
+        listenTodayZone(childId);
+        listenRapidRescue(childId);
+        listenWorseAfterDose(childId);
+        listenTriage(childId);
+        listenInventory(childId);
+    }
+
+//    // Listens to alerts for each child
+//    private void listenForChildrenAlerts() {
+//
+//        ValueEventListener childListener = new ValueEventListener() {
+//
+//            // Iterates through all children and runs whenever child/data is added,
+//            // removed or updated
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot childSnap : dataSnapshot.getChildren()) {
+//
+//                    // Gets current child's ID so activeChildId is never null
+//                    String childId = childSnap.getKey();
+//                    if (childSnap.hasChild(parentId)) {
+//
+//                        if (activeChildId == null) {
+//                            activeChildId = childId;
+//                        }
+//
+//                        // Listeners for each alert category
+//                        listenTriage(childId);
+//                        listenTodayZone(childId);
+//                        listenRapidRescue(childId);
+//                        listenInventory(childId);
+//                    }
+//                }
+//            }
+//
+//            // Handles read errors
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.e("ParentListener", "Failed to read children",
+//                        databaseError.toException());
+//            }
+//        };
+//
+//        // Listens to the data in the 'parentsByChild' node
+//        DatabaseReference childrenRef = mdatabase.child("parentsByChild");
+//        childrenRef.addValueEventListener(childListener);
+//    }
 
     // Today zone listener, alert for the child's zone today
     // Listens to the child based on the ID passed as an argument
     private void listenTodayZone(String childId) {
         DatabaseReference zoneRef =
-                mdatabase.child("children").child(childId).child("todayZone");
+                mdatabase.child("pef").child(childId);
 
-        ValueEventListener zoneListener = new ValueEventListener() {
-
-            // Runs whenever data under today's zone changes
+        zoneRef.addValueEventListener(new ValueEventListener() {
+            // Runs whenever child id's pef data changes
             @Override
             public void onDataChange(@NonNull DataSnapshot receiver) {
-                String zone = receiver.getValue(String.class);
+                double newestRatio = -1;
+                long newestTimestamp = 0;
 
-                // Notifies the parent if the zone is red
-                if ("red".equals(zone)) {
-                    showAlert("Red Zone Alert",
-                            "Your child is in the RED asthma zone today.");
+                // Gets newest timestamp to ensure that a previous pef entry
+                // is not considered
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Double current = child.child("current").getValue(Double.class);
+                    Double pb = child.child("pb").getValue(Double.class);
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
+
+                    if (current == null || pb == null || timestamp == null) continue;
+                    // Skip if any of the above are missing
+
+                    double ratio = current / pb;
+
+                    if (timestamp > newestTimestamp) {
+                        newestTimestamp = timestamp;
+                        newestRatio = ratio;
+                    }
+                }
+
+                if (newestRatio < 0.5 && newestTimestamp > getLast("redzone_" + childId)) {
+                    showAlert("Red Zone", "Your child is in the red asthma zone.");
+                    setLast("redzone_" + childId, newestTimestamp);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
-        };
-
-        zoneRef.addValueEventListener(zoneListener);
+        });
     }
 
     // Rapid rescue repeats listener, listens for rescue uses
     private void listenRapidRescue(String childId) {
-        DatabaseReference logsRef =
-                mdatabase.child("children").child(childId).child("rescueLogs");
+        DatabaseReference logsRef = mdatabase
+                .child("medicine")
+                .child("rescue")
+                .child(childId);
 
-        ChildEventListener logsListener = new ChildEventListener() {
-
-            // Runs when a new rescue log is added
+        logsRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot childSnap, String previousChildName) {
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                long now = System.currentTimeMillis();
+                int count = 0;
+                long newestTimestamp = 0;
 
-                ValueEventListener rescueListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot parentSnap) {
-                        long now = System.currentTimeMillis();
-                        int count = 0;
-                        for (DataSnapshot childSnap : parentSnap.getChildren()) {
-                            Long timestamp = childSnap.child("timestamp").getValue(Long.class);
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
 
-                            // Between now and 3 hours ago
-                            // Convert milliseconds to hours
-                            if (timestamp != null && timestamp >= now - 3*60*60*1000) {
-                                count++;
-                            }
-                        }
-
-                        // Alerts if 3 or more rescue uses in the last 3 hours
-                        if (count >= 3) {
-                            showAlert("Rescue Inhaler Alert",
-                                    "Your child has used rescue inhaler 3 times in 3 hours.");
-                        }
+                    // check for last 3 hours
+                    if (timestamp != null && timestamp >= now - (3 * 60 * 60 * 1000)) {
+                        count++;
+                        newestTimestamp = Math.max(newestTimestamp, timestamp);
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                };
-
-                // Reads all rescue logs of a child
-                Objects.requireNonNull(childSnap.
-                        getRef().getParent()).addListenerForSingleValueEvent(rescueListener);
+                // make sure not checking duplicates
+                if (count >= 3 && newestTimestamp > getLast("rapid_" + childId)) {
+                    showAlert("Rescue Alert", "Used rescue inhaler 3 times in 3 hours.");
+                    setLast("rapid_" + childId, newestTimestamp);
+                }
             }
 
-            // Following functions are not needed
-            // Detects if a rescue time has changed
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot childSnap,
-                                       String previousChildName) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
 
-            // Detects if a rescue time has been removed
+    // Worse after dose listener, checks and alerts if the child is feeling worse after a dose
+    private void listenWorseAfterDose(String childId) {
+        ValueEventListener listener = new ValueEventListener() {
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot childSnap) {}
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                long newestTimestamp = 0;
+                boolean worse = false;
 
-            // Detects if the order of rescue logs has changed
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot childSnap,
-                                     String previousChildName) {}
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Double before = child.child("breathingBefore").getValue(Double.class);
+                    Double after = child.child("breathingAfter").getValue(Double.class);
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
+
+                    if (before == null || after == null || timestamp == null) continue;
+                    // skip if missing
+
+                    if (after < before && timestamp > newestTimestamp) {
+                        newestTimestamp = timestamp;
+                        worse = true; // after rating < before rating
+                    }
+                }
+
+                if (worse && newestTimestamp > getLast("worse_" + childId)) {
+                    showAlert("Dose Issue", "Your child felt worse after their dose.");
+                    setLast("worse_" + childId, newestTimestamp);
+                }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         };
 
-        logsRef.addChildEventListener(logsListener);
-    }
-
-    // Worse after dose listener, checks and alerts if the child is feeling worse after a dose
-    private void listenWorseAfterDose(String childId) {
-        DatabaseReference doseRef =
-                mdatabase.child("children").child(childId).child("doseChecks");
-
-        ChildEventListener childListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot receiver, String previousChildName) {
-
-                // Gets the child's condition after the dose and stores it in 'after'
-                String after = receiver.child("after").getValue(String.class);
-
-                // If worse, alert the parent
-                if ("Worse".equals(after)) {
-                    showAlert("Dose Check: Worse",
-                            "Your child reported feeling worse after their dose.");
-                }
-            }
-
-            // Following functions are not needed
-            @Override public void onChildChanged(@NonNull DataSnapshot childSnap, String previousChildName) {}
-            @Override public void onChildRemoved(@NonNull DataSnapshot childSnap) {}
-            @Override public void onChildMoved(@NonNull DataSnapshot childSnap, String previousChildName) {}
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
-        };
-
-        doseRef.addChildEventListener(childListener);
+        // Listener for both controller and rescue logs
+        mdatabase.child("medicine").child("controller").child(childId)
+                .addValueEventListener(listener);
+        mdatabase.child("medicine").child("rescue").child(childId)
+                .addValueEventListener(listener);
     }
 
     // Triage escalation listener
     private void listenTriage(String childId) {
-        DatabaseReference triageRef =
-                mdatabase.child("children").child(childId).child("triage");
+        DatabaseReference triageRef = mdatabase.child("triage_incidents").child(childId);
 
-        ChildEventListener childListener = new ChildEventListener() {
-
-            // After a new triage session, checks if escalated
+        triageRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot receiver, String previousChildName) {
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                long newestTimestamp = 0;
+                boolean escalated = false;
 
-                // Finds whether escalated is true or false
-                Boolean escalated = receiver.child("escalated").getValue(Boolean.class);
-                if (Boolean.TRUE.equals(escalated)) {
-                    showAlert("Triage Escalation",
-                            "Your child's triage has escalated.");
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Boolean temp = child.child("escalation").getValue(Boolean.class);
+                    Long timestamp = child.child("timestamp").getValue(Long.class);
+
+                    if (temp != null && temp && timestamp != null && timestamp > newestTimestamp) {
+                        newestTimestamp = timestamp;
+                        escalated = true;
+                    }
+                }
+
+                if (escalated && newestTimestamp > getLast("triage_" + childId)) {
+                    showAlert("Triage Escalation", "Your child's triage has escalated.");
+                    setLast("triage_" + childId, newestTimestamp);
                 }
             }
 
-            // Following functions are not needed
-            @Override public void onChildChanged(@NonNull DataSnapshot receiver, String previousChildName) {}
-            @Override public void onChildRemoved(@NonNull DataSnapshot receiver) {}
-            @Override public void onChildMoved(@NonNull DataSnapshot receiver, String previousChildName) {}
             @Override public void onCancelled(@NonNull DatabaseError error) {}
-        };
-
-        triageRef.addChildEventListener(childListener);
+        });
     }
 
     // Inventory low/expired listener, alerts the parent if the child's medication is low
     // or expired
     private void listenInventory(String childId) {
-        DatabaseReference inventoryRef =
-                mdatabase.child("children").child(childId).child("inventory");
+        DatabaseReference inventoryRef = mdatabase.child("inventory").child(childId);
 
-        ChildEventListener childListener = new ChildEventListener() {
-
-            // Runs if a new medication is added
+        inventoryRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot receiver, String previousChildName) {
-                checkInventory(receiver);
-            }
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                long newestTimestamp = System.currentTimeMillis();
 
-            // Runs anytime the medication level changes or the medication becomes expired
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot receiver, String previousChildName) {
-                checkInventory(receiver);
-            }
+                for (DataSnapshot child : receiver.getChildren()) {
+                    Boolean expired = child.child("expired").getValue(Boolean.class);
+                    Boolean low = child.child("low").getValue(Boolean.class);
 
-            // Following function are not needed
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot receiver) {}
+                    if (Boolean.TRUE.equals(expired)
+                            && newestTimestamp > getLast("inventoryexpired_" + childId)) {
+                        showAlert("Expired Medication", "Your child's medication expired.");
+                        setLast("inventoryexpired_" + childId, newestTimestamp);
+                    }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot receiver, String previousChildName) {}
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-
-            // Checks whether the medicine's low or expired indicators are true and alerts
-            // the parent accordingly
-            private void checkInventory(DataSnapshot receiver) {
-
-                Boolean expired = receiver.child("expired").getValue(Boolean.class);
-                Boolean low = receiver.child("low").getValue(Boolean.class);
-                if (Boolean.TRUE.equals(expired)) {
-                    showAlert("Expired Medication",
-                            "Your child's medication has expired.");
-                }
-                if (Boolean.TRUE.equals(low)) {
-                    showAlert("Low Inhaler", "Your child's inhaler is low.");
+                    if (Boolean.TRUE.equals(low)
+                            && newestTimestamp > getLast("inventorylow_" + childId)) {
+                        showAlert("Low Medication", "Your child's medication is low.");
+                        setLast("inventorylow_" + childId, newestTimestamp);
+                    }
                 }
             }
-        };
 
-        inventoryRef.addChildEventListener(childListener);
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     // Displays a popup method for all the alerts on the parent's app
