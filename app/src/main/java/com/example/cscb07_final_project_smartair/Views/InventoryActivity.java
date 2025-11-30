@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 public class InventoryActivity extends BaseActivity {
-
     private InventoryPresenter presenter;
 
     private Spinner childSpinner;
@@ -45,9 +44,6 @@ public class InventoryActivity extends BaseActivity {
         presenter.loadChildren();
     }
 
-    // ============================================================
-    // CHILD LIST
-    // ============================================================
     public void displayChildren(List<String> names) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, names);
@@ -62,9 +58,6 @@ public class InventoryActivity extends BaseActivity {
         });
     }
 
-    // ============================================================
-    // INVENTORY LIST
-    // ============================================================
     public void clearInventoryList() {
         inventoryContainer.removeAllViews();
     }
@@ -97,9 +90,6 @@ public class InventoryActivity extends BaseActivity {
         return new SimpleDateFormat("MMM d, yyyy").format(new Date(millis));
     }
 
-    // ============================================================
-    // POPUP
-    // ============================================================
     public void showAddEditPopup(InventoryItem existingItem) {
         this.editingItem = existingItem;
 
@@ -116,7 +106,6 @@ public class InventoryActivity extends BaseActivity {
         Button save = inventoryDialog.findViewById(R.id.btnSaveInventoryItemMed);
         Button delete = inventoryDialog.findViewById(R.id.btnDeleteInventoryItemMed);
 
-        // === EDIT EXISTING ===
         if (existingItem != null) {
             title.setText("Edit Medication");
 
@@ -147,46 +136,32 @@ public class InventoryActivity extends BaseActivity {
     public void closeInventoryPopup() {
         if (inventoryDialog != null) inventoryDialog.dismiss();
     }
-
-    // ============================================================
-    // GETTERS (MATCH XML)
-    // ============================================================
     public String getMedicationName() {
         return getPopupText(R.id.etMedicationName);
     }
-
     public String getTotalAmount() {
         return getPopupText(R.id.etDosageTotalAmount);
     }
-
     public String getAmountLeft() {
         return getPopupText(R.id.etDosageAmountLeft);
     }
-
     public String getPurchaseDate() {
         return getPopupText(R.id.etMedicinePurchaseDate);
     }
-
     public String getExpiryDate() {
         return getPopupText(R.id.etMedExpiryDate);
     }
-
     private String getPopupText(int id) {
         EditText et = inventoryDialog.findViewById(id);
         return et.getText().toString().trim();
     }
 
-    // ============================================================
-    // NAV + FEEDBACK
-    // ============================================================
     public void showSuccess(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
     public void showError(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
     public void navigateToMainActivity() {
         startActivity(new Intent(this, MainActivityView.class));
         finish();

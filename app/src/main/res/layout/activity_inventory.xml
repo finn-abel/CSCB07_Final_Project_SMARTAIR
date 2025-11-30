@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <!-- CHILD SELECTOR -->
     <LinearLayout
         android:id="@+id/childSelectorRow"
         android:layout_width="0dp"
@@ -34,7 +33,6 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <!-- SCROLLABLE INVENTORY LIST -->
     <ScrollView
         android:id="@+id/inventoryScroll"
         android:layout_width="0dp"
@@ -52,7 +50,6 @@
             android:paddingTop="12dp" />
     </ScrollView>
 
-    <!-- ADD MEDICATION BUTTON -->
     <Button
         android:id="@+id/btnAddItem"
         android:layout_width="0dp"
@@ -63,7 +60,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- BACK BUTTON -->
     <Button
         android:id="@+id/btnBackToHome"
         android:layout_width="0dp"

@@ -15,7 +15,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Medication Name -->
         <TextView
             android:id="@+id/tvMedicationName"
             android:layout_width="wrap_content"
@@ -24,7 +23,6 @@
             android:textStyle="bold"
             android:textSize="18sp" />
 
-        <!-- Amount Left -->
         <TextView
             android:id="@+id/tvAmountLeft"
             android:layout_width="wrap_content"
@@ -33,7 +31,6 @@
             android:textSize="15sp"
             android:layout_marginTop="4dp" />
 
-        <!-- Expiry Date -->
         <TextView
             android:id="@+id/tvExpiryDate"
             android:layout_width="wrap_content"
@@ -42,7 +39,6 @@
             android:textSize="15sp"
             android:layout_marginTop="4dp" />
 
-        <!-- Edit Button -->
         <Button
             android:id="@+id/btnEditMedication"
             android:layout_width="wrap_content"
@@ -50,7 +46,5 @@
             android:layout_marginTop="12dp"
             android:backgroundTint="#5C8AF2"
             android:text="EDIT" />
-
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

@@ -12,16 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryModel {
-
     private final InventoryPresenter presenter;
 
     public InventoryModel(InventoryPresenter presenter) {
         this.presenter = presenter;
     }
 
-    // ============================================================
-    // GET CHILDREN FOR PARENT
-    // ============================================================
     public void getChildren() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -31,12 +27,10 @@ public class InventoryModel {
         }
 
         String parentID = user.getUid();
-
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("parents")
                 .child(parentID)
                 .child("children");
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -62,9 +56,6 @@ public class InventoryModel {
         });
     }
 
-    // ============================================================
-    // GET INVENTORY FOR A SPECIFIC CHILD
-    // ============================================================
     public void getInventory(String childId) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -74,14 +65,12 @@ public class InventoryModel {
         }
 
         String parentID = user.getUid();
-
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("parents")
                 .child(parentID)
                 .child("children")
                 .child(childId)
                 .child("inventory");
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -102,9 +91,6 @@ public class InventoryModel {
         });
     }
 
-    // ============================================================
-    // SAVE (ADD OR UPDATE) MEDICATION
-    // ============================================================
     public void saveItem(String childId, InventoryItem item) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -112,7 +98,6 @@ public class InventoryModel {
             presenter.onFailure("User not logged in.");
             return;
         }
-
         String parentID = user.getUid();
 
         DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -121,16 +106,13 @@ public class InventoryModel {
                 .child("children")
                 .child(childId)
                 .child("inventory")
-                .child(item.medicationName);  // medication name = key
+                .child(item.medicationName);
 
         ref.setValue(item)
                 .addOnSuccessListener(aVoid -> presenter.onSaveSuccess())
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
     }
 
-    // ============================================================
-    // DELETE MEDICATION
-    // ============================================================
     public void deleteItem(String childId, String medicationName) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -138,7 +120,6 @@ public class InventoryModel {
             presenter.onFailure("User not logged in.");
             return;
         }
-
         String parentID = user.getUid();
 
         DatabaseReference ref = FirebaseDatabase.getInstance()

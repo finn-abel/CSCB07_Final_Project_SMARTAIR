@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class InventoryPresenter {
-
     private final InventoryActivity view;
     private final InventoryModel model;
 
@@ -24,9 +23,6 @@ public class InventoryPresenter {
         this.model = new InventoryModel(this);
     }
 
-    // ============================================================
-    // LOAD CHILDREN
-    // ============================================================
     public void loadChildren() {
         model.getChildren();
     }
@@ -41,9 +37,6 @@ public class InventoryPresenter {
         view.showError(msg);
     }
 
-    // ============================================================
-    // HANDLE CHILD SELECTION
-    // ============================================================
     public void onChildSelected(int index) {
         if (index < 0 || index >= childIds.size()) {
             view.showError("Invalid child selection.");
@@ -53,9 +46,6 @@ public class InventoryPresenter {
         loadInventory();
     }
 
-    // ============================================================
-    // LOAD INVENTORY FOR SELECTED CHILD
-    // ============================================================
     public void loadInventory() {
         if (selectedChildId == null) {
             view.showError("No child selected.");
@@ -86,9 +76,6 @@ public class InventoryPresenter {
         }
     }
 
-    // ============================================================
-    // ADD / EDIT POPUP
-    // ============================================================
     public void startAddNew() {
         editingItem = null;
         view.showAddEditPopup(null);
@@ -99,9 +86,6 @@ public class InventoryPresenter {
         view.showAddEditPopup(item);
     }
 
-    // ============================================================
-    // SAVE ITEM
-    // ============================================================
     public void saveItem() {
         String name = view.getMedicationName();
         String totalStr = view.getTotalAmount();
@@ -130,14 +114,8 @@ public class InventoryPresenter {
             return;
         }
 
-        InventoryItem item = new InventoryItem(
-                selectedChildId,
-                name,
-                total,
-                left,
-                purchaseDate,
-                expiryDate
-        );
+        InventoryItem item = new InventoryItem(selectedChildId, name, total, left, purchaseDate,
+                expiryDate);
 
         model.saveItem(selectedChildId, item);
     }
@@ -148,12 +126,8 @@ public class InventoryPresenter {
         loadInventory();
     }
 
-    // ============================================================
-    // DELETE ITEM
-    // ============================================================
     public void deleteItem(InventoryItem editingItem) {
         if (editingItem == null) return;
-
         model.deleteItem(selectedChildId, editingItem.medicationName);
     }
 
