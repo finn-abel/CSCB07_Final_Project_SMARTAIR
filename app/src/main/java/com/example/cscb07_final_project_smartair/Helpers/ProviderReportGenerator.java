@@ -536,7 +536,6 @@ public class ProviderReportGenerator {
         // End of rescue frequency
 
         // Controller adherence, pie chart
-        takenDays = 5;
         int missedDays = plannedDays - takenDays;
 
         PieChart pieChart = new PieChart(context);
