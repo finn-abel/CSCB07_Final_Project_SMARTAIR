@@ -2,7 +2,7 @@ package com.example.cscb07_final_project_smartair.Views;
 
 public interface MainView {
 
-    void navigateToLoginScreen();
+    void navigateToLoginScreen(String role);
     void navigateToCheckInScreen();
     void navigateToMedicineLogs();
     void navigateToInventory();

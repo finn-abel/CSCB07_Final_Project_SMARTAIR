@@ -10,8 +10,4 @@ public interface ChildLoginView {
     void showValidationError(String message);
 
     void navigateToMainScreen();
-    void navigateToSignUpScreen();
-
-    void showPasswordResetSuccess(String message);
-    void showPasswordResetFailure(String message);
 }

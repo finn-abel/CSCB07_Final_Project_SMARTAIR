@@ -7,14 +7,19 @@ import android.widget.Button;
 
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivityView extends BaseActivity implements MainView{
     private MainActivityPresenter presenter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         presenter = new MainActivityPresenter(this);
 
@@ -45,8 +50,14 @@ public class MainActivityView extends BaseActivity implements MainView{
     }
 
     @Override
-    public void navigateToLoginScreen(){
-        Intent intent = new Intent(this, LoginActivity.class);
+    public void navigateToLoginScreen(String role){
+        Intent intent;
+        if(role.equals("Child")) {
+            intent = new Intent(this, ChildLoginActivity.class);
+        }
+        else {
+            intent = new Intent(this, LoginActivity.class);
+        }
         startActivity(intent);
         finish();
     }

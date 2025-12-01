@@ -9,6 +9,13 @@ android {
         version = release(36)
     }
 
+    packaging {
+        resources{
+            resources.excludes += "META-INF/native-image/reflect-config.json"
+            resources.excludes += "META-INF/native-image/resource-config.json"
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.cscb07_final_project_smartair"
         minSdk 24
@@ -50,4 +57,7 @@ dependencies {
     implementation libs.firebase.database
 
     implementation libs.mpandroidchart
+
+    implementation 'com.itextpdf:kernel:8.0.4'
+    implementation 'com.itextpdf:layout:8.0.4'
 }

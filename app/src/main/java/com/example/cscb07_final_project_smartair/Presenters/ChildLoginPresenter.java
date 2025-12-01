@@ -23,10 +23,6 @@ public class ChildLoginPresenter implements LoginModel.OnLoginFinishedListener {
     }
 
 
-    public void onSignUpButtonClicked() {
-
-        view.navigateToSignUpScreen();
-    }
 
 
     @Override

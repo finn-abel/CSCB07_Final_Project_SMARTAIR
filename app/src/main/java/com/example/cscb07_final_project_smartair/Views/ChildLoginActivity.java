@@ -31,7 +31,6 @@ public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
         username = findViewById(R.id.username);
         user_password = findViewById(R.id.user_password);
         Button sign_in_button = findViewById(R.id.sib);
-        Button sign_up_button = findViewById(R.id.sub);
 
 
         presenter = new ChildLoginPresenter(this);
@@ -41,20 +40,7 @@ public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
             presenter.onLoginButtonClicked();
         });
 
-        sign_up_button.setOnClickListener(view -> {
-            presenter.onSignUpButtonClicked();
-        });
 
-    }
-
-    @Override
-    public void showPasswordResetSuccess(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showPasswordResetFailure(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -87,12 +73,6 @@ public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
     public void navigateToMainScreen() {
         startActivity(new Intent(this, MainActivityView.class));
         finish();
-    }
-
-    @Override
-    public void navigateToSignUpScreen() {
-
-        startActivity(new Intent(this, ChildSignUpActivity.class));
     }
 
 }

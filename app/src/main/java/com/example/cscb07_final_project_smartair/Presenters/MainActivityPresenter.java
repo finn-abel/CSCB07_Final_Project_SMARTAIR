@@ -1,5 +1,6 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,6 +13,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cscb07_final_project_smartair.Models.MainActivityModel;
 import com.example.cscb07_final_project_smartair.Models.SignUpModel;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Views.ChildLoginActivity;
+import com.example.cscb07_final_project_smartair.Views.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.example.cscb07_final_project_smartair.Views.MainActivityView;
@@ -21,10 +25,16 @@ public class MainActivityPresenter extends AppCompatActivity {
 
     private final MainActivityView view;
     private final MainActivityModel model;
+    private FirebaseAuth mAuth;
+
+
+
+
 
     public MainActivityPresenter(MainActivityView view){
         this.view = view;
         this.model = new MainActivityModel();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -56,8 +66,13 @@ public class MainActivityPresenter extends AppCompatActivity {
 
 
     public void onLogoutButtonClicked() {
+        String role="N/A";
+        if(mAuth.getCurrentUser().getEmail().contains("@smartair.com")) {
+            role = "Child";
+        }
         model.signOut();
-        view.navigateToLoginScreen();
+        view.navigateToLoginScreen(role);
+
     }
 
     public void onPEFButtonClicked(){

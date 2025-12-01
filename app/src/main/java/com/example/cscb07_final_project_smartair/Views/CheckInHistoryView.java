@@ -2,6 +2,7 @@ package com.example.cscb07_final_project_smartair.Views;
 
 import com.example.cscb07_final_project_smartair.DataObjects.CheckInData;
 
+
 import java.util.ArrayList;
 
 public interface CheckInHistoryView {
@@ -16,4 +17,6 @@ public interface CheckInHistoryView {
     ArrayList<String> getTriggers();
 
     String[] getDateRange();
+    public void generatePDF(ArrayList<CheckInData> checkInEntries);
+    public ArrayList<CheckInData> getCheckIns();
 }

@@ -1,5 +1,6 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import com.example.cscb07_final_project_smartair.Adapters.CheckInHistoryAdapter;
 import com.example.cscb07_final_project_smartair.DataObjects.CheckInData;
 import com.example.cscb07_final_project_smartair.Models.CheckInHistoryModel;
 import com.example.cscb07_final_project_smartair.Models.CheckInModel;
@@ -12,6 +13,7 @@ public class CheckInHistoryPresenter implements CheckInHistoryModel.OnSearchFini
 
     private CheckInHistoryModel model;
     private CheckInHistoryView view;
+
 
     public CheckInHistoryPresenter(CheckInHistoryView view) {
         this.view = view;
@@ -28,6 +30,11 @@ public class CheckInHistoryPresenter implements CheckInHistoryModel.OnSearchFini
         String[] date = view.getDateRange();
 
         model.filterCheckIns(symptoms, triggers, date, this);
+    }
+
+    public void onExportButtonClicked() {
+        ArrayList<CheckInData> checkIns = view.getCheckIns();
+        view.generatePDF(checkIns);
     }
 
     @Override
