@@ -2,12 +2,18 @@ package com.example.cscb07_final_project_smartair;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cscb07_final_project_smartair.DataObjects.ScheduleEntry;
+import com.example.cscb07_final_project_smartair.Presenters.SchedulePresenter;
 import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
+import com.example.cscb07_final_project_smartair.Views.ScheduleView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -21,17 +27,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ParentHomeActivity extends BaseParentActivity {
+public class ParentHomeActivity extends BaseParentActivity implements ScheduleView {
 
     private LineChart trendChart;
     private TextView toggleText;
+    private Spinner spinnerChild;
     private boolean showThirtyDays = false;
     private DatabaseReference mdatabase;
+    private SchedulePresenter presenter;
     String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3";
 
     @Override
@@ -42,8 +48,13 @@ public class ParentHomeActivity extends BaseParentActivity {
         // Get a database instance
         mdatabase = FirebaseDatabase.getInstance().getReference();
 
+        presenter = new SchedulePresenter(this);
+
         trendChart = findViewById(R.id.chart_trend);
         toggleText = findViewById(R.id.tv_toggle_range);
+        spinnerChild = findViewById(R.id.SDspinnerChild);
+
+        presenter.loadChildrenDash();
 
         // If 'Show 30 Days' is pressed, this code will change the view to 30 days
         toggleText.setOnClickListener(v -> {
@@ -59,6 +70,82 @@ public class ParentHomeActivity extends BaseParentActivity {
         });
     }
 
+    public void setActiveChild(String id) {
+        activeChildId = id;
+
+        // Reload UI using new child
+        loadRescueTrend(id, showThirtyDays ? 30 : 7);
+        getTodayZone();
+        getLastRescueTime();
+        getWeeklyRescueCount();
+    }
+
+    public void displayChildren(List<String> names) {
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerChild.setAdapter(adapter);
+
+        if (!names.isEmpty()) {
+            spinnerChild.setSelection(0);
+            presenter.onChildSelectedDash(0); // auto select a child
+        }
+
+        spinnerChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                presenter.onChildSelectedDash(pos);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    @Override
+    public void displayScheduleForDay(List<ScheduleEntry> entries) {
+
+    }
+
+    @Override
+    public void displayEmptyDayMessage() {
+
+    }
+
+    @Override
+    public void showAddEditDialog(ScheduleEntry entry) {
+
+    }
+
+    @Override
+    public String getDialogTime() {
+        return "";
+    }
+
+    @Override
+    public String getDialogDose() {
+        return "";
+    }
+
+    @Override
+    public String getDialogNote() {
+        return "";
+    }
+
+    @Override
+    public void showError(String msg) {
+
+    }
+
+    @Override
+    public void showSuccess(String msg) {
+
+    }
+
+    @Override
+    public void navigateBackHome() {
+
+    }
+
+
     private void loadRescueTrend(String childId, int days) {
 
         long now = System.currentTimeMillis();
@@ -70,7 +157,7 @@ public class ParentHomeActivity extends BaseParentActivity {
         DatabaseReference rescueRef = mdatabase
                 .child("medicine")
                 .child("rescue")
-                .child(activeChildId);
+                .child(childId);
 
         ValueEventListener rescueListener = new ValueEventListener() {
             @Override
@@ -137,23 +224,37 @@ public class ParentHomeActivity extends BaseParentActivity {
         xAxis.setAxisMinimum(0f);
         xAxis.setAxisMaximum(data.length - 1);
 
-        // To check: do all cases always work
-
+        // increment by units of 5 on x axis for 30 day chart
         if (data.length == 30) {
+            xAxis.setLabelCount(data.length, false);
+
+            String[] labels = new String[data.length];
+
+            for (int i = 0; i < data.length; i++) {
+                // label multiples of 5
+                if (i == 0 || i == 5 || i == 10 || i == 15 || i == 20 || i == 25) {
+                    labels[i] = String.valueOf(i);
+                }
+
+                else if (i == 29) {
+                    labels[i] = String.valueOf(i + 1);
+                }
+
+                else {
+                    labels[i] = "";
+                }
+            }
+
             xAxis.setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
-                    int idx = Math.round(value);
-                    switch (idx) {
-                        case 0: return "0";
-                        case 5: return "5";
-                        case 10: return "10";
-                        case 15: return "15";
-                        case 19: return "20";
-                        case 24: return "25";
-                        case 29: return "30";
-                        default: return "";
+                    int index = Math.round(value);
+
+                    if (index >= 0 && index < labels.length) {
+                        return labels[index];
                     }
+
+                    return "";
                 }
             });
         }
@@ -171,6 +272,16 @@ public class ParentHomeActivity extends BaseParentActivity {
         }
 
         YAxis leftAxis = trendChart.getAxisLeft();
+
+        int maxValue = 0;
+        for (int item : data) {
+            if (item > maxValue) maxValue = item;
+        }
+
+        leftAxis.setAxisMaximum(maxValue + 1); // y axis scale
+        leftAxis.setLabelCount(Math.min(maxValue + 1, 6), true); // ensures there is not
+                                                                       // too many ticks on the
+                                                                       // y axis
 
         leftAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -211,7 +322,7 @@ public class ParentHomeActivity extends BaseParentActivity {
         pefRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot pefReceiver) {
-                double ratio = -1024;
+                double ratio = 0;
                 for (DataSnapshot child : pefReceiver.getChildren()) {
                     Long timestamp = child.child("timestamp").getValue(Long.class);
                     Integer current = child.child("current").getValue(Integer.class);
@@ -221,7 +332,7 @@ public class ParentHomeActivity extends BaseParentActivity {
                     if (timestamp != null && current != null && pb != null &&
                             timestamp >= startOfToday && timestamp <= now) {
 
-                        ratio = (double) current / pb;
+                        ratio = ((double) current) / pb;
                         break;
                     }
                 }
@@ -235,7 +346,9 @@ public class ParentHomeActivity extends BaseParentActivity {
                     zone = "Yellow";
                 }
 
-                else zone = "Red";
+                else if (ratio > 0) {
+                    zone = "Red";
+                }
 
                 tvTodayZoneValue.setText(zone);
             }
