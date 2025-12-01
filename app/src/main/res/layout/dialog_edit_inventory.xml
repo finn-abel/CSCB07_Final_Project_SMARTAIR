@@ -56,6 +56,45 @@
         android:clickable="true"
         android:layout_marginTop="12dp"/>
 
+    <TextView
+        android:id="@+id/tvMedTypeLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Medication Type"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/medTypeSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <ToggleButton
+            android:id="@+id/btnTypeRescue"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:textOn="Rescue"
+            android:textOff="Rescue"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:layout_marginEnd="12dp"/>
+
+        <ToggleButton
+            android:id="@+id/btnTypeController"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:textOn="Controller"
+            android:textOff="Controller"
+            android:textSize="14sp"
+            android:padding="6dp"/>
+    </LinearLayout>
+
     <Button
         android:id="@+id/btnSaveInventoryItemMed"
         android:layout_width="match_parent"

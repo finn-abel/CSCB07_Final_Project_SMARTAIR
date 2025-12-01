@@ -4,22 +4,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.cscb07_final_project_smartair.Helpers.ProviderReportGenerator;
-import com.example.cscb07_final_project_smartair.ParentHomeActivity;
-import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
+import com.example.cscb07_final_project_smartair.Presenters.ParentHomePresenter;
 import com.example.cscb07_final_project_smartair.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -35,31 +28,30 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MainActivityView extends BaseParentActivity implements MainView { // TO CHANGE; CHANGED TO PARENTACTIVITY
-    private MainActivityPresenter presenter;
-    private LineChart trendChart; // to delete
-    private TextView toggleText; // to delete
-    private boolean showThirtyDays = false; // to delete
+public class ParentHomeActivity extends BaseParentActivity implements ParentHomeView{
+    private ParentHomePresenter presenter;
+    private LineChart trendChart;
+    private TextView toggleText;
+    private boolean showThirtyDays = false;
 
-    private DatabaseReference mdatabase; // to delete
-    String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3"; // to delete
-
-
+    private DatabaseReference mdatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_parent_home);
 
         // delete after this
 
-        mdatabase = FirebaseDatabase.getInstance().getReference();
+        if (mdatabase == null) {
+            mdatabase = FirebaseDatabase.getInstance().getReference();
+        }
 
         trendChart = findViewById(R.id.chart_trend);
         toggleText = findViewById(R.id.tv_toggle_range);
 
         toggleText.setOnClickListener(v -> {
+            if(activeChildId == null) {return;}
             if (showThirtyDays) {
                 loadRescueTrend(activeChildId, 7);
                 toggleText.setText("Show 30 days");
@@ -73,7 +65,7 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
 
         // delete up to this
 
-        presenter = new MainActivityPresenter(this);
+        presenter = new ParentHomePresenter(this);
 
         Button check_in_button = findViewById(R.id.checkin);
         Button logout_button = findViewById(R.id.logout);
@@ -113,6 +105,37 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
             presenter.onProviderReportClicked();
         });
 
+        fetchChildThenLoad();
+    }
+
+    private void fetchChildThenLoad() { //ensure that child is found before loading, avoid null ptr error
+        if (parentId == null) return;
+
+        mdatabase.child("users").child("parents").child(parentId).child("children")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!snapshot.exists()) { //no children
+                            Toast.makeText(ParentHomeActivity.this, "No children found.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        for (DataSnapshot childKey : snapshot.getChildren()) {
+                            activeChildId = childKey.getKey();
+                            loadDashboardData(); //load UI
+                            return;  //return after first child
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
+
+    private void loadDashboardData() {
+        if (activeChildId == null) return;
+
+        //call load methods after child found
         getTodayZone();
         getLastRescueTime();
         getWeeklyRescueCount();
@@ -120,14 +143,8 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
     }
 
     @Override
-    public void navigateToLoginScreen(String role){
-        Intent intent;
-        if(role.equals("Child")) {
-            intent = new Intent(this, ChildLoginActivity.class);
-        }
-        else {
-            intent = new Intent(this, LoginActivity.class);
-        }
+    public void navigateToLoginScreen(){
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -164,6 +181,7 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
         startActivity(new Intent(this, InventoryActivity.class));
     }
 
+    @Override
     public void navigateToProviderReport() {
         startActivity(new Intent(this, ProviderReportSelectionActivity.class));
     }
@@ -177,11 +195,9 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
 
         // Goes to the rescueLogs branch of the requested child based on the childId
         DatabaseReference rescueRef = mdatabase
-                .child("users")
-                .child("children")
-                .child(childId)
                 .child("medicine")
-                .child("rescue");
+                .child("rescue")
+                .child(childId);
 
         ValueEventListener rescueListener = new ValueEventListener() {
             @Override
@@ -358,11 +374,9 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
 
     public void getLastRescueTime() {
         DatabaseReference rescueRef = mdatabase
-                .child("users")
-                .child("children")
-                .child(activeChildId)
                 .child("medicine")
-                .child("rescue");
+                .child("rescue")
+                .child(activeChildId);
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -399,11 +413,9 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
         long lastWeek = now - ((long)7 * 24 * 60 * 60 * 1000);
 
         DatabaseReference rescueRef = mdatabase
-                .child("users")
-                .child("children")
-                .child(activeChildId)
                 .child("medicine")
-                .child("rescue");
+                .child("rescue")
+                .child(activeChildId);
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

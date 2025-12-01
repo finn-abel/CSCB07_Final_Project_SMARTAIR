@@ -1,5 +1,8 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.example.cscb07_final_project_smartair.Models.LoginModel;
 import com.example.cscb07_final_project_smartair.Views.LoginView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +39,13 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     @Override
     public void onLoginSuccess() {
         if (view != null) {
+
+            SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putString("USER_ROLE", "PARENT");
+            editor.apply();
+
             view.showLoginSuccess("Sign in successful!");
             view.navigateToMainScreen();
         }

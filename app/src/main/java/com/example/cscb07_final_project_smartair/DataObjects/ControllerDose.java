@@ -10,10 +10,10 @@ public class ControllerDose extends Data {
     public ControllerDose() {
     }
 
-    public ControllerDose(int doseAmount) {
+    public ControllerDose(int doseAmount, int before, int after) {
         super(System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getUid(), "controllerDose");
         this.doseAmount = doseAmount;
-        this.breathingBefore = 1;
-        this.breathingAfter = 1;
+        this.breathingBefore = before;
+        this.breathingAfter = after;
     }
 }

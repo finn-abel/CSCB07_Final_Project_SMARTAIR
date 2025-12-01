@@ -1,6 +1,7 @@
 package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.cscb07_final_project_smartair.Presenters.LauncherPresenter;
@@ -10,7 +11,7 @@ import com.example.cscb07_final_project_smartair.Presenters.LauncherPresenter;
  * the user's login status and navigate to the appropriate screen.
  * It implements the LauncherView interface and contains no logic.
  */
-public class LauncherActivity extends BaseActivity implements LauncherView {
+public class LauncherActivity extends AppCompatActivity implements LauncherView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,30 @@ public class LauncherActivity extends BaseActivity implements LauncherView {
 
     @Override
     public void navigateToMainScreen() {
-        startActivity(new Intent(this, MainActivityView.class));
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String role = prefs.getString("USER_ROLE", "");
+
+        Class<?> activityClass;
+
+        if(role.equals("PARENT")) { //redirect to parent home
+            activityClass = ParentHomeActivity.class;
+        } else { //redirect to child home
+            activityClass = MainActivityView.class;
+        }
+
+        Intent MainIntent = new Intent(LauncherActivity.this, activityClass);
+
+        if (getIntent().getBooleanExtra("SHOW_TRIAGE_RECHECK", false)) {
+            MainIntent.putExtra("SHOW_TRIAGE_RECHECK", true);
+
+            String childID = getIntent().getStringExtra("CHILD_ID");
+            if (childID != null) {
+                MainIntent.putExtra("CHILD_ID", childID); //add child if there
+            }
+
+        } //check for triage recheck
+
+        startActivity(MainIntent);
         finish();
     }
 

@@ -13,4 +13,3 @@ public class ScheduleEntry {
         this.note = note;
     }
 }
-

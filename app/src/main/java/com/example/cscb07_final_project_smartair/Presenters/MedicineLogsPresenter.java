@@ -1,11 +1,7 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
-import com.example.cscb07_final_project_smartair.DataObjects.ControllerDose;
-import com.example.cscb07_final_project_smartair.DataObjects.RescueDose;
 import com.example.cscb07_final_project_smartair.Models.MedicineLogsModel;
 import com.example.cscb07_final_project_smartair.Views.MedicineLogsView;
-
-import java.util.List;
 
 public class MedicineLogsPresenter {
     private final MedicineLogsView view;
@@ -16,71 +12,76 @@ public class MedicineLogsPresenter {
         this.model = new MedicineLogsModel(this);
     }
 
-    public void onLogControllerClicked() {
-        String doseText = view.getControllerDoseAmount();
-
-        if (doseText.isEmpty()) {
-            view.showError("Dose amount cannot be empty");
-            return;
-        }
-
-        try {
-            int dose = Integer.parseInt(doseText);
-            model.logController(dose);
-        } catch (Exception e) {
-            view.showError("Invalid dose amount");
-        }
-    }
-
-    public void onControllerLogSuccess() {
-        view.showSuccess("Controller dose logged!");
-        view.closeControllerPopup();
-        model.getControllerDoses();
-    }
-
-    public void onLogRescueClicked() {
-        String doseText = view.getRescueDoseAmount();
-        String beforeText = view.getBreathingBefore();
-        String afterText = view.getBreathingAfter();
-        String sobText = view.getShortnessOfBreath();
-
-        if (doseText.isEmpty() || beforeText.isEmpty() || afterText.isEmpty() || sobText.isEmpty()) {
-            view.showError("All rescue fields must be filled");
-            return;
-        }
-
-        try {
-            int dose = Integer.parseInt(doseText);
-            int before = Integer.parseInt(beforeText);
-            int after = Integer.parseInt(afterText);
-            int sob = Integer.parseInt(sobText);
-
-            model.logRescue(dose, before, after, sob);
-        } catch (Exception e) {
-            view.showError("Invalid rescue input values");
-        }
-    }
-
-    public void onRescueLogSuccess() {
-        view.showSuccess("Rescue dose logged!");
-        view.closeRescuePopup();
-        model.getRescueDoses();
-    }
-
     public void loadLogs() {
         model.getControllerDoses();
         model.getRescueDoses();
     }
 
-    public void onControllerLogsLoaded(List<ControllerDose> logs) {
-        view.displayControllerLogs(logs);
+    public void onLogControllerClicked() {
+        String doseStr = view.getControllerDoseAmount();
+
+        if (doseStr.isEmpty()) {
+            view.showError("Please enter a controller dose amount.");
+            return;
+        }
+
+        int dose;
+        try {
+            dose = Integer.parseInt(doseStr);
+        } catch (Exception e) {
+            view.showError("Dose amount must be a number.");
+            return;
+        }
+
+        int before = view.getControllerBreathingBefore();
+        int after = view.getControllerBreathingAfter();
+
+        model.logController(dose, before, after);
     }
 
-    public void onRescueLogsLoaded(List<RescueDose> logs) {
-        view.displayRescueLogs(logs);
+    public void onControllerLogSuccess() {
+        view.closeControllerPopup();
+        view.showSuccess("Controller dose logged successfully.");
+        loadLogs();
     }
 
     public void onFailure(String msg) {
         view.showError(msg);
+    }
+    public void onLogRescueClicked() {
+        String doseStr = view.getRescueDoseAmount();
+
+        if (doseStr.isEmpty()) {
+            view.showError("Please enter a rescue dose amount.");
+            return;
+        }
+
+        int dose;
+        try {
+            dose = Integer.parseInt(doseStr);
+        } catch (Exception e) {
+            view.showError("Dose amount must be a number.");
+            return;
+        }
+
+        int before = view.getRescueBreathingBefore();
+        int after = view.getRescueBreathingAfter();
+        int sob = view.getRescueShortnessOfBreath();
+
+        model.logRescue(dose, before, after, sob);
+    }
+
+    public void onRescueLogSuccess() {
+        view.closeRescuePopup();
+        view.showSuccess("Rescue dose logged successfully.");
+        loadLogs();
+    }
+
+    public void onControllerLogsLoaded(java.util.List<com.example.cscb07_final_project_smartair.DataObjects.ControllerDose> list) {
+        view.displayControllerLogs(list);
+    }
+
+    public void onRescueLogsLoaded(java.util.List<com.example.cscb07_final_project_smartair.DataObjects.RescueDose> list) {
+        view.displayRescueLogs(list);
     }
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -21,6 +22,8 @@
             android:exported = "false" />
         <activity android:name=".Views.SignUpActivity"
             android:exported="false" />
+        <activity android:name=".Views.ParentHomeActivity"
+         android:exported="false" />
         <activity android:name=".Views.MainActivityView"
             android:exported="false" />
 
@@ -42,11 +45,15 @@
             android:exported="false" />
 
         <activity
+            android:name=".ParentHomeActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".Views.InventoryActivity"
             android:exported="false" />
 
         <activity
-            android:name=".Views.PEFActivity"
+            android:name=".Views.ProviderReportSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".Views.ChildSignUpActivity"
@@ -69,7 +76,9 @@
         <activity
             android:name=".Views.BadgeSettingsActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".Views.PEFActivity"
+            android:exported="false" />
 
         <receiver
             android:name=".Receivers.TriageReceiver"

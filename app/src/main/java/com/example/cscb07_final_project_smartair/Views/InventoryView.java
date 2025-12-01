@@ -5,9 +5,7 @@ import com.example.cscb07_final_project_smartair.DataObjects.InventoryItem;
 import java.util.List;
 
 public interface InventoryView {
-
     void displayChildren(List<String> childNames, List<String> childIds);
-    void showChildSelectionError(String msg);
 
     void clearInventoryList();
     void displayNoInventoryMessage();
@@ -16,11 +14,12 @@ public interface InventoryView {
     void showAddEditPopup(InventoryItem existingItem);
     void closeInventoryPopup();
 
-    String getMedicationName();
-    String getTotalAmount();
-    String getAmountLeft();
-    String getPurchaseDate();
-    String getExpiryDate();
+    public String getMedicationName();
+    public String getTotalAmount();
+    public String getAmountLeft();
+    public String getPurchaseDate();
+    public String getExpiryDate();
+    public String getMedicationType();
 
     void showSuccess(String msg);
     void showError(String msg);

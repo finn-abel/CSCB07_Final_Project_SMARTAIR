@@ -1,9 +1,18 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import androidx.annotation.NonNull;
+
 import com.example.cscb07_final_project_smartair.DataObjects.ScheduleEntry;
 import com.example.cscb07_final_project_smartair.Models.ScheduleModel;
+import com.example.cscb07_final_project_smartair.ParentHomeActivity;
 import com.example.cscb07_final_project_smartair.Views.ScheduleView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SchedulePresenter {
@@ -12,7 +21,8 @@ public class SchedulePresenter {
 
     private String selectedChildId;
     private String selectedDay;
-    private List<String> childIds;
+    private List<String> childIds = new ArrayList<>();
+    private List<String> childNames = new ArrayList<>();
 
     public SchedulePresenter(ScheduleView view) {
         this.view = view;
@@ -21,6 +31,32 @@ public class SchedulePresenter {
 
     public void loadChildren() {
         model.fetchChildren();
+    }
+
+    public void loadChildrenDash() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child("users")
+                .child("children");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot receiver) {
+                childIds.clear();
+                childNames.clear();
+
+                for (DataSnapshot child : receiver.getChildren()) {
+                    childIds.add(child.getKey()); // get child's id
+                    String name = child.child("fullName").getValue(String.class);
+
+                    childNames.add(name);
+                }
+
+                view.displayChildren(childNames);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     public void onChildrenLoaded(List<String> names, List<String> ids) {
@@ -39,6 +75,15 @@ public class SchedulePresenter {
         selectedChildId = childIds.get(index);
         selectedDay = "Monday";
         model.fetchScheduleDay(selectedChildId, selectedDay);
+    }
+
+    public void onChildSelectedDash(int index) {
+        if (index < 0 || index >= childIds.size()) return;
+
+        String id = childIds.get(index);
+
+        // send childId back to ParentHomeActivity
+        ((ParentHomeActivity) view).setActiveChild(id);
     }
 
     public void onDaySelected(String day) {
