@@ -1,10 +1,16 @@
 package com.example.cscb07_final_project_smartair.Models;
 
 import androidx.annotation.NonNull;
+
+import com.example.cscb07_final_project_smartair.DataObjects.CheckInData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.ArrayList;
 
 public class SignUpModel {
 
@@ -16,41 +22,42 @@ public class SignUpModel {
 
     public interface OnSignUpFinishedListener {
         void onSignUpSuccess();
+
         void onSignUpFailure(String errorMessage);
     }
 
-    public int passwordcheck(String pw){     //check password strength
-        if((pw==null)||(pw.length()<7))             //no password or too short
+    public int passwordcheck(String pw) {     //check password strength
+        if ((pw == null) || (pw.length() < 7))             //no password or too short
             return -2; //password too short
-        int caps =0, lwr=0, num=0, sym=0, inv=0;
+        int caps = 0, lwr = 0, num = 0, sym = 0, inv = 0;
         String symbols = "!@#$%&";                  //valid symbols
-        for(int x=0;x<pw.length();x++){             //iterate through string
-            char c=pw.charAt(x);
-            if(Character.isUpperCase(c))            //check uppercase
+        for (int x = 0; x < pw.length(); x++) {             //iterate through string
+            char c = pw.charAt(x);
+            if (Character.isUpperCase(c))            //check uppercase
                 caps++;
-            else if(Character.isLowerCase(c))       //check lowercase
+            else if (Character.isLowerCase(c))       //check lowercase
                 lwr++;
-            else if(Character.isDigit(c))           //check numbers
+            else if (Character.isDigit(c))           //check numbers
                 num++;
-            else if(symbols.indexOf(c)!=-1)         //check for symbols
+            else if (symbols.indexOf(c) != -1)         //check for symbols
                 sym++;
             else
                 inv++;                              //invalid character found
         }
 
-        if( (pw.length()>=8) && (caps>=1) && (lwr>=1) && (num>=1) && (sym>=1) && (inv==0) )
+        if ((pw.length() >= 8) && (caps >= 1) && (lwr >= 1) && (num >= 1) && (sym >= 1) && (inv == 0))
             return 1; //valid password
         return -1;  // invalid password
     }
 
     public void createUser(String email, String password, OnSignUpFinishedListener listener) {
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             listener.onSignUpFailure("Email cannot be empty");
             return;
         }
 
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             listener.onSignUpFailure("Password cannot be empty");
             return;
         }
@@ -73,5 +80,3 @@ public class SignUpModel {
                 });
     }
 }
-
-

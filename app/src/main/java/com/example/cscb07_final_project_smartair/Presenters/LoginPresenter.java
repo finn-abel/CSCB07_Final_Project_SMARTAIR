@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 
 import com.example.cscb07_final_project_smartair.Models.LoginModel;
 import com.example.cscb07_final_project_smartair.Views.LoginView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginPresenter implements LoginModel.OnLoginFinishedListener, LoginModel.OnResetPasswordFinishedListener {
 
     private LoginView view;
     private LoginModel model;
+    private FirebaseAuth mAuth;
 
     public LoginPresenter(LoginView view) {
         this.view = view;

@@ -1,5 +1,6 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cscb07_final_project_smartair.Models.MainActivityModel;
 import com.example.cscb07_final_project_smartair.Models.SignUpModel;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Views.ChildLoginActivity;
+import com.example.cscb07_final_project_smartair.Views.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,10 +29,16 @@ public class MainActivityPresenter extends AppCompatActivity {
 
     private final MainActivityView view;
     private final MainActivityModel model;
+    private FirebaseAuth mAuth;
+
+
+
+
 
     public MainActivityPresenter(MainActivityView view){
         this.view = view;
         this.model = new MainActivityModel();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -60,6 +70,13 @@ public class MainActivityPresenter extends AppCompatActivity {
 
 
     public void onLogoutButtonClicked() {
+        String role="N/A";
+        if(mAuth.getCurrentUser().getEmail().contains("@smartair.com")) {
+            role = "Child";
+        }
+        model.signOut();
+        view.navigateToLoginScreen(role);
+
 
         SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         prefs.edit().clear().apply();

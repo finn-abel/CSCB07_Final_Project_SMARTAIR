@@ -8,13 +8,14 @@ public class InventoryItem extends Data {
     public int amountLeft;
     public long purchaseDate;
     public long expiryDate;
+    public String medType;
 
     public String childId;
 
     public InventoryItem() {
     }
 
-    public InventoryItem(String childId, String medicationName, int totalAmount, int amountLeft, long purchaseDate, long expiryDate) {
+    public InventoryItem(String childId, String medicationName, int totalAmount, int amountLeft, long purchaseDate, long expiryDate, String medType) {
         super(System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getUid(), "inventoryItem");
         this.childId = childId;
         this.medicationName = medicationName;
@@ -22,5 +23,6 @@ public class InventoryItem extends Data {
         this.amountLeft = amountLeft;
         this.purchaseDate = purchaseDate;
         this.expiryDate = expiryDate;
+        this.medType = medType;
     }
 }

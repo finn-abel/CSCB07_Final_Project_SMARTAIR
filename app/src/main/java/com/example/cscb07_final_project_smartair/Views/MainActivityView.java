@@ -19,6 +19,7 @@ import com.example.cscb07_final_project_smartair.Helpers.ProviderReportGenerator
 import com.example.cscb07_final_project_smartair.ParentHomeActivity;
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -43,10 +44,13 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
     private DatabaseReference mdatabase; // to delete
     String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3"; // to delete
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // delete after this
 
@@ -116,8 +120,14 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
     }
 
     @Override
-    public void navigateToLoginScreen(){
-        Intent intent = new Intent(this, LoginActivity.class);
+    public void navigateToLoginScreen(String role){
+        Intent intent;
+        if(role.equals("Child")) {
+            intent = new Intent(this, ChildLoginActivity.class);
+        }
+        else {
+            intent = new Intent(this, LoginActivity.class);
+        }
         startActivity(intent);
         finish();
     }

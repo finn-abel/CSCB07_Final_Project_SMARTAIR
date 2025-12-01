@@ -2,10 +2,12 @@ package com.example.cscb07_final_project_smartair.Models;
 
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.DataObjects.Badge;
 import com.example.cscb07_final_project_smartair.DataObjects.BadgeThresholds;
 import com.example.cscb07_final_project_smartair.Presenters.BadgeSettingsPresenter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
@@ -19,11 +21,18 @@ public class BadgeSettingsModel {
     }
 
     public void loadChildren() {
-        String parentID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
 
+        String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("childrenOfParent")
-                .child(parentID);
+                .getReference("users")
+                .child("parents")
+                .child(parentID)
+                .child("children");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -31,17 +40,16 @@ public class BadgeSettingsModel {
                 List<String> childIDs = new ArrayList<>();
                 List<String> childNames = new ArrayList<>();
 
-                for (DataSnapshot ds : snapshot.getChildren())
-                {
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     childIDs.add(ds.getKey());
-                    childNames.add(ds.child("name").getValue(String.class));
+                    String name = ds.child("name").getValue(String.class);
+                    if (name == null) name = "(Unnamed)";
+                    childNames.add(name);
                 }
-                //TO:DO Remove these line!!!!
-                childNames.add("Test Child");
-                childIDs.add("l1Z0u0INnMZxsjae4MdRCOj8oqJ3");
 
                 presenter.onChildrenLoaded(childIDs, childNames);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 presenter.onFailure(error.getMessage());
@@ -51,16 +59,19 @@ public class BadgeSettingsModel {
 
     public void loadThresholds(String childID) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("badgeThresholds")
-                .child(childID);
+                .getReference("users")
+                .child("children")
+                .child(childID)
+                .child("medicine")
+                .child("motivation")
+                .child("thresholds");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 BadgeThresholds t = snapshot.getValue(BadgeThresholds.class);
 
-                if (t == null)
-                {
+                if (t == null) {
                     t = BadgeThresholds.getDefault();
                 }
 
@@ -75,8 +86,12 @@ public class BadgeSettingsModel {
 
     public void saveThresholds(String childID, BadgeThresholds thresholds) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("badgeThresholds")
-                .child(childID);
+                .getReference("users")
+                .child("children")
+                .child(childID)
+                .child("medicine")
+                .child("motivation")
+                .child("thresholds");
 
         ref.setValue(thresholds)
                 .addOnSuccessListener(a -> presenter.onSaveSuccess())
@@ -85,21 +100,44 @@ public class BadgeSettingsModel {
 
     public void loadBadges(String childID) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("earnedBadges")
-                .child(childID);
+                .getReference("users")
+                .child("children")
+                .child(childID)
+                .child("medicine")
+                .child("motivation")
+                .child("earned");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Badge> list = new ArrayList<>();
 
-                for (DataSnapshot ds : snapshot.getChildren())
-                {
-                    Badge b = ds.getValue(Badge.class);
-                    if (b != null)
-                    {
-                        list.add(b);
-                    }
+                Boolean perfect = snapshot.child("perfectControllerWeek").getValue(Boolean.class);
+                Boolean technique = snapshot.child("techniqueMaster").getValue(Boolean.class);
+                Boolean lowRescue = snapshot.child("lowRescueMonth").getValue(Boolean.class);
+
+                if (perfect != null && perfect) {
+                    list.add(new Badge(
+                            "Perfect Controller Week",
+                            "Completed a full week of controller doses.",
+                            R.drawable.ic_badge_perfect_week
+                    ));
+                }
+
+                if (technique != null && technique) {
+                    list.add(new Badge(
+                            "Technique Master",
+                            "Completed 10 high-quality technique sessions.",
+                            R.drawable.ic_badge_technique
+                    ));
+                }
+
+                if (lowRescue != null && lowRescue) {
+                    list.add(new Badge(
+                            "Low Rescue Month",
+                            "Stayed below rescue usage threshold for 30 days.",
+                            R.drawable.ic_badge_low_rescue
+                    ));
                 }
 
                 presenter.onBadgesLoaded(list);

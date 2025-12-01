@@ -21,10 +21,9 @@ public class BadgeSettingsPresenter {
     }
 
     public void onChildrenLoaded(List<String> childIDs, List<String> childNames) {
-        view.populateChildList(childNames);
+        view.populateChildList(childNames, childIDs);
 
-        if (!childIDs.isEmpty())
-        {
+        if (!childIDs.isEmpty()) {
             selectedChildID = childIDs.get(0);
             model.loadThresholds(selectedChildID);
             model.loadBadges(selectedChildID);
