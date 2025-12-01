@@ -38,6 +38,12 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     public void onLoginSuccess() {
         if (view != null) {
 
+            SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putString("USER_ROLE", "PARENT");
+            editor.apply();
+
             view.showLoginSuccess("Sign in successful!");
             view.navigateToMainScreen();
         }

@@ -22,6 +22,8 @@
             android:exported = "false" />
         <activity android:name=".Views.SignUpActivity"
             android:exported="false" />
+        <activity android:name=".Views.ParentHomeActivity"
+         android:exported="false" />
         <activity android:name=".Views.MainActivityView"
             android:exported="false" />
 

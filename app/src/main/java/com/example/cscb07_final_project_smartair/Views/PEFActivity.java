@@ -1,21 +1,28 @@
 package com.example.cscb07_final_project_smartair.Views;
 
-import static androidx.core.content.ContextCompat.startActivity;
+import static androidx.core.content.ContentProviderCompat.requireContext;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cscb07_final_project_smartair.Presenters.CheckInPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.PEFPresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
+
+import java.util.List;
 
 public class PEFActivity extends BaseActivity implements PEFView{
 
     PEFPresenter presenter;
 
+    Spinner select_child;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,13 @@ public class PEFActivity extends BaseActivity implements PEFView{
 
         Button enter = findViewById(R.id.enter_pef);
         Button return_pef = findViewById(R.id.return_pef);
+        select_child = findViewById(R.id.select_child_pef);
+        TextView select_child_prompt = findViewById(R.id.select_child_prompt_pef);
+
+        if(!isParent()){
+            select_child.setVisibility(View.GONE);
+            select_child_prompt.setVisibility(View.GONE);
+        } else { presenter.getChildren();}
 
         enter.setOnClickListener(view -> {
             presenter.onEnterClicked();
@@ -75,6 +89,20 @@ public class PEFActivity extends BaseActivity implements PEFView{
     public String getPost(){
         EditText post_med_pef = findViewById(R.id.post_med_pef);
         return post_med_pef.getText().toString().trim();
+    }
+
+    @Override
+    public void updateSpinner(List<ChildSpinnerOption> childrenList){
+        ArrayAdapter<ChildSpinnerOption> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                childrenList);  //create adapter for spinner selections
+        select_child.setAdapter(adapter); //set adapter
+    }
+
+    public ChildSpinnerOption getSpinnerOption(){
+        Object o = select_child.getSelectedItem();
+        ChildSpinnerOption option = (ChildSpinnerOption) o;
+        return option;
     }
 }
 
