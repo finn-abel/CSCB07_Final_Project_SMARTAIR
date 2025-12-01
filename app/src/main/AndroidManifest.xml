@@ -26,8 +26,13 @@
             android:exported="false" />
 
         <activity
-            android:name=".Views.LauncherActivity"
-            android:exported="false" />
+            android:name=".ParentHomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".Views.OnboardingActivity"
@@ -38,13 +43,8 @@
             android:exported="false" />
 
         <activity
-            android:name=".ParentHomeActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".Views.LauncherActivity"
+            android:exported="false" />
 
         <activity
             android:name=".Views.InventoryActivity"

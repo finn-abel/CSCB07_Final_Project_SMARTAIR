@@ -29,6 +29,10 @@ public class SchedulePresenter {
         this.model = new ScheduleModel(this);
     }
 
+    public void loadChildren() {
+        model.fetchChildren();
+    }
+
     public void loadChildrenDash() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
                 .child("users")
@@ -65,6 +69,12 @@ public class SchedulePresenter {
             selectedDay = "Monday";
             model.fetchScheduleDay(selectedChildId, selectedDay);
         }
+    }
+
+    public void onChildSelected(int index) {
+        selectedChildId = childIds.get(index);
+        selectedDay = "Monday";
+        model.fetchScheduleDay(selectedChildId, selectedDay);
     }
 
     public void onChildSelectedDash(int index) {

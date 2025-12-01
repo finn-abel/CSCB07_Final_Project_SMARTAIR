@@ -750,7 +750,7 @@ public class ProviderReportGenerator {
             // Check if it writes the PDF
             document.writeTo(new FileOutputStream(file));
 
-            Toast.makeText(context, "PDF file generated successfully.",
+            Toast.makeText(context, "PDF file sent to 'Downloads' folder successfully.",
                     Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             // Handles error

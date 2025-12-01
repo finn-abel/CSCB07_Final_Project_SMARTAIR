@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.DataObjects.ScheduleEntry;
+import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.SchedulePresenter;
 import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
 import com.example.cscb07_final_project_smartair.Views.ScheduleView;
@@ -38,6 +40,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
     private boolean showThirtyDays = false;
     private DatabaseReference mdatabase;
     private SchedulePresenter presenter;
+    private MainActivityPresenter presenterMain;
     String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3";
 
     @Override
@@ -68,6 +71,43 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
                 showThirtyDays = true;
             }
         });
+
+        Button check_in_button = findViewById(R.id.checkin);
+        Button logout_button = findViewById(R.id.logout);
+        Button btnLogs = findViewById(R.id.btnMedicineLogs);
+        Button btnInventory = findViewById(R.id.btnInventory);
+        Button btnPEF = findViewById(R.id.btnPEF);
+        Button btnProviderReport = findViewById(R.id.btnProviderReport);
+        Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
+
+        Button btnSchedule = findViewById(R.id.btnSchedule);
+        Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
+
+
+        btnBadgeSettings.setOnClickListener(view -> {
+            presenterMain.onBadgeSettingsClicked();
+        });
+        btnSchedule.setOnClickListener(view -> {
+            presenterMain.onScheduleButtonClicked();
+        });
+
+
+        logout_button.setOnClickListener(view -> {
+            presenterMain.onLogoutButtonClicked();
+        });
+
+        check_in_button.setOnClickListener(view -> {
+            presenterMain.onCheckInButtonClicked();
+        });
+        btnCheckInHistory.setOnClickListener(v -> presenterMain.onCheckInHistoryClicked());
+
+        btnLogs.setOnClickListener(v -> presenterMain.onMedicineLogsClicked());
+        btnInventory.setOnClickListener(v -> presenterMain.onInventoryClicked());
+
+        btnProviderReport.setOnClickListener(view -> {
+            presenterMain.onProviderReportClicked();
+        });
+
     }
 
     public void setActiveChild(String id) {
