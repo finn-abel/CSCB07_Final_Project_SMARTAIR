@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,12 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
+
     <LinearLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dashboard"
+            android:layout_marginBottom="12dp"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/SDspinnerChild"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="12dp"/>
 
         <!-- CHILD BADGE SECTION -->
         <LinearLayout
@@ -161,43 +176,6 @@
 
         </LinearLayout>
 
-        <!-- STREAKS -->
-        <TextView
-            android:id="@+id/tvControllerStreak"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Controller Streak: 0 days"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp" />
-
-        <TextView
-            android:id="@+id/tvTechniqueStreak"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Technique Streak: 0 days"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp" />
-
-        <!-- BADGES TITLE -->
-        <TextView
-            android:id="@+id/tvBadgesTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Badges"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp" />
-
-        <!-- BADGE CONTAINER -->
-        <LinearLayout
-            android:id="@+id/badgeContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="8dp" />
-
         <!-- BUTTONS -->
         <Button
             android:id="@+id/checkin"
@@ -219,14 +197,6 @@
             android:layout_width="match_parent"
             android:layout_height="62dp"
             android:text="CHILD SCHEDULE"
-            android:backgroundTint="#5C8AF2"
-            android:layout_marginTop="12dp" />
-
-        <Button
-            android:id="@+id/btnPEF"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:text="PEF ENTRY"
             android:backgroundTint="#5C8AF2"
             android:layout_marginTop="12dp" />
 
@@ -263,14 +233,6 @@
             android:layout_marginTop="12dp" />
 
         <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:text="SIGN OUT"
-            android:backgroundTint="#5C8AF2"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp" />
-        <Button
             android:id="@+id/triage_button"
             android:layout_width="match_parent"
             android:layout_height="62dp"
@@ -278,6 +240,14 @@
             android:backgroundTint="#5C8AF2"
             android:layout_marginTop="12dp" />
 
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="SIGN OUT"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp" />
 
     </LinearLayout>
 

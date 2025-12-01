@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -60,10 +61,11 @@ public class ProviderReportGenerator {
             return;
         }
 
-        DatabaseReference rescueRef = FirebaseDatabase.getInstance()
-                .getReference("medicine")  // medicine folder
-                .child("rescue")  // rescue folder
-                .child(childId);  // child id's folder
+        DatabaseReference rescueRef = FirebaseDatabase.getInstance() // temp changed
+                .getReference("users")  // medicine folder
+                .child("children")
+                .child(childId)
+                .child("rescueLogs");  // rescue folder
 
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
                 .getReference("pef")  // pef folder
@@ -86,11 +88,9 @@ public class ProviderReportGenerator {
                 .child(childId); // children folder
 
         DatabaseReference scheduleRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child("children")
-                .child(childId)
+                .getReference("medicine")
                 .child("schedule")
-                .child("controller");
+                .child(childId);
 
         DatabaseReference logsRef = FirebaseDatabase.getInstance()
                 .getReference("medicine")
@@ -138,7 +138,7 @@ public class ProviderReportGenerator {
                 }
 
                 if (!dataBeforeExists || !dataAfterExists) {
-                    Toast.makeText(context, "Not enough data 1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Not enough data", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -241,7 +241,7 @@ public class ProviderReportGenerator {
                                                     weekdayRequiredDoses.put(i, 0); // default 0
                                                 }
 
-                                                DataSnapshot scheduleNode = scheduleReceiver.child("schedule");
+                                                DataSnapshot scheduleNode = scheduleReceiver;
                                                 for (DataSnapshot scheduleChild : scheduleNode.getChildren()) {
                                                     String dayName = scheduleChild.getKey();
                                                     int calendarDay = dayNameToCalendar(dayName);
@@ -261,13 +261,17 @@ public class ProviderReportGenerator {
                                                 int plannedDays = 0;
                                                 Calendar calendar = Calendar.getInstance();
                                                 // increment by days from start time
-                                                for (long time = startTime; time <= System.currentTimeMillis(); time += 24L * 60 * 60 * 1000) {
+                                                for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24 * 60 * 60 * 1000)) {
                                                     calendar.setTimeInMillis(time);
                                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                                                     if (weekdayRequiredDoses.get(dayOfWeek) > 0) {
                                                         plannedDays++;
+                                                        // only consider days that have a dose as a planned day
                                                     }
                                                 }
+
+                                                int finalPlannedDays = plannedDays;
+                                                Log.d("PlannedDays", "PlannedDays: " + finalPlannedDays);
 
                                                 // Calculate taken days
                                                 logsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -293,21 +297,29 @@ public class ProviderReportGenerator {
                                                             calendar.set(Calendar.MILLISECOND, 0);
                                                             long day = calendar.getTimeInMillis();
 
+                                                            // update doses per day for 'day' and if no values already
+                                                            // on that day, use 0, otherwise get 'day's values
                                                             dosesPerDay.put(day, dosesPerDay.getOrDefault(day, 0) + doseAmount);
                                                         }
 
                                                         int takenDays = 0;
-                                                        for (long time = startTime; time <= System.currentTimeMillis(); time += 24L * 60 * 60 * 1000) {
+                                                        for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24L * 60 * 60 * 1000)) {
                                                             calendar.setTimeInMillis(time);
                                                             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                                                             int requiredDose = weekdayRequiredDoses.get(dayOfWeek);
                                                             if (requiredDose == 0) continue; // not a planned day
+                                                                                             // so not a taken day
 
                                                             long dayKey = calendar.getTimeInMillis();
+
+                                                            // find doses taken on dayKey's day
                                                             int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
                                                             if (takenDose >= requiredDose) takenDays++;
                                                         }
 
+                                                        int finalTakenDays = takenDays;
+
+                                                        Log.d("TakenDays", "TakenDays: " + finalPlannedDays);
                                                         // Checks if permissions are enabled for triage sharing
                                                         triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -324,13 +336,13 @@ public class ProviderReportGenerator {
                                                                         public void onTriageIncidentsLoaded(ArrayList<String> triageList) {
 
 
-                                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays);
+                                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays, finalPlannedDays, finalTakenDays);
                                                                         }
                                                                     });
                                                                 }
 
                                                                 else {
-                                                                    generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays);
+                                                                    generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays, finalPlannedDays, finalTakenDays);
                                                                 }
                                                             }
 
@@ -441,7 +453,8 @@ public class ProviderReportGenerator {
     }
 
     public void generatePdf(Context context, String childId, int months, int[] dailyFrequency,
-                            ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList, int totalProblemDays) {
+                            ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList,
+                            int totalProblemDays, int plannedDays, int takenDays) {
 
         // Creates an object for the PDF document
         PdfDocument document = new PdfDocument();
@@ -523,8 +536,6 @@ public class ProviderReportGenerator {
         // End of rescue frequency
 
         // Controller adherence, pie chart
-        int plannedDays = 200; // To be calculated from db
-        int takenDays = 125; // To be calculated from db
         int missedDays = plannedDays - takenDays;
 
         PieChart pieChart = new PieChart(context);
@@ -739,7 +750,7 @@ public class ProviderReportGenerator {
             // Check if it writes the PDF
             document.writeTo(new FileOutputStream(file));
 
-            Toast.makeText(context, "PDF file generated successfully.",
+            Toast.makeText(context, "PDF file sent to 'Downloads' folder successfully.",
                     Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             // Handles error
