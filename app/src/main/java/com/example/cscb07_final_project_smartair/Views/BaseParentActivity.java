@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,14 +27,10 @@ public class BaseParentActivity extends BaseActivity {
         // Get a database instance
         mdatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Get parent ID from preferences
-        // MODE_PRIVATE - Only accessible by calling app
-        parentId = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                .getString("PARENT_ID", null);
+        // get parent id
+        parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if (activeChildId != null) {
-            allAlerts(activeChildId);
-        }
+        loadChildrenAndStartAlerts();
     }
 
     // Below used to avoid duplicate alerts
@@ -47,20 +44,22 @@ public class BaseParentActivity extends BaseActivity {
         lastAlertMap.put(key, value);
     }
 
-    private void listenForChildrenAlerts() {
-        DatabaseReference ref = mdatabase
+    private void loadChildrenAndStartAlerts() {
+        DatabaseReference childrenRef = mdatabase
                 .child("users")
                 .child("parents")
-                .child(parentId);
+                .child(parentId)
+                .child("children");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        childrenRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot receiver) {
                 for (DataSnapshot child : receiver.getChildren()) {
-                    String childId = child.getKey();
-                    allAlerts(childId);
+                    String childId = child.getKey(); // get child id
+                    allAlerts(childId); // check alerts for child
                 }
             }
+
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
