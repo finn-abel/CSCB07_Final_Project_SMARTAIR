@@ -5,7 +5,11 @@ import android.os.Bundle;
 
 import android.content.Intent;
 
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +31,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParentHomeActivity extends BaseParentActivity implements ParentHomeView{
     private ParentHomePresenter presenter;
     private LineChart trendChart;
     private TextView toggleText;
+    private Spinner spinnerChild;
+
     private boolean showThirtyDays = false;
+    public String activeChildId = null;
 
     private DatabaseReference mdatabase;
 
@@ -41,15 +49,15 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_home);
 
-        // delete after this
-
         if (mdatabase == null) {
             mdatabase = FirebaseDatabase.getInstance().getReference();
         }
 
         trendChart = findViewById(R.id.chart_trend);
         toggleText = findViewById(R.id.tv_toggle_range);
+        spinnerChild = findViewById(R.id.SDspinnerChild);
 
+        // If 'Show 30 Days' is pressed, this code will change the view to 30 days
         toggleText.setOnClickListener(v -> {
             if(activeChildId == null) {return;}
             if (showThirtyDays) {
@@ -63,9 +71,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
             }
         });
 
-        // delete up to this
-
         presenter = new ParentHomePresenter(this);
+        presenter.loadChildrenDash();
 
         Button check_in_button = findViewById(R.id.checkin);
         Button logout_button = findViewById(R.id.logout);
@@ -104,42 +111,36 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         btnProviderReport.setOnClickListener(view -> {
             presenter.onProviderReportClicked();
         });
-
-        fetchChildThenLoad();
     }
 
-    private void fetchChildThenLoad() { //ensure that child is found before loading, avoid null ptr error
-        if (parentId == null) return;
+    public void setActiveChild(String id) {
+        activeChildId = id;
 
-        mdatabase.child("users").child("parents").child(parentId).child("children")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.exists()) { //no children
-                            Toast.makeText(ParentHomeActivity.this, "No children found.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        for (DataSnapshot childKey : snapshot.getChildren()) {
-                            activeChildId = childKey.getKey();
-                            loadDashboardData(); //load UI
-                            return;  //return after first child
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
-    }
-
-
-    private void loadDashboardData() {
-        if (activeChildId == null) return;
-
-        //call load methods after child found
+        // Reload UI using new child
+        loadRescueTrend(id, showThirtyDays ? 30 : 7);
         getTodayZone();
         getLastRescueTime();
         getWeeklyRescueCount();
-        loadRescueTrend(activeChildId, 7);
+    }
+
+    public void displayChildren(List<String> names) {
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerChild.setAdapter(adapter);
+
+        if (!names.isEmpty()) {
+            spinnerChild.setSelection(0);
+            presenter.onChildSelectedDash(0); // auto select a child
+        }
+
+        spinnerChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                presenter.onChildSelectedDash(pos);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
     @Override
@@ -264,23 +265,37 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         xAxis.setAxisMinimum(0f);
         xAxis.setAxisMaximum(data.length - 1);
 
-        // To check: do all cases always work
-
+        // increment by units of 5 on x axis for 30 day chart
         if (data.length == 30) {
+            xAxis.setLabelCount(data.length, false);
+
+            String[] labels = new String[data.length];
+
+            for (int i = 0; i < data.length; i++) {
+                // label multiples of 5
+                if (i == 0 || i == 5 || i == 10 || i == 15 || i == 20 || i == 25) {
+                    labels[i] = String.valueOf(i);
+                }
+
+                else if (i == 29) {
+                    labels[i] = String.valueOf(i + 1);
+                }
+
+                else {
+                    labels[i] = "";
+                }
+            }
+
             xAxis.setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
-                    int idx = Math.round(value);
-                    switch (idx) {
-                        case 0: return "0";
-                        case 5: return "5";
-                        case 10: return "10";
-                        case 15: return "15";
-                        case 19: return "20";
-                        case 24: return "25";
-                        case 29: return "30";
-                        default: return "";
+                    int index = Math.round(value);
+
+                    if (index >= 0 && index < labels.length) {
+                        return labels[index];
                     }
+
+                    return "";
                 }
             });
         }
@@ -298,6 +313,16 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         }
 
         YAxis leftAxis = trendChart.getAxisLeft();
+
+        int maxValue = 0;
+        for (int item : data) {
+            if (item > maxValue) maxValue = item;
+        }
+
+        leftAxis.setAxisMaximum(maxValue + 1); // y axis scale
+        leftAxis.setLabelCount(Math.min(maxValue + 1, 6), true); // ensures there is not
+        // too many ticks on the
+        // y axis
 
         leftAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -338,7 +363,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         pefRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot pefReceiver) {
-                double ratio = -1024;
+                double ratio = 0;
                 for (DataSnapshot child : pefReceiver.getChildren()) {
                     Long timestamp = child.child("timestamp").getValue(Long.class);
                     Integer current = child.child("current").getValue(Integer.class);
@@ -348,7 +373,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
                     if (timestamp != null && current != null && pb != null &&
                             timestamp >= startOfToday && timestamp <= now) {
 
-                        ratio = (double) current / pb;
+                        ratio = ((double) current) / pb;
                         break;
                     }
                 }
@@ -362,7 +387,9 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
                     zone = "Yellow";
                 }
 
-                else zone = "Red";
+                else if (ratio > 0) {
+                    zone = "Red";
+                }
 
                 tvTodayZoneValue.setText(zone);
             }

@@ -82,7 +82,6 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
         Button btnSchedule = findViewById(R.id.btnSchedule);
         Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
 
-
         btnBadgeSettings.setOnClickListener(view -> {
             presenterMain.onBadgeSettingsClicked();
         });

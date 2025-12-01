@@ -2,6 +2,8 @@ package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Context;
 
+import java.util.List;
+
 public interface ParentHomeView {
     public Context getContext();
 
@@ -22,4 +24,8 @@ public interface ParentHomeView {
     void navigateToInventory();
 
     void navigateToProviderReport();
+
+    public void displayChildren(List<String> names);
+
+    void setActiveChild(String id);
 }
