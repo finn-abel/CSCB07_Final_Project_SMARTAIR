@@ -291,7 +291,7 @@ public class BaseParentActivity extends BaseActivity {
                         }
 
                         // Check low
-                        if (amountLeft <= totalAmount * 0.2 && newestTimestamp > getLast("inventorylow_" + childId)) {
+                        if (amountLeft * 5 <= totalAmount && newestTimestamp > getLast("inventorylow_" + childId)) {
                             showAlert("Low Medication", "Your child's medication is running low.");
                             setLast("inventorylow_" + childId, newestTimestamp);
                         }
