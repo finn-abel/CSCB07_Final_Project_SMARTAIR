@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.Views.ProviderReportSelectionActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -52,7 +53,7 @@ public class ProviderReportGenerator {
     // Checks if the report is generatable
     // I.e. checks if there is enough data for the last 'months' months
 
-    public void generateReport(Context context, String childId, int months) {
+    public void generateReport(ProviderReportSelectionActivity context, String childId, int months) {
 
         if (childId == null)
         {
