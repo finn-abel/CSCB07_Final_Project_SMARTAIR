@@ -45,10 +45,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".ParentHomeActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".Views.InventoryActivity"
             android:exported="false" />
 
