@@ -60,7 +60,11 @@ public class MainActivityPresenter extends AppCompatActivity {
 
 
     public void onLogoutButtonClicked() {
+
+        SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        prefs.edit().clear().apply();
         model.signOut();
+
         view.navigateToLoginScreen();
     }
 

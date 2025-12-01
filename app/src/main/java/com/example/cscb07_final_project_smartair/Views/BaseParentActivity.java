@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,14 +24,16 @@ public class BaseParentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        // Get a database instance
         mdatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Get parent ID from preferences
-        // MODE_PRIVATE - Only accessible by calling app
-        parentId = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                .getString("PARENT_ID", null);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else { //no user logged in (edge case)
+            finish();
+            return;
+        }
 
         if (activeChildId != null) {
             allAlerts(activeChildId);
@@ -65,7 +69,7 @@ public class BaseParentActivity extends BaseActivity {
         });
     }
 
-    private void allAlerts(String childId) {
+    public void allAlerts(String childId) {
         listenTodayZone(childId);
         listenRapidRescue(childId);
         listenWorseAfterDose(childId);

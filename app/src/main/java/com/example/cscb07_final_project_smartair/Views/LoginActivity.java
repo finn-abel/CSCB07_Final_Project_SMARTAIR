@@ -2,6 +2,7 @@ package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -87,7 +88,17 @@ public class LoginActivity extends BaseActivity implements LoginView {
 
     @Override
     public void navigateToMainScreen() {
-        startActivity(new Intent(this, MainActivityView.class));
+
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String role = prefs.getString("USER_ROLE", "");
+        //pull role
+
+        if (role.equals("PARENT")) {
+            startActivity(new Intent(this, ParentHomeActivity.class));
+
+        } else if (role.equals("CHILD")) {
+            startActivity(new Intent(this, MainActivityView.class));
+        }
         finish();
     }
 

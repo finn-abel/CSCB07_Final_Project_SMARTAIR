@@ -1,6 +1,7 @@
 package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.cscb07_final_project_smartair.Presenters.LauncherPresenter;
@@ -23,7 +24,18 @@ public class LauncherActivity extends AppCompatActivity implements LauncherView 
 
     @Override
     public void navigateToMainScreen() {
-        Intent MainIntent = new Intent(LauncherActivity.this, MainActivityView.class);
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String role = prefs.getString("USER_ROLE", "");
+
+        Class<?> activityClass;
+
+        if(role.equals("PARENT")) { //redirect to parent home
+            activityClass = ParentHomeActivity.class;
+        } else { //redirect to child home
+            activityClass = MainActivityView.class;
+        }
+
+        Intent MainIntent = new Intent(LauncherActivity.this, activityClass);
 
         if (getIntent().getBooleanExtra("SHOW_TRIAGE_RECHECK", false)) {
             MainIntent.putExtra("SHOW_TRIAGE_RECHECK", true);
