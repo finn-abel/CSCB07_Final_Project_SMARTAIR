@@ -3,34 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_editor_absoluteX="2dp"
-    tools:layout_editor_absoluteY="0dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="10dp"
-        android:text="Post-medicine"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current_pef"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-        android:text="Pre-medicine"
-        app:layout_constraintEnd_toStartOf="@+id/textView16"
-        app:layout_constraintStart_toEndOf="@+id/textView14"
-        app:layout_constraintTop_toBottomOf="@+id/current_pef" />
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/view_top_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/textView10"
@@ -40,10 +20,9 @@
         android:text="PEF"
         android:textAlignment="center"
         android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textView12"
@@ -53,10 +32,24 @@
         android:layout_marginBottom="10dp"
         android:text="Peak Expiratory Flow"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="111dp"
+        android:layout_height="97dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginBottom="14dp"
+        app:srcCompat="@drawable/pef_icon"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView13" />
 
     <TextView
         android:id="@+id/textView13"
@@ -77,10 +70,9 @@
         android:ems="10"
         android:inputType="number"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textView14"
@@ -91,10 +83,49 @@
         android:layout_marginBottom="393dp"
         android:text="Optional: \nEnter pre-medicine and post-medicine PEF values"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_pef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="10dp"
+        android:text="Post-medicine"
+        app:layout_constraintTop_toBottomOf="@+id/current_pef"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.045" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:text="Pre-medicine"
+        app:layout_constraintTop_toBottomOf="@+id/current_pef"
+        app:layout_constraintEnd_toStartOf="@+id/textView16"
+        app:layout_constraintStart_toEndOf="@+id/textView14" />
+
+    <EditText
+        android:id="@+id/pre_med_pef"
+        android:layout_width="70sp"
+        android:layout_height="50sp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="201dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.054" />
 
     <EditText
         android:id="@+id/post_med_pef"
@@ -106,24 +137,42 @@
         android:ems="10"
         android:inputType="number"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/textView16"
         app:layout_constraintStart_toEndOf="@+id/pre_med_pef"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0" />
 
-    <EditText
-        android:id="@+id/pre_med_pef"
-        android:layout_width="70sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="201dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView14"
-        app:layout_constraintTop_toBottomOf="@+id/textView15"
-        app:layout_constraintVertical_bias="0.054" />
+    <TextView
+        android:id="@+id/select_child_prompt_pef"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="100dp"
+        android:text="Select child"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/select_child_pef"
+        app:layout_constraintBottom_toTopOf="@+id/return_pef"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.083" />
+
+    <Spinner
+        android:id="@+id/select_child_pef"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="100dp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@+id/post_med_pef"
+        app:layout_constraintStart_toEndOf="@+id/select_child_prompt_pef"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/enter_pef"
+        app:layout_constraintVertical_bias="0.101" />
 
     <Button
         android:id="@+id/enter_pef"
@@ -136,8 +185,8 @@
         android:text="Enter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.905"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.905" />
 
     <Button
         android:id="@+id/return_pef"
@@ -148,56 +197,7 @@
         android:layout_marginBottom="68dp"
         android:backgroundTint="@color/primary"
         android:text="Return"
-        android:textColorLink="#4673DB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/enter_pef"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="111dp"
-        android:layout_height="97dp"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginBottom="14dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView13"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
-        app:srcCompat="@drawable/pef_icon" />
-
-    <Spinner
-        android:id="@+id/select_child_pef"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="100dp"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/enter_pef"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/select_child_prompt_pef"
-        app:layout_constraintTop_toBottomOf="@+id/post_med_pef"
-        app:layout_constraintVertical_bias="0.101" />
-
-    <TextView
-        android:id="@+id/select_child_prompt_pef"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="100dp"
-        android:text="Select child"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/return_pef"
-        app:layout_constraintEnd_toStartOf="@+id/select_child_pef"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14"
-        app:layout_constraintVertical_bias="0.083" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

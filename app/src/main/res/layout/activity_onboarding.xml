@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/onboarding_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -144,7 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cta_text"
-            android:layout_marginTop="@dimen/space_medium" />
-
+            android:layout_marginTop="@dimen/space_medium"
+            app:backgroundTint="#FF4673DB" />
     </LinearLayout>
 </ScrollView>

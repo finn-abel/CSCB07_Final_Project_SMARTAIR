@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.cscb07_final_project_smartair.Presenters.MainPresenter;
+import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Presenters.OnboardingPresenter;
 import com.google.android.material.button.MaterialButton;
@@ -25,9 +25,7 @@ public class OnboardingActivity extends AppCompatActivity{
     }
 
     public void navigateToMainScreen() {
-        // to-do:
-        // change this to where you want to navigate!!!!!!!!
-        startActivity(new Intent(this, MainPresenter.class));
+        startActivity(new Intent(this, MainActivityPresenter.class));
         finish();
     }
 
