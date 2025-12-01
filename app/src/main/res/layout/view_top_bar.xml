@@ -43,7 +43,7 @@
         android:id="@+id/triage_button"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:text="HTB"
+        android:text="HBA"
         android:textSize="12sp"
         android:textColor="@android:color/white"
         android:backgroundTint="@color/danger_red"

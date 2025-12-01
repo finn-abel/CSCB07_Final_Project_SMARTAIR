@@ -30,7 +30,8 @@ public class LauncherActivity extends AppCompatActivity implements LauncherView 
         Class<?> activityClass;
 
         if(role.equals("PARENT")) { //redirect to parent home
-            activityClass = ParentHomeActivity.class;
+            //activityClass = ParentHomeActivity.class;
+            activityClass = MainActivityView.class;
         } else { //redirect to child home
             activityClass = MainActivityView.class;
         }
