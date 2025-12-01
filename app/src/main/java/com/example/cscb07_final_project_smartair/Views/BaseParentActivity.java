@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.cscb07_final_project_smartair.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,20 +23,14 @@ public class BaseParentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        // Get a database instance
         mdatabase = FirebaseDatabase.getInstance().getReference();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        } else { //no user logged in (edge case)
-            finish();
-            return;
-        }
+        // get parent id
+        parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if (activeChildId != null) {
-            allAlerts(activeChildId);
-        }
+        loadChildrenAndStartAlerts();
     }
 
     // Below used to avoid duplicate alerts
@@ -51,25 +44,27 @@ public class BaseParentActivity extends BaseActivity {
         lastAlertMap.put(key, value);
     }
 
-    private void listenForChildrenAlerts() {
-        DatabaseReference ref = mdatabase
+    private void loadChildrenAndStartAlerts() {
+        DatabaseReference childrenRef = mdatabase
                 .child("users")
                 .child("parents")
-                .child(parentId);
+                .child(parentId)
+                .child("children");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        childrenRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot receiver) {
                 for (DataSnapshot child : receiver.getChildren()) {
-                    String childId = child.getKey();
-                    allAlerts(childId);
+                    String childId = child.getKey(); // get child id
+                    allAlerts(childId); // check alerts for child
                 }
             }
+
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    public void allAlerts(String childId) {
+    protected void allAlerts(String childId) {
         listenTodayZone(childId);
         listenRapidRescue(childId);
         listenWorseAfterDose(childId);
@@ -267,7 +262,13 @@ public class BaseParentActivity extends BaseActivity {
     // Inventory low/expired listener, alerts the parent if the child's medication is low
     // or expired
     private void listenInventory(String childId) {
-        DatabaseReference inventoryRef = mdatabase.child("inventory").child(childId);
+        DatabaseReference inventoryRef = mdatabase
+                .child("users")
+                .child("parents")
+                .child(parentId)
+                .child("children")
+                .child(childId)
+                .child("inventory");
 
         inventoryRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -275,19 +276,24 @@ public class BaseParentActivity extends BaseActivity {
                 long newestTimestamp = System.currentTimeMillis();
 
                 for (DataSnapshot child : receiver.getChildren()) {
-                    Boolean expired = child.child("expired").getValue(Boolean.class);
-                    Boolean low = child.child("low").getValue(Boolean.class);
+                    Long expiryDate = child.child("expiryDate").getValue(Long.class);
+                    Integer totalAmount = child.child("totalAmount").getValue(Integer.class);
+                    Integer amountLeft = child.child("amountLeft").getValue(Integer.class);
 
-                    if (Boolean.TRUE.equals(expired)
-                            && newestTimestamp > getLast("inventoryexpired_" + childId)) {
-                        showAlert("Expired Medication", "Your child's medication expired.");
-                        setLast("inventoryexpired_" + childId, newestTimestamp);
-                    }
+                    // if valid data
+                    if (expiryDate != null && totalAmount != null && amountLeft != null) {
 
-                    if (Boolean.TRUE.equals(low)
-                            && newestTimestamp > getLast("inventorylow_" + childId)) {
-                        showAlert("Low Medication", "Your child's medication is low.");
-                        setLast("inventorylow_" + childId, newestTimestamp);
+                        // Check expired
+                        if (expiryDate < newestTimestamp && newestTimestamp > getLast("inventoryexpired_" + childId)) {
+                            showAlert("Expired Medication", "Your child's medication has expired.");
+                            setLast("inventoryexpired_" + childId, newestTimestamp);
+                        }
+
+                        // Check low
+                        if (amountLeft * 5 <= totalAmount && newestTimestamp > getLast("inventorylow_" + childId)) {
+                            showAlert("Low Medication", "Your child's medication is running low.");
+                            setLast("inventorylow_" + childId, newestTimestamp);
+                        }
                     }
                 }
             }

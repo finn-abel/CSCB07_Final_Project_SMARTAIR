@@ -140,8 +140,6 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         getLastRescueTime();
         getWeeklyRescueCount();
         loadRescueTrend(activeChildId, 7);
-
-        allAlerts(activeChildId);
     }
 
     @Override
