@@ -39,7 +39,7 @@ public class BadgeSettingsActivity extends BaseActivity implements BadgeSettings
     }
 
     @Override
-    public void populateChildList(List<String> childNames) {
+    public void populateChildList(List<String> childNames, List<String> childIDs) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -50,12 +50,13 @@ public class BadgeSettingsActivity extends BaseActivity implements BadgeSettings
         spinnerChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                presenter.onChildSelected(childNames.get(pos));
+                presenter.onChildSelected(childIDs.get(pos));
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
+
 
     @Override
     public void displayThresholds(BadgeThresholds t) {

@@ -45,7 +45,7 @@ public class MedicineLogsModel {
 
         ref.child(logID).setValue(log)
                 .addOnSuccessListener(aVoid -> {
-                    reduceInventory("controller", doseAmount);
+                    reduceInventory(childID,"controller", doseAmount);
                     presenter.onControllerLogSuccess();
                 })
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
@@ -76,7 +76,7 @@ public class MedicineLogsModel {
 
         ref.child(logID).setValue(log)
                 .addOnSuccessListener(aVoid -> {
-                    reduceInventory("rescue", doseAmount);
+                    reduceInventory(childID, "rescue", doseAmount);
                     presenter.onRescueLogSuccess();
                 })
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
@@ -157,14 +157,17 @@ public class MedicineLogsModel {
                 });
     }
 
-    private void reduceInventory(String medType, int amountToReduce) {
+    private void reduceInventory(String childId, String medType, int amountToReduce) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
         String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("children")
+                .getReference("users")
+                .child("parents")
                 .child(parentID)
+                .child("children")
+                .child(childId)
                 .child("inventory");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -175,7 +178,6 @@ public class MedicineLogsModel {
 
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     InventoryItem item = ds.getValue(InventoryItem.class);
-
                     if (item == null) continue;
 
                     String type = item.medType == null ? "" : item.medType;
@@ -191,11 +193,14 @@ public class MedicineLogsModel {
                     return;
                 }
 
-                target.amountLeft = Math.max(0, target.amountLeft - amountToReduce);
+                int newAmount = Math.max(0, target.amountLeft - amountToReduce);
+                target.amountLeft = newAmount;
+
                 ref.child(key).setValue(target);
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 

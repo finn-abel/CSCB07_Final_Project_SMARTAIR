@@ -17,5 +17,4 @@ public class Child extends User{
         super(fullName,uid,email,"Child");
         this.sharingPerms = new HashMap<>();
     }
-
 }

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.cscb07_final_project_smartair.DataObjects.ScheduleEntry;
 import com.example.cscb07_final_project_smartair.Presenters.SchedulePresenter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
 import java.util.*;
@@ -17,34 +18,42 @@ public class ScheduleModel {
     }
 
     public void fetchChildren() {
-        String parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
 
+        String parentId = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("parents")
+                .getReference("users")
+                .child("parents")
                 .child(parentId)
                 .child("children");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<String> names = new ArrayList<>();
                 List<String> ids = new ArrayList<>();
 
-                for (DataSnapshot ds : snapshot.getChildren())
-                {
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     ids.add(ds.getKey());
-                    names.add(String.valueOf(ds.child("name").getValue()));
+                    String name = ds.child("name").getValue(String.class);
+                    if (name == null) name = "(Unnamed)";
+                    names.add(name);
                 }
-                //TO:DO Remove these line!!!!
-                names.add("Test Child");
-                ids.add("l1Z0u0INnMZxsjae4MdRCOj8oqJ3");
 
                 presenter.onChildrenLoaded(names, ids);
             }
-            @Override public void onCancelled(@NonNull DatabaseError error) {
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
                 presenter.onFailure(error.getMessage());
             }
         });
     }
+
 
     public void fetchScheduleDay(String childId, String day) {
         DatabaseReference ref = FirebaseDatabase.getInstance()

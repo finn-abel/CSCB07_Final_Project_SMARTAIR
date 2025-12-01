@@ -6,6 +6,7 @@ import com.example.cscb07_final_project_smartair.DataObjects.Badge;
 import com.example.cscb07_final_project_smartair.DataObjects.BadgeThresholds;
 import com.example.cscb07_final_project_smartair.Presenters.BadgeSettingsPresenter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
@@ -19,11 +20,18 @@ public class BadgeSettingsModel {
     }
 
     public void loadChildren() {
-        String parentID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            presenter.onFailure("User not logged in.");
+            return;
+        }
 
+        String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("childrenOfParent")
-                .child(parentID);
+                .getReference("users")
+                .child("parents")
+                .child(parentID)
+                .child("children");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -31,23 +39,23 @@ public class BadgeSettingsModel {
                 List<String> childIDs = new ArrayList<>();
                 List<String> childNames = new ArrayList<>();
 
-                for (DataSnapshot ds : snapshot.getChildren())
-                {
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     childIDs.add(ds.getKey());
-                    childNames.add(ds.child("name").getValue(String.class));
+                    String name = ds.child("name").getValue(String.class);
+                    if (name == null) name = "(Unnamed)";
+                    childNames.add(name);
                 }
-                //TO:DO Remove these line!!!!
-                childNames.add("Test Child");
-                childIDs.add("l1Z0u0INnMZxsjae4MdRCOj8oqJ3");
 
-                presenter.onChildrenLoaded(childIDs, childNames);
+                presenter.onChildrenLoaded(childNames, childIDs);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 presenter.onFailure(error.getMessage());
             }
         });
     }
+
 
     public void loadThresholds(String childID) {
         DatabaseReference ref = FirebaseDatabase.getInstance()

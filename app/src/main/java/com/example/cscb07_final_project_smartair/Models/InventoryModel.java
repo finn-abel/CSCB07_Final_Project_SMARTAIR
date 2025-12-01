@@ -28,9 +28,11 @@ public class InventoryModel {
 
         String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("parents")
+                .getReference("users")
+                .child("parents")
                 .child(parentID)
                 .child("children");
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -42,9 +44,6 @@ public class InventoryModel {
                     names.add(name);
                     ids.add(ds.getKey());
                 }
-                //TESTING
-                names.add("Test Child");
-                ids.add("l1Z0u0INnMZxsjae4MdRCOj8oqJ3");
 
                 presenter.onChildrenLoaded(names, ids);
             }
@@ -66,11 +65,13 @@ public class InventoryModel {
 
         String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("parents")
+                .getReference("users")
+                .child("parents")
                 .child(parentID)
                 .child("children")
                 .child(childId)
                 .child("inventory");
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -98,10 +99,11 @@ public class InventoryModel {
             presenter.onFailure("User not logged in.");
             return;
         }
-        String parentID = user.getUid();
 
+        String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("parents")
+                .getReference("users")
+                .child("parents")
                 .child(parentID)
                 .child("children")
                 .child(childId)
@@ -120,10 +122,11 @@ public class InventoryModel {
             presenter.onFailure("User not logged in.");
             return;
         }
-        String parentID = user.getUid();
 
+        String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("parents")
+                .getReference("users")
+                .child("parents")
                 .child(parentID)
                 .child("children")
                 .child(childId)

@@ -63,14 +63,6 @@ public class InventoryPresenter {
         }
 
         for (InventoryItem item : items) {
-            // === TODO ALERT HOOKS ===
-            if (item.amountLeft <= item.totalAmount * 0.2) {
-                // TODO: trigger low-stock alert service
-            }
-            if (System.currentTimeMillis() > item.expiryDate) {
-                // TODO: trigger expiry alert service
-            }
-
             view.addInventoryItemCard(item);
         }
     }
