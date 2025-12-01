@@ -22,7 +22,9 @@ public class TriageModel extends BaseModel{
     public TriagePresenter Tpresenter;
 
     public int rescue_count;
-
+    public float cachedPB = -1;
+    public Float cachedRecentPef = null;
+    //load on selection to avoid simultaneous db pulls
     public TriageModel(TriagePresenter presenter){
         super();
         this.Tpresenter = presenter;
@@ -61,97 +63,83 @@ public class TriageModel extends BaseModel{
         long threeHoursAgo = System.currentTimeMillis() - (3 * 60 * 60 * 1000); //3 hours prior
 
         DatabaseReference path = FirebaseDatabase.getInstance()
-                .getReference("medicine/rescue")
-                .child(childID);
+                .getReference("users/children")
+                .child(childID)
+                .child("medicine")
+                .child("rescue");
 
-        path.orderByChild("timestamp").startAt(threeHoursAgo) //last three house
+        path.orderByChild("timestamp").startAt(threeHoursAgo)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        rescue_count = (int) snapshot.getChildrenCount(); //get count
+                        rescue_count = (int) snapshot.getChildrenCount();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError error) {
-                        rescue_count = 0; // zero on error
+                        rescue_count = 0;
                     }
                 });
+    }
+
+    public void preloadData(String childID) {
+        //load rescue logs
+        preloadRescueLogs(childID);
+
+
+        //load pb for pef
+        DatabaseReference childRef = FirebaseDatabase.getInstance()
+                .getReference("users/children").child(childID);
+
+        childRef.child("pb_pef").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Assuming stored as Integer or Float in DB
+                    cachedPB = snapshot.getValue(Float.class);
+                } else {
+                    cachedPB = -1; // Not set
+                }
+            }
+            @Override public void onCancelled(DatabaseError error) {}
+        });
+
+        //find most recent pef in last 24hrs
+        long oneDayAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
+        DatabaseReference pefRef = FirebaseDatabase.getInstance()
+                .getReference("pef").child(childID);
+
+        pefRef.orderByChild("timestamp").startAt(oneDayAgo).limitToLast(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        cachedRecentPef = null;
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            cachedRecentPef = child.child("current").getValue(Float.class);
+                        }
+                    }
+                    @Override public void onCancelled(DatabaseError error) {}
+                });
+    }
+
+    public boolean isRedZone(Float pefValue) {
+        // when no recent PEF and no pb
+        if (pefValue == null || cachedPB <= 0) {
+            return false;
+        }
+        return (pefValue < (0.5f * cachedPB));
     }
 
     public boolean isRedFlag(triageCapture capture) {
         boolean physicalRedFlags = (capture.speak || capture.lips || capture.chest);
 
         boolean rapidRescueFlag = false;
-        boolean pefConcern = false;
         if (capture.shared_rescue) {
             rapidRescueFlag = (this.rescue_count >= 3);
         }
-
-        if(capture.pef != null){
-            pefConcern = (capture.pef <=40); //change to red-zone when implemented
-        }
-
-        return physicalRedFlags || rapidRescueFlag || pefConcern;
-    }
-
-    public interface ImprovementListener {
-        void onComparisonComplete(boolean shouldEscalate);
-    }
-
-    public void isImprovement(triageCapture capture, ImprovementListener listener) {
-        String childID = capture.userID;
-        DatabaseReference path = FirebaseDatabase.getInstance()
-                .getReference("triage_incidents")
-                .child(childID);
-
-        path.orderByKey().limitToLast(1)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        if (!snapshot.exists()) { //no history
-                            listener.onComparisonComplete(isRedFlag(capture));
-                            //default to current flags
-                            return;
-                        }
-
-                        triageData lastLog = null;
-                        for (DataSnapshot child : snapshot.getChildren()) {
-                            lastLog = child.getValue(triageData.class);
-                        } // get last log
-
-                        if (lastLog == null) {
-                            listener.onComparisonComplete(isRedFlag(capture));
-                            //default to current flags on error
-                            return;
-                        }
-                        boolean prePef = false;
-                        boolean currPef = false;
-                        if(lastLog.pef != null) { prePef = lastLog.pef <40;}
-                        if(capture.pef != null) { currPef = capture.pef <40;}
-
-                        //compare flags before and now
-                        boolean prev = (lastLog.speak || lastLog.lips || lastLog.chest
-                                || prePef );
-                        boolean curr = (capture.speak || capture.lips || capture.chest
-                                ||currPef );
-
-                        boolean escalate = false;
-
-                        if (curr) {
-                            escalate = true;
-                        } else if (prev && !curr) {
-                            escalate = false;
-                        }
-
-                        // 5. Return decision
-                        listener.onComparisonComplete(escalate);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        listener.onComparisonComplete(isRedFlag(capture));
-                    }
-                });
+        Float pefToCheck = (capture.pef != null) ? capture.pef : cachedRecentPef; // get relevant value
+        boolean pefRedZone = isRedZone(pefToCheck);
+        return physicalRedFlags || rapidRescueFlag || pefRedZone;
     }
 
     public interface getRemedyListener {

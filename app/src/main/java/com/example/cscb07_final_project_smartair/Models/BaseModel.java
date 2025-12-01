@@ -28,34 +28,20 @@ public class BaseModel
         root.child("users/parents").child(userID).child("children") //get path
                 .addListenerForSingleValueEvent(new ValueEventListener() { //read once
                     @Override
-                    public void onDataChange(DataSnapshot childListSnap) {
-                        if (!childListSnap.exists()) {
-                            listener.onChildrenLoaded(new ArrayList<>()); // empty list on no children
-                            return;
+                    public void onDataChange(DataSnapshot snapshot) {
+                        List<ChildSpinnerOption> childrenList = new ArrayList<>();
+
+                        if (snapshot.exists()) {
+                            for (DataSnapshot childSnap : snapshot.getChildren()) {
+
+                                String childId = childSnap.getKey();
+                                String name = childSnap.child("name").getValue(String.class);
+
+                                if (name == null) {name = "Unknown";}
+                                childrenList.add(new ChildSpinnerOption(childId, name));
+                            }
                         }
-
-
-                        List<ChildSpinnerOption> childrenList = new ArrayList<>();   //list for kids
-                        long totalChildren = childListSnap.getChildrenCount();
-                        final int [] count = {0};    //so lambdas can increment
-
-                        // 2. Loop through every ID
-                        for (DataSnapshot childKey : childListSnap.getChildren()) {  //loop through children in list
-                            String childID = childKey.getKey();
-
-                            // 3. Go fetch the Name for this ID
-                            root.child("users/children").child(childID).child("name")
-                                    .get().addOnSuccessListener(nameSnap -> {
-
-                                        String name = nameSnap.getValue(String.class);
-                                        childrenList.add(new ChildSpinnerOption(childID, name));
-                                        count[0]++;  //increment
-
-                                        if (count[0] == totalChildren) {
-                                            listener.onChildrenLoaded(childrenList); //send full list
-                                        }
-                                    });
-                        }
+                        listener.onChildrenLoaded(childrenList);
                     }
 
                     @Override
