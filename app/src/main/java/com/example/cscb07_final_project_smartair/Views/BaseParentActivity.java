@@ -64,7 +64,7 @@ public class BaseParentActivity extends BaseActivity {
         });
     }
 
-    private void allAlerts(String childId) {
+    protected void allAlerts(String childId) {
         listenTodayZone(childId);
         listenRapidRescue(childId);
         listenWorseAfterDose(childId);
