@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.DataObjects.ScheduleEntry;
 import com.example.cscb07_final_project_smartair.Models.ScheduleModel;
-import com.example.cscb07_final_project_smartair.ParentHomeActivity;
 import com.example.cscb07_final_project_smartair.Views.ScheduleView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,15 +74,6 @@ public class SchedulePresenter {
         selectedChildId = childIds.get(index);
         selectedDay = "Monday";
         model.fetchScheduleDay(selectedChildId, selectedDay);
-    }
-
-    public void onChildSelectedDash(int index) {
-        if (index < 0 || index >= childIds.size()) return;
-
-        String id = childIds.get(index);
-
-        // send childId back to ParentHomeActivity
-        ((ParentHomeActivity) view).setActiveChild(id);
     }
 
     public void onDaySelected(String day) {
