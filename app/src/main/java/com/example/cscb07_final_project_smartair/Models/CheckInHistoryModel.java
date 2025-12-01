@@ -40,7 +40,7 @@ public class CheckInHistoryModel {
         ArrayList<CheckInData> checkIns = new ArrayList<>();
         userID = currentUser.getUid();
         DatabaseReference checkinsRef = mDatabase.child(userID);
-        checkinsRef.addListenerForSingleValueEvent(new ValueEventListener(){
+        checkinsRef.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot check_in_data) {
                 if (!check_in_data.exists()) {
@@ -68,14 +68,6 @@ public class CheckInHistoryModel {
             browseCheckIns(listener);
             return;
         }
-        String[] start_date_components = date[0].split("/");
-        String[] end_date_components = date[1].split("/");
-        int start_day = Integer.parseInt(start_date_components[0].trim());
-        int start_month = Integer.parseInt(start_date_components[1].trim());
-        int start_year = Integer.parseInt(start_date_components[2].trim());
-        int end_day = Integer.parseInt(end_date_components[0].trim());
-        int end_month = Integer.parseInt(end_date_components[1].trim());
-        int end_year = Integer.parseInt(end_date_components[2].trim());
 
 
         String userID = null;
@@ -89,9 +81,30 @@ public class CheckInHistoryModel {
         ArrayList<CheckInData> updatedCheckIns = new ArrayList<>();
         userID = currentUser.getUid();
         DatabaseReference checkinsRef = mDatabase.child(userID);
-        checkinsRef.addListenerForSingleValueEvent(new ValueEventListener(){
+        checkinsRef.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot check_in_data) {
+
+                int start_day=-1;
+                int start_month=-1;
+                int start_year=-1;
+                int end_day=-1;
+                int end_month=-1;
+                int end_year=-1;
+
+
+                if(!date[0].isEmpty()){
+                    String[] start_date_components = date[0].split("/");
+                    String[] end_date_components = date[1].split("/");
+
+                    start_day = Integer.parseInt(start_date_components[0].trim());
+                    start_month = Integer.parseInt(start_date_components[1].trim());
+                    start_year = Integer.parseInt(start_date_components[2].trim());
+                    end_day = Integer.parseInt(end_date_components[0].trim());
+                    end_month = Integer.parseInt(end_date_components[1].trim());
+                    end_year = Integer.parseInt(end_date_components[2].trim());
+
+                }
 
                 if (!check_in_data.exists()) {
                     listener.onFailure("No check-ins found");
@@ -120,21 +133,21 @@ public class CheckInHistoryModel {
                         }
 
                         String[] check_in_date_components = checkInData.date.split("/");
-                            int day = Integer.parseInt(check_in_date_components[0].trim());
-                            int month = Integer.parseInt(check_in_date_components[1].trim());
-                            int year = Integer.parseInt(check_in_date_components[2].trim());
+                        int day = Integer.parseInt(check_in_date_components[0].trim());
+                        int month = Integer.parseInt(check_in_date_components[1].trim());
+                        int year = Integer.parseInt(check_in_date_components[2].trim());
 
-                            if (start_year == end_year && year == start_year) {
-                                if (start_month == end_month && month == start_month) {
-                                    if (start_day <= day && day <= end_day) {
-                                        matching_date = 1;
-                                    }
-                                } else if (start_month <= month && month <= end_month && (day >= start_day || day <= end_day)) {
+                        if (start_year == end_year && year == start_year) {
+                            if (start_month == end_month && month == start_month) {
+                                if (start_day <= day && day <= end_day) {
                                     matching_date = 1;
                                 }
-                            } else if (start_year <= year && year <= end_year && (month >= start_month || month <= end_month) && (day >= start_day || day <= end_day)) {
-                                matching_date = 1;
+                            }else if (start_month <= month && month <= end_month && (day >= start_day || day <= end_day)) {
+                                    matching_date = 1;
                             }
+                        } else if (start_year <= year && year <= end_year && (month >= start_month || month <= end_month) && (day >= start_day || day <= end_day)) {
+                                matching_date = 1;
+                        }
 
                         if (matching_symptoms == 1 || matching_triggers == 1 || matching_date == 1) {
                             updatedCheckIns.add(checkInData);
@@ -151,4 +164,6 @@ public class CheckInHistoryModel {
 
         });
     }
+
+
 }

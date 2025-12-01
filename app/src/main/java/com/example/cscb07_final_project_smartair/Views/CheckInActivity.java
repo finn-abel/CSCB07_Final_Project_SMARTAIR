@@ -28,6 +28,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     private CheckBox odour;
     private CheckBox other;
 
+
     private CheckInPresenter presenter;
 
 

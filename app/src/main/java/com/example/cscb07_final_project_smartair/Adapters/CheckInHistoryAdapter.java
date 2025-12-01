@@ -43,6 +43,13 @@ public class CheckInHistoryAdapter extends RecyclerView.Adapter<CheckInHistoryAd
         notifyDataSetChanged(); // Notify the adapter that the data has changed
     }
 
+    public ArrayList<CheckInData> onScreenData() {
+        return checkInList;
+    }
+
+
+
+
 
     public static class CheckInViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewDate;
