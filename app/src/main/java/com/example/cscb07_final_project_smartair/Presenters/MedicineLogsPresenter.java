@@ -20,45 +20,37 @@ public class MedicineLogsPresenter {
         String doseText = view.getControllerDoseAmount();
 
         if (doseText.isEmpty()) {
-            view.showError("Dose amount cannot be empty");
+            view.showError("Dose amount cannot be empty.");
             return;
         }
 
-        try {
-            int dose = Integer.parseInt(doseText);
-            model.logController(dose);
-        } catch (Exception e) {
-            view.showError("Invalid dose amount");
+        int dose = Integer.parseInt(doseText);
+        int before = view.getControllerBreathingBefore();
+        int after = view.getControllerBreathingAfter();
+
+        model.logController(dose, before, after);
+    }
+
+    public void onLogRescueClicked() {
+        String doseText = view.getRescueDoseAmount();
+
+        if (doseText.isEmpty()) {
+            view.showError("Dose amount cannot be empty.");
+            return;
         }
+
+        int dose = Integer.parseInt(doseText);
+        int before = view.getRescueBreathingBefore();
+        int after = view.getRescueBreathingAfter();
+        int sob = view.getRescueShortnessOfBreath();
+
+        model.logRescue(dose, before, after, sob);
     }
 
     public void onControllerLogSuccess() {
         view.showSuccess("Controller dose logged!");
         view.closeControllerPopup();
         model.getControllerDoses();
-    }
-
-    public void onLogRescueClicked() {
-        String doseText = view.getRescueDoseAmount();
-        String beforeText = view.getBreathingBefore();
-        String afterText = view.getBreathingAfter();
-        String sobText = view.getShortnessOfBreath();
-
-        if (doseText.isEmpty() || beforeText.isEmpty() || afterText.isEmpty() || sobText.isEmpty()) {
-            view.showError("All rescue fields must be filled");
-            return;
-        }
-
-        try {
-            int dose = Integer.parseInt(doseText);
-            int before = Integer.parseInt(beforeText);
-            int after = Integer.parseInt(afterText);
-            int sob = Integer.parseInt(sobText);
-
-            model.logRescue(dose, before, after, sob);
-        } catch (Exception e) {
-            view.showError("Invalid rescue input values");
-        }
     }
 
     public void onRescueLogSuccess() {

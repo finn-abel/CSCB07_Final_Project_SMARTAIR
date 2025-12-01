@@ -8,9 +8,12 @@ import java.util.List;
 public interface MedicineLogsView {
     String getControllerDoseAmount();
     String getRescueDoseAmount();
-    String getBreathingBefore();
-    String getBreathingAfter();
-    String getShortnessOfBreath();
+
+    public int getControllerBreathingBefore();
+    public int getControllerBreathingAfter();
+    public int getRescueBreathingBefore();
+    public int getRescueBreathingAfter();
+    public int getRescueShortnessOfBreath();
 
     void showControllerPopup();
     void showRescuePopup();

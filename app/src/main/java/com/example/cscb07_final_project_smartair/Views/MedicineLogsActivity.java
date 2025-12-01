@@ -3,9 +3,11 @@ package com.example.cscb07_final_project_smartair.Views;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +28,15 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
 
     private Dialog controllerDialog;
     private Dialog rescueDialog;
+
     private LinearLayout controllerLogContainer;
     private LinearLayout rescueLogContainer;
+    private int selectedBeforeController = 1;
+    private int selectedAfterController = 1;
+
+    private int selectedBeforeRescue = 1;
+    private int selectedAfterRescue = 1;
+    private int selectedSOB = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +48,6 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         controllerLogContainer = findViewById(R.id.recyclerControllerLogs);
         rescueLogContainer = findViewById(R.id.recyclerRescueLogs);
 
-        // Buttons
         Button btnController = findViewById(R.id.btnLogController);
         Button btnRescue = findViewById(R.id.btnLogRescue);
         Button btnBack = findViewById(R.id.btnBackToHome);
@@ -48,44 +56,102 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         btnRescue.setOnClickListener(v -> showRescuePopup());
         btnBack.setOnClickListener(v -> navigateToMainActivity());
 
-        presenter.loadLogs(); // fetch last 72 hours
+        presenter.loadLogs();
     }
 
-    // popup handling
     @Override
     public void showControllerPopup() {
         controllerDialog = new Dialog(this);
         controllerDialog.setContentView(R.layout.dialog_controller_dose);
+
+        if (controllerDialog.getWindow() != null)
+        {
+            controllerDialog.getWindow().setLayout(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+        }
+
+        setupSpinner(controllerDialog.findViewById(R.id.spinnerBeforeController),
+                value -> selectedBeforeController = value);
+
+        setupSpinner(controllerDialog.findViewById(R.id.spinnerAfterController),
+                value -> selectedAfterController = value);
 
         Button submit = controllerDialog.findViewById(R.id.submitControllerDose);
         submit.setOnClickListener(v -> presenter.onLogControllerClicked());
 
         controllerDialog.show();
     }
+
     @Override
     public void showRescuePopup() {
         rescueDialog = new Dialog(this);
         rescueDialog.setContentView(R.layout.dialog_rescue_dose);
+
+        if (rescueDialog.getWindow() != null) {
+            rescueDialog.getWindow().setLayout(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+        }
+
+        setupSpinner(rescueDialog.findViewById(R.id.spinnerBeforeRescue),
+                value -> selectedBeforeRescue = value);
+
+        setupSpinner(rescueDialog.findViewById(R.id.spinnerAfterRescue),
+                value -> selectedAfterRescue = value);
+
+        setupSpinner(rescueDialog.findViewById(R.id.spinnerSOB),
+                value -> selectedSOB = value);
 
         Button submit = rescueDialog.findViewById(R.id.submitRescueDose);
         submit.setOnClickListener(v -> presenter.onLogRescueClicked());
 
         rescueDialog.show();
     }
+
     @Override
     public void closeControllerPopup() {
         if (controllerDialog != null) controllerDialog.dismiss();
     }
+
     @Override
     public void closeRescuePopup() {
         if (rescueDialog != null) rescueDialog.dismiss();
     }
 
-    // methods to snag user inputs
+    private void setupSpinner(Spinner spinner, java.util.function.Consumer<Integer> setter) {
+        Integer[] values = {1, 2, 3, 4, 5};
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                values
+        );
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
+                setter.accept(values[position]);
+            }
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+        });
+    }
+
     @Override
     public String getControllerDoseAmount() {
         EditText et = controllerDialog.findViewById(R.id.controllerDoseAmount);
         return et.getText().toString().trim();
+    }
+    @Override
+    public int getControllerBreathingBefore() {
+        return selectedBeforeController;
+    }
+    @Override
+    public int getControllerBreathingAfter() {
+        return selectedAfterController;
     }
     @Override
     public String getRescueDoseAmount() {
@@ -93,22 +159,18 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         return et.getText().toString().trim();
     }
     @Override
-    public String getBreathingBefore() {
-        EditText et = rescueDialog.findViewById(R.id.breathingBefore);
-        return et.getText().toString().trim();
+    public int getRescueBreathingBefore() {
+        return selectedBeforeRescue;
     }
     @Override
-    public String getBreathingAfter() {
-        EditText et = rescueDialog.findViewById(R.id.breathingAfter);
-        return et.getText().toString().trim();
+    public int getRescueBreathingAfter() {
+        return selectedAfterRescue;
     }
     @Override
-    public String getShortnessOfBreath() {
-        EditText et = rescueDialog.findViewById(R.id.shortnessOfBreath);
-        return et.getText().toString().trim();
+    public int getRescueShortnessOfBreath() {
+        return selectedSOB;
     }
 
-    //Log clearing and rendering
     @Override
     public void clearControllerLogs() {
         controllerLogContainer.removeAllViews();
@@ -134,19 +196,17 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
     @Override
     public void addControllerLog(String text) {
         TextView tv = new TextView(this);
-        tv.setText(text);
         tv.setPadding(0, 16, 0, 16);
+        tv.setText(text);
         controllerLogContainer.addView(tv);
     }
     @Override
     public void addRescueLog(String text) {
         TextView tv = new TextView(this);
-        tv.setText(text);
         tv.setPadding(0, 16, 0, 16);
+        tv.setText(text);
         rescueLogContainer.addView(tv);
     }
-
-    //fills list view thing
     @Override
     public void displayControllerLogs(List<ControllerDose> logs) {
         clearControllerLogs();
@@ -159,9 +219,10 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         for (ControllerDose log : logs) {
             String time = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
                     .format(new Date(log.timestamp));
-            String entry = "Dose: " + log.doseAmount + "\n" + "Before: " + log.breathingBefore +
-                    "\n" + "After: " + log.breathingAfter + "\n" + "Time: " + time;
-            addControllerLog(entry);
+
+            addControllerLog("Dose: " + log.doseAmount + "\n" +
+                    "Before: " + log.breathingBefore + "\n" +
+                    "After: " + log.breathingAfter + "\n" + "Time: " + time);
         }
     }
     @Override
@@ -177,12 +238,11 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
             String time = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
                     .format(new Date(log.timestamp));
 
-            String entry = "Dose: " + log.doseAmount + "\n" +
-                            "Before: " + log.breathingBefore + "\n" +
-                            "After: " + log.breathingAfter + "\n" +
-                            "Shortness of Breath: " + log.shortnessOfBreath + "\n" +
-                            "Time: " + time;
-            addRescueLog(entry);
+            addRescueLog("Dose: " + log.doseAmount + "\n" +
+                    "Before: " + log.breathingBefore + "\n" +
+                    "After: " + log.breathingAfter + "\n" +
+                    "Shortness of Breath: " + log.shortnessOfBreath + "\n" +
+                    "Time: " + time);
         }
     }
 
