@@ -46,7 +46,7 @@ public class SchedulePresenter {
 
                 for (DataSnapshot child : receiver.getChildren()) {
                     childIds.add(child.getKey()); // get child's id
-                    String name = child.child("fullName").getValue(String.class);
+                    String name = child.child("name").getValue(String.class);
 
                     childNames.add(name);
                 }

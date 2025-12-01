@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.Helpers.ProviderReportGenerator;
 import com.example.cscb07_final_project_smartair.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,18 +35,27 @@ public class ProviderReportSelectionActivity extends BaseParentActivity {
         Button btn3Months = findViewById(R.id.btn3Months);
         Button btn6Months = findViewById(R.id.btn6Months);
 
+        String parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        loadChildren(parentId);
+
         btn3Months.setOnClickListener(view -> {
-            new ProviderReportGenerator().generateReport(this, "l1Z0u0INnMZxsjae4MdRCOj8oqJ3", 3);
+            if (selectedChildId != null) {
+                new ProviderReportGenerator().generateReport(this, selectedChildId, 3);
+            }
         });
 
         btn6Months.setOnClickListener(view -> {
-            new ProviderReportGenerator().generateReport(this, "l1Z0u0INnMZxsjae4MdRCOj8oqJ3", 6);
+            if (selectedChildId != null) {
+                new ProviderReportGenerator().generateReport(this, selectedChildId, 6);
+            }
         });
     }
 
-    private void loadChildren() {
+    private void loadChildren(String parentId) {
         DatabaseReference childrenRef = FirebaseDatabase.getInstance()
                 .getReference("users")
+                .child("parents")
+                .child(parentId)
                 .child("children");
 
         childrenRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -54,7 +64,7 @@ public class ProviderReportSelectionActivity extends BaseParentActivity {
                 ArrayList<String> names = new ArrayList<>();
                 for (DataSnapshot child : receiver.getChildren()) {
                     String childId = child.getKey(); // get child id
-                    String fullName = child.child("fullName").getValue(String.class);
+                    String fullName = child.child("name").getValue(String.class);
                     if (childId != null && fullName != null) {
                         names.add(fullName);
                         nameToIdMap.put(fullName, childId);

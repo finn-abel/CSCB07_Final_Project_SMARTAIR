@@ -44,7 +44,7 @@ public class BaseModel
                             String childID = childKey.getKey();
 
                             // 3. Go fetch the Name for this ID
-                            root.child("users/children").child(childID).child("fullName")
+                            root.child("users/children").child(childID).child("name")
                                     .get().addOnSuccessListener(nameSnap -> {
 
                                         String name = nameSnap.getValue(String.class);
