@@ -81,11 +81,6 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
     }
 
     @Override
-    public void showSteps(){
-        //not implemented yet
-    }
-
-    @Override
     public void closeDialog(){
         Fragment previous = getSupportFragmentManager().findFragmentByTag("TRIAGE_FRAGMENT");
         if(previous != null){
@@ -112,8 +107,22 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
 
     @Override
     public void showTimerStart(triageCapture capture, long n){
+
+        Tpresenter.getRemedy(capture);
         Tpresenter.logDecision("REMEDY", capture, false);
         Tpresenter.startTimer(n,capture.userID);
+    }
+
+    @Override
+    public void showRemedy(String s, String level){
+        Fragment triageDialog = getSupportFragmentManager().findFragmentByTag("TRIAGE_FRAGMENT");
+
+        if (triageDialog instanceof TriageFragment && triageDialog.isVisible()) {
+            ((TriageFragment) triageDialog).morphToRemedy(s,level); //change to decision mode
+        } else { //on error, reopen
+            TriageFragment newFrag = new TriageFragment();
+            newFrag.show(getSupportFragmentManager(), "TRIAGE_FRAGMENT");
+        }
     }
 
     @Override

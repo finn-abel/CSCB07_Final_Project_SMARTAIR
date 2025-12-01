@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-public class TriagePresenter implements BaseModel.ChildFetchListener{
+public class TriagePresenter implements BaseModel.ChildFetchListener, TriageModel.getRemedyListener{
     private TriageView Tview;
     private Context context;
     public boolean recheck;
@@ -115,6 +115,15 @@ public class TriagePresenter implements BaseModel.ChildFetchListener{
 
     public void onChildSelected(String userID){
         Tmodel.preloadRescueLogs(userID);
+    }
+
+    public void getRemedy(triageCapture capture) {
+        Tmodel.getRemedy(capture,this);
+    }
+
+    @Override
+    public void onRemedyRetrieved(String s, String level){
+        Tview.showRemedy(s,level);
     }
 }
 

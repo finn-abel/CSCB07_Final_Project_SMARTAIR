@@ -2,12 +2,15 @@ package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -15,12 +18,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.cscb07_final_project_smartair.DataObjects.triageCapture;
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -28,8 +34,11 @@ public class TriageFragment extends DialogFragment {
 
     private View checkupView;
     private View decisionView;
-    private TextView emergencyLabel;
-    private TextView remedyLabel;
+    private View remedyView;
+    private TextView remedyHeader;
+    private TextView remedyData;
+    private Button emergencyButton;
+    private Button remedyButton;
     private TriageView listener;
 
     public String childID;
@@ -57,9 +66,11 @@ public class TriageFragment extends DialogFragment {
 
         this.checkupView = view.findViewById(R.id.checkup_layout);
         this.decisionView = view.findViewById(R.id.decision_layout);
+        this.remedyView = view.findViewById(R.id.remedy_layout);
 
         if (this.checkupView != null) checkupView.setVisibility(View.VISIBLE);
         if (this.decisionView != null) decisionView.setVisibility(View.GONE);
+        if (this.remedyView != null) remedyView.setVisibility(View.GONE);
 
         TextView select_child_prompt = view.findViewById(R.id.select_child_prompt_triage);
         this.child_select = view.findViewById(R.id.select_child_spinner);
@@ -73,8 +84,10 @@ public class TriageFragment extends DialogFragment {
 
 
 
-        this.emergencyLabel = view.findViewById(R.id.emergencyLabel);
-        this.remedyLabel = view.findViewById(R.id.remedyLabel);
+        this.emergencyButton= view.findViewById(R.id.emergencyButton);
+        this.remedyButton = view.findViewById(R.id.homeRemedyButton);
+        this.remedyHeader = view.findViewById(R.id.remedy_header);
+        this.remedyData = view.findViewById(R.id.remedy_data);
 
         CheckBox speak = view.findViewById(R.id.checkBox_speak);
         CheckBox chest = view.findViewById(R.id.checkBox_chest);
@@ -123,11 +136,9 @@ public class TriageFragment extends DialogFragment {
             } else {
                 capture.userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
             }
-
             long timer = getLong(timer_length);
 
             listener.showTimerStart(capture, timer);
-            dismiss(); // Close dialog after starting timer
         });
 
         view.findViewById(R.id.emergencyButton).setOnClickListener(v -> {
@@ -154,11 +165,13 @@ public class TriageFragment extends DialogFragment {
     public void morphToDecision(boolean isRedFlag) {
         // update text
         if (isRedFlag) {
-            emergencyLabel.setText("CRITICAL: Call Emergency Services");
-            emergencyLabel.setTextColor(getResources().getColor(R.color.danger_red));
+            int color = Color.parseColor("#c40e0e"); //danger red
+            emergencyButton.setText("CRITICAL: Call Emergency Services");
+            emergencyButton.setBackgroundTintList(ColorStateList.valueOf(color));
         } else {
-            remedyLabel.setText("STABLE: Use Home Remedies");
-            remedyLabel.setTextColor(getResources().getColor(R.color.safe_green));
+            int color = Color.parseColor("#0cba06"); //safe green
+            remedyButton.setText("STABLE: Use Home Remedies");
+            remedyButton.setBackgroundTintList(ColorStateList.valueOf(color));
         }
 
         // swap visibility
@@ -166,6 +179,29 @@ public class TriageFragment extends DialogFragment {
         decisionView.setVisibility(View.VISIBLE);
     }
 
+    public void morphToRemedy(String s, String level) {
+
+        // update text
+
+        this.remedyData.setText(s);
+
+        if (level.equals("RED")) {
+            this.remedyHeader.setText("Red Zone");
+            this.remedyHeader.setTextColor(getResources().getColor(R.color.danger_red));
+        } else if (level.equals("YELLOW")){
+            this.remedyHeader.setText("Yellow Zone");
+            this.remedyHeader.setTextColor(getResources().getColor(R.color.warning_yellow));
+        } else {
+            this.remedyHeader.setText("Green Zone");
+            this.remedyHeader.setTextColor(getResources().getColor(R.color.safe_green));
+        }
+
+        // swap visibility
+
+
+        decisionView.setVisibility(View.GONE);
+        remedyView.setVisibility(View.VISIBLE);
+    }
     public Float getNum(EditText num){
         String numString = num.getText().toString().trim();
         if(numString.isEmpty()){ return null;

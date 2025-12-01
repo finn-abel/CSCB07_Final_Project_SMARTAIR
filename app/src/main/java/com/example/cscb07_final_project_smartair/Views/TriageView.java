@@ -14,11 +14,11 @@ public interface TriageView {
 
     void onFormSubmit(triageCapture capture);//submit form
 
-    void showSteps();
-
     void closeDialog();
 
     void showTimerStart(triageCapture capture, long n);
+
+    void showRemedy(String s, String level);
 
     void callEmergency(triageCapture capture, boolean escalation);
 

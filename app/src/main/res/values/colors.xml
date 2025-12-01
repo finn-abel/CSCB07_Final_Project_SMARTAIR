@@ -5,4 +5,5 @@
     <color name="primary">#FF4673DB</color>
     <color name="safe_green">#0cba06</color>
     <color name="danger_red">#c40e0e</color>
+    <color name="warning_yellow">#b1b52f</color>
 </resources>

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.cscb07_final_project_smartair.DataObjects.triageCapture;
 import com.example.cscb07_final_project_smartair.DataObjects.triageData;
 import com.example.cscb07_final_project_smartair.Presenters.TriagePresenter;
+import com.example.cscb07_final_project_smartair.Users.Child;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,6 +151,45 @@ public class TriageModel extends BaseModel{
                         listener.onComparisonComplete(isRedFlag(capture));
                     }
                 });
+    }
+
+    public interface getRemedyListener {
+        void onRemedyRetrieved(String s, String level);
+    }
+
+    public void getRemedy(triageCapture capture, getRemedyListener listener){
+        DatabaseReference path = FirebaseDatabase.getInstance()
+                .getReference("users/children")
+                .child(capture.userID);
+
+        path.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (!snapshot.exists()) { //no history
+                            listener.onRemedyRetrieved("No guidance", "Green");
+                            //default to current flags
+                            return;
+                        }
+
+                        Child childProfile = snapshot.getValue(Child.class);
+
+                        // Safety check (in case the data was malformed)
+                        if (childProfile != null) {
+                            if (capture.pef < (0.5 * childProfile.pb_pef)) {
+                                listener.onRemedyRetrieved(childProfile.pef_guidance.red, "RED");
+                            } else if (capture.pef <= (0.8 * childProfile.pb_pef)) {
+                                listener.onRemedyRetrieved(childProfile.pef_guidance.yellow, "YELLOW");
+                            } else {
+                                listener.onRemedyRetrieved(childProfile.pef_guidance.green, "GREEN");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+
     }
 
 }
