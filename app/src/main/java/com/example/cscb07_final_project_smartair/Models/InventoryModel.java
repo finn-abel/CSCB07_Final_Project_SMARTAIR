@@ -56,20 +56,16 @@ public class InventoryModel {
     }
 
     public void getInventory(String childId) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user == null) {
-            presenter.onFailure("User not logged in.");
+        if (childId == null || childId.isEmpty()) {
+            presenter.onFailure("Invalid child ID.");
             return;
         }
 
-        String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
-                .child("parents")
-                .child(parentID)
                 .child("children")
                 .child(childId)
+                .child("medicine")
                 .child("inventory");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -84,7 +80,6 @@ public class InventoryModel {
 
                 presenter.onInventoryLoaded(list);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 presenter.onFailure(error.getMessage());
@@ -93,20 +88,21 @@ public class InventoryModel {
     }
 
     public void saveItem(String childId, InventoryItem item) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user == null) {
-            presenter.onFailure("User not logged in.");
+        if (childId == null || childId.isEmpty()) {
+            presenter.onFailure("Invalid child ID.");
             return;
         }
 
-        String parentID = user.getUid();
+        if (item == null || item.medicationName == null) {
+            presenter.onFailure("Invalid inventory item.");
+            return;
+        }
+
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
-                .child("parents")
-                .child(parentID)
                 .child("children")
                 .child(childId)
+                .child("medicine")
                 .child("inventory")
                 .child(item.medicationName);
 
@@ -116,20 +112,16 @@ public class InventoryModel {
     }
 
     public void deleteItem(String childId, String medicationName) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user == null) {
-            presenter.onFailure("User not logged in.");
+        if (childId == null || childId.isEmpty()) {
+            presenter.onFailure("Invalid child ID.");
             return;
         }
 
-        String parentID = user.getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
-                .child("parents")
-                .child(parentID)
                 .child("children")
                 .child(childId)
+                .child("medicine")
                 .child("inventory")
                 .child(medicationName);
 

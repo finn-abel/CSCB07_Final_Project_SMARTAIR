@@ -33,7 +33,6 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
     private LinearLayout rescueLogContainer;
     private int selectedBeforeController = 1;
     private int selectedAfterController = 1;
-
     private int selectedBeforeRescue = 1;
     private int selectedAfterRescue = 1;
     private int selectedSOB = 1;
@@ -64,8 +63,7 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         controllerDialog = new Dialog(this);
         controllerDialog.setContentView(R.layout.dialog_controller_dose);
 
-        if (controllerDialog.getWindow() != null)
-        {
+        if (controllerDialog.getWindow() != null) {
             controllerDialog.getWindow().setLayout(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -78,12 +76,16 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         setupSpinner(controllerDialog.findViewById(R.id.spinnerAfterController),
                 value -> selectedAfterController = value);
 
-        Button submit = controllerDialog.findViewById(R.id.submitControllerDose);
-        submit.setOnClickListener(v -> presenter.onLogControllerClicked());
+        Button submitBtn = controllerDialog.findViewById(R.id.submitControllerDose);
+        submitBtn.setOnClickListener(v -> presenter.onLogControllerClicked());
 
         controllerDialog.show();
     }
 
+    @Override
+    public void closeControllerPopup() {
+        if (controllerDialog != null) controllerDialog.dismiss();
+    }
     @Override
     public void showRescuePopup() {
         rescueDialog = new Dialog(this);
@@ -109,11 +111,6 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         submit.setOnClickListener(v -> presenter.onLogRescueClicked());
 
         rescueDialog.show();
-    }
-
-    @Override
-    public void closeControllerPopup() {
-        if (controllerDialog != null) controllerDialog.dismiss();
     }
 
     @Override
@@ -221,8 +218,8 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
                     .format(new Date(log.timestamp));
 
             addControllerLog("Dose: " + log.doseAmount + "\n" +
-                    "Before: " + log.breathingBefore + "\n" +
-                    "After: " + log.breathingAfter + "\n" + "Time: " + time);
+                    "Before: " + log.breathingBefore + "\n" + "After: " + log.breathingAfter + "\n"
+                    + "Time: " + time);
         }
     }
     @Override
@@ -238,11 +235,9 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
             String time = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
                     .format(new Date(log.timestamp));
 
-            addRescueLog("Dose: " + log.doseAmount + "\n" +
-                    "Before: " + log.breathingBefore + "\n" +
-                    "After: " + log.breathingAfter + "\n" +
-                    "Shortness of Breath: " + log.shortnessOfBreath + "\n" +
-                    "Time: " + time);
+            addRescueLog("Dose: " + log.doseAmount + "\n" + "Before: " + log.breathingBefore
+                    + "\n" + "After: " + log.breathingAfter + "\n" + "Shortness of Breath: "
+                    + log.shortnessOfBreath + "\n" + "Time: " + time);
         }
     }
 

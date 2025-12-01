@@ -11,7 +11,7 @@ import com.google.firebase.database.*;
 import java.util.*;
 
 public class ScheduleModel {
-    private SchedulePresenter presenter;
+    private final SchedulePresenter presenter;
 
     public ScheduleModel(SchedulePresenter presenter) {
         this.presenter = presenter;
@@ -54,20 +54,20 @@ public class ScheduleModel {
         });
     }
 
-
     public void fetchScheduleDay(String childId, String day) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("medicine")
-                .child("schedule")
+                .getReference("users")
+                .child("children")
                 .child(childId)
+                .child("medicine")
+                .child("schedule")
                 .child(day);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snap) {
                 List<ScheduleEntry> entries = new ArrayList<>();
 
-                for (DataSnapshot ds : snap.getChildren())
-                {
+                for (DataSnapshot ds : snap.getChildren()) {
                     ScheduleEntry entry = ds.getValue(ScheduleEntry.class);
                     if (entry != null) entries.add(entry);
                 }
@@ -80,12 +80,13 @@ public class ScheduleModel {
         });
     }
 
-    public void saveScheduleEntry(String childId, String day, ScheduleEntry newEntry,
-                                  ScheduleEntry oldEntry) {
+    public void saveScheduleEntry(String childId, String day, ScheduleEntry newEntry, ScheduleEntry oldEntry) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("medicine")
-                .child("schedule")
+                .getReference("users")
+                .child("children")
                 .child(childId)
+                .child("medicine")
+                .child("schedule")
                 .child(day);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -96,11 +97,12 @@ public class ScheduleModel {
                     ScheduleEntry entry = ds.getValue(ScheduleEntry.class);
 
                     if (entry == null) continue;
-                    // remove existing
-                    if (oldEntry != null && entry.time.equals(oldEntry.time) &&
+
+                    if (oldEntry != null &&
+                            entry.time.equals(oldEntry.time) &&
                             entry.doseAmount == oldEntry.doseAmount &&
-                            Objects.equals(entry.note, oldEntry.note))
-                    {
+                            Objects.equals(entry.note, oldEntry.note)) {
+
                         continue;
                     }
                     entries.add(entry);
@@ -119,9 +121,11 @@ public class ScheduleModel {
 
     public void deleteScheduleEntry(String childId, String day, ScheduleEntry target) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("medicine")
-                .child("schedule")
+                .getReference("users")
+                .child("children")
                 .child(childId)
+                .child("medicine")
+                .child("schedule")
                 .child(day);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -133,9 +137,9 @@ public class ScheduleModel {
 
                     if (entry == null) continue;
 
-                    if (entry.time.equals(target.time) && entry.doseAmount == target.doseAmount
-                            && Objects.equals(entry.note, target.note))
-                    {
+                    if (entry.time.equals(target.time) &&
+                            entry.doseAmount == target.doseAmount &&
+                            Objects.equals(entry.note, target.note)) {
                         continue;
                     }
 

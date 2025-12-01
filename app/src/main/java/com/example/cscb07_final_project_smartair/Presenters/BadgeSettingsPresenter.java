@@ -21,7 +21,7 @@ public class BadgeSettingsPresenter {
     }
 
     public void onChildrenLoaded(List<String> childIDs, List<String> childNames) {
-        view.populateChildList(childIDs, childNames);
+        view.populateChildList(childNames, childIDs);
 
         if (!childIDs.isEmpty()) {
             selectedChildID = childIDs.get(0);
