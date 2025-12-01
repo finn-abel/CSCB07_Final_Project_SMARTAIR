@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.cscb07_final_project_smartair.DataObjects.Badge;
 import com.example.cscb07_final_project_smartair.Models.MainActivityModel;
 import com.example.cscb07_final_project_smartair.Models.SignUpModel;
 import com.example.cscb07_final_project_smartair.R;
@@ -25,15 +26,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.example.cscb07_final_project_smartair.Views.MainActivityView;
 import com.example.cscb07_final_project_smartair.Views.SignUpView;
 
+import java.util.List;
+
 public class MainActivityPresenter extends AppCompatActivity {
 
     private final MainActivityView view;
     private final MainActivityModel model;
     private FirebaseAuth mAuth;
-
-
-
-
 
     public MainActivityPresenter(MainActivityView view){
         this.view = view;
@@ -68,6 +67,21 @@ public class MainActivityPresenter extends AppCompatActivity {
         // End of test
     }
 
+    public void loadMainPageData() {
+        model.loadBadgesAndStreaks(new MainActivityModel.MainDataCallback() {
+            @Override
+            public void onBadgesLoaded(List<Badge> list) {
+                view.displayBadges(list);
+            }
+            @Override
+            public void onStreaksLoaded(int controllerStreak, int techniqueStreak) {
+                view.setStreaks(controllerStreak, techniqueStreak);
+            }
+            @Override
+            public void onFailure(String error) {}
+        });
+    }
+
 
     public void onLogoutButtonClicked() {
         String role="N/A";
@@ -85,9 +99,6 @@ public class MainActivityPresenter extends AppCompatActivity {
         view.navigateToLoginScreen(role);
     }
 
-    public void onScheduleButtonClicked(){
-        view.navigateToSchedule();
-    }
     public void onPEFButtonClicked(){
         view.navigateToPEFEntry();
     }
@@ -99,17 +110,8 @@ public class MainActivityPresenter extends AppCompatActivity {
     public void onMedicineLogsClicked() {
         view.navigateToMedicineLogs();
     }
-
-    public void onInventoryClicked() {
-        view.navigateToInventory();
-    }
-
-    public void onProviderReportClicked() { view.navigateToProviderReport(); }
   
     public void onCheckInHistoryClicked() {
         view.navigateToCheckInHistoryScreen();
-    }
-    public void onBadgeSettingsClicked() {
-        view.navigateToBadgeSettings();
     }
 }

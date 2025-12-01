@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -103,7 +105,47 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
                     Tpresenter.callTriage(false,null);
             });
         }
+        android.view.View navButton = findViewById(R.id.btnTopNav);
+        if (navButton != null) {
+            navButton.setOnClickListener(v -> showNavMenu(navButton));
+        }
     }
+    private void showNavMenu(android.view.View anchor) {
+        android.view.View menuView = getLayoutInflater().inflate(R.layout.view_nav_menu, null);
+
+        PopupWindow popup = new PopupWindow(
+                menuView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+        );
+
+        popup.setElevation(12f);
+
+        menuView.findViewById(R.id.nav_checkin).setOnClickListener(v -> {
+            startActivity(new Intent(this, CheckInActivity.class));
+            popup.dismiss();
+        });
+        menuView.findViewById(R.id.nav_pef).setOnClickListener(v -> {
+            startActivity(new Intent(this, PEFActivity.class));
+            popup.dismiss();
+        });
+        menuView.findViewById(R.id.nav_meds).setOnClickListener(v -> {
+            startActivity(new Intent(this, MedicineLogsActivity.class));
+            popup.dismiss();
+        });
+        menuView.findViewById(R.id.nav_history).setOnClickListener(v -> {
+            startActivity(new Intent(this, CheckInHistoryActivity.class));
+            popup.dismiss();
+        });
+        menuView.findViewById(R.id.nav_home).setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivityView.class));
+            popup.dismiss();
+        });
+
+        popup.showAsDropDown(anchor, 0, 16);
+    }
+
 
     @Override
     public void showTimerStart(triageCapture capture, long n){

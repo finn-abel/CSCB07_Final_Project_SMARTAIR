@@ -49,11 +49,9 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
 
         Button btnController = findViewById(R.id.btnLogController);
         Button btnRescue = findViewById(R.id.btnLogRescue);
-        Button btnBack = findViewById(R.id.btnBackToHome);
 
         btnController.setOnClickListener(v -> showControllerPopup());
         btnRescue.setOnClickListener(v -> showRescuePopup());
-        btnBack.setOnClickListener(v -> navigateToMainActivity());
 
         presenter.loadLogs();
     }
