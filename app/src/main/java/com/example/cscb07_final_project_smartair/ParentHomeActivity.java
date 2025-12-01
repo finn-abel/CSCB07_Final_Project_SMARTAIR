@@ -224,23 +224,37 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
         xAxis.setAxisMinimum(0f);
         xAxis.setAxisMaximum(data.length - 1);
 
-        // To check: do all cases always work
-
+        // increment by units of 5 on x axis for 30 day chart
         if (data.length == 30) {
+            xAxis.setLabelCount(data.length, false);
+
+            String[] labels = new String[data.length];
+
+            for (int i = 0; i < data.length; i++) {
+                // label multiples of 5
+                if (i == 0 || i == 5 || i == 10 || i == 15 || i == 20 || i == 25) {
+                    labels[i] = String.valueOf(i);
+                }
+
+                else if (i == 29) {
+                    labels[i] = String.valueOf(i + 1);
+                }
+
+                else {
+                    labels[i] = "";
+                }
+            }
+
             xAxis.setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
-                    int idx = Math.round(value);
-                    switch (idx) {
-                        case 0: return "0";
-                        case 5: return "5";
-                        case 10: return "10";
-                        case 15: return "15";
-                        case 19: return "20";
-                        case 24: return "25";
-                        case 29: return "30";
-                        default: return "";
+                    int index = Math.round(value);
+
+                    if (index >= 0 && index < labels.length) {
+                        return labels[index];
                     }
+
+                    return "";
                 }
             });
         }
@@ -258,6 +272,16 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
         }
 
         YAxis leftAxis = trendChart.getAxisLeft();
+
+        int maxValue = 0;
+        for (int item : data) {
+            if (item > maxValue) maxValue = item;
+        }
+
+        leftAxis.setAxisMaximum(maxValue + 1); // y axis scale
+        leftAxis.setLabelCount(Math.min(maxValue + 1, 6), true); // ensures there is not
+                                                                       // too many ticks on the
+                                                                       // y axis
 
         leftAxis.setValueFormatter(new ValueFormatter() {
             @Override
