@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tvScheduleDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Schedule Entry"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etScheduleTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Time (HH:mm)"
+        android:focusable="true"
+        android:clickable="true"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/etScheduleDose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dose Amount (puffs)"
+        android:inputType="number"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etScheduleNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Optional Note"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/btnSaveScheduleEntry"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="SAVE"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#5C8AF2"/>
+
+    <Button
+        android:id="@+id/btnDeleteScheduleEntry"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="DELETE"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#F25C5C"
+        android:visibility="gone"/>
+</LinearLayout>

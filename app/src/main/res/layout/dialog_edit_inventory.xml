@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Medication"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etMedicationName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Medication Name"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/etDosageTotalAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Total Amount (Doses)"
+        android:inputType="number"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etDosageAmountLeft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Amount Left (Doses)"
+        android:inputType="number"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etMedicinePurchaseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Purchase Date (YYYY-MM-DD)"
+        android:focusable="true"
+        android:clickable="true"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etMedExpiryDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expiry Date (YYYY-MM-DD)"
+        android:focusable="true"
+        android:clickable="true"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/btnSaveInventoryItemMed"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="SAVE"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#5C8AF2"/>
+
+    <Button
+        android:id="@+id/btnDeleteInventoryItemMed"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="DELETE"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#F25C5C"
+        android:visibility="gone"/>
+</LinearLayout>
