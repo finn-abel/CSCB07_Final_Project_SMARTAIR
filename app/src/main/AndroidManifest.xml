@@ -26,7 +26,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ParentHomeActivity"
+            android:name=".Views.LauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +43,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".Views.LauncherActivity"
+            android:name=".ParentHomeActivity"
             android:exported="false" />
 
         <activity

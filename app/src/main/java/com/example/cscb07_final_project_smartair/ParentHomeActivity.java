@@ -76,7 +76,6 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
         Button logout_button = findViewById(R.id.logout);
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
         Button btnInventory = findViewById(R.id.btnInventory);
-        Button btnPEF = findViewById(R.id.btnPEF);
         Button btnProviderReport = findViewById(R.id.btnProviderReport);
         Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
 
