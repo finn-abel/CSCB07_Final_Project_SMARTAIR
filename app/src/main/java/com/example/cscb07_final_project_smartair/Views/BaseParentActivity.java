@@ -223,9 +223,12 @@ public class BaseParentActivity extends BaseActivity {
         };
 
         // Listener for both controller and rescue logs
-        mdatabase.child("medicine").child("controller").child(childId)
+        mdatabase.child("users").child("children").child(childId)
+                .child("medicine").child("controller")
                 .addValueEventListener(listener);
-        mdatabase.child("medicine").child("rescue").child(childId)
+
+        mdatabase.child("users").child("children").child(childId)
+                .child("medicine").child("rescue")
                 .addValueEventListener(listener);
     }
 
@@ -264,10 +267,9 @@ public class BaseParentActivity extends BaseActivity {
     private void listenInventory(String childId) {
         DatabaseReference inventoryRef = mdatabase
                 .child("users")
-                .child("parents")
-                .child(parentId)
                 .child("children")
-                .child(childId)
+                .child(activeChildId)
+                .child("medicine")
                 .child("inventory");
 
         inventoryRef.addValueEventListener(new ValueEventListener() {

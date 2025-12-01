@@ -65,7 +65,8 @@ public class ProviderReportGenerator {
                 .getReference("users")  // medicine folder
                 .child("children")
                 .child(childId)
-                .child("rescueLogs");  // rescue folder
+                .child("medicine")
+                .child("rescue");  // rescue folder
 
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
                 .getReference("pef")  // pef folder
@@ -88,14 +89,18 @@ public class ProviderReportGenerator {
                 .child(childId); // children folder
 
         DatabaseReference scheduleRef = FirebaseDatabase.getInstance()
-                .getReference("medicine")
-                .child("schedule")
-                .child(childId);
+                .getReference("users")
+                .child("children")
+                .child(childId)
+                .child("medicine")
+                .child("schedule");
 
         DatabaseReference logsRef = FirebaseDatabase.getInstance()
-                .getReference("medicine")
-                .child("controller")
-                .child(childId);
+                .getReference("users")
+                .child("children")
+                .child(childId)
+                .child("medicine")
+                .child("controller");
 
         long now = System.currentTimeMillis();
 

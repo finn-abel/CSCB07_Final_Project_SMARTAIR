@@ -170,7 +170,8 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
                 .child("users")
                 .child("children")
                 .child(childId)
-                .child("rescueLogs");
+                .child("medicine")
+                .child("rescue");
 
         ValueEventListener rescueListener = new ValueEventListener() {
             @Override
@@ -350,7 +351,8 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
                 .child("users")
                 .child("children")
                 .child(activeChildId)
-                .child("rescueLogs");
+                .child("medicine")
+                .child("rescue");
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -390,7 +392,8 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
                 .child("users")
                 .child("children")
                 .child(activeChildId)
-                .child("rescueLogs");
+                .child("medicine")
+                .child("rescue");
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
