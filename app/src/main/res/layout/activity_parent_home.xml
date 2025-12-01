@@ -199,6 +199,13 @@
             android:text="CHILD SCHEDULE"
             android:backgroundTint="#5C8AF2"
             android:layout_marginTop="12dp" />
+        <Button
+            android:id="@+id/btnPEF"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="PEF ENTRY"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
 
         <Button
             android:id="@+id/btnInventory"
