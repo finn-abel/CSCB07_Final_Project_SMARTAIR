@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.DataObjects.ScheduleEntry;
 import com.example.cscb07_final_project_smartair.Presenters.MainActivityPresenter;
+import com.example.cscb07_final_project_smartair.Presenters.ParentHomePresenter;
 import com.example.cscb07_final_project_smartair.Presenters.SchedulePresenter;
 import com.example.cscb07_final_project_smartair.Views.BaseParentActivity;
 import com.example.cscb07_final_project_smartair.Views.ScheduleView;
@@ -40,7 +41,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
     private boolean showThirtyDays = false;
     private DatabaseReference mdatabase;
     private SchedulePresenter presenter;
-    private MainActivityPresenter presenterMain;
+    private ParentHomePresenter presenterMain;
     String activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3";
 
     @Override
