@@ -22,11 +22,11 @@ public class BaseModel
         void onError(String message);
     }
 
-    public void fetchChildren(String parentID, ChildFetchListener listener) {
+    public void fetchChildren(String userID, ChildFetchListener listener) { //get children for spinner
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
-        root.child("users/parents").child(parentID).child("children")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        root.child("users/parents").child(userID).child("children") //get path
+                .addListenerForSingleValueEvent(new ValueEventListener() { //read once
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         List<ChildSpinnerOption> childrenList = new ArrayList<>();
