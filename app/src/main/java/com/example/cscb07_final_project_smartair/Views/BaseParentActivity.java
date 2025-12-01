@@ -263,7 +263,13 @@ public class BaseParentActivity extends BaseActivity {
     // Inventory low/expired listener, alerts the parent if the child's medication is low
     // or expired
     private void listenInventory(String childId) {
-        DatabaseReference inventoryRef = mdatabase.child("inventory").child(childId);
+        DatabaseReference inventoryRef = mdatabase
+                .child("users")
+                .child("parents")
+                .child(parentId)
+                .child("children")
+                .child(childId)
+                .child("inventory");
 
         inventoryRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -271,19 +277,24 @@ public class BaseParentActivity extends BaseActivity {
                 long newestTimestamp = System.currentTimeMillis();
 
                 for (DataSnapshot child : receiver.getChildren()) {
-                    Boolean expired = child.child("expired").getValue(Boolean.class);
-                    Boolean low = child.child("low").getValue(Boolean.class);
+                    Long expiryDate = child.child("expiryDate").getValue(Long.class);
+                    Integer totalAmount = child.child("totalAmount").getValue(Integer.class);
+                    Integer amountLeft = child.child("amountLeft").getValue(Integer.class);
 
-                    if (Boolean.TRUE.equals(expired)
-                            && newestTimestamp > getLast("inventoryexpired_" + childId)) {
-                        showAlert("Expired Medication", "Your child's medication expired.");
-                        setLast("inventoryexpired_" + childId, newestTimestamp);
-                    }
+                    // if valid data
+                    if (expiryDate != null && totalAmount != null && amountLeft != null) {
 
-                    if (Boolean.TRUE.equals(low)
-                            && newestTimestamp > getLast("inventorylow_" + childId)) {
-                        showAlert("Low Medication", "Your child's medication is low.");
-                        setLast("inventorylow_" + childId, newestTimestamp);
+                        // Check expired
+                        if (expiryDate < newestTimestamp && newestTimestamp > getLast("inventoryexpired_" + childId)) {
+                            showAlert("Expired Medication", "Your child's medication has expired.");
+                            setLast("inventoryexpired_" + childId, newestTimestamp);
+                        }
+
+                        // Check low
+                        if (amountLeft <= totalAmount * 0.2 && newestTimestamp > getLast("inventorylow_" + childId)) {
+                            showAlert("Low Medication", "Your child's medication is running low.");
+                            setLast("inventorylow_" + childId, newestTimestamp);
+                        }
                     }
                 }
             }
