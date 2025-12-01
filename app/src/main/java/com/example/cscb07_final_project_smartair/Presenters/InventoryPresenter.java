@@ -29,7 +29,7 @@ public class InventoryPresenter {
 
     public void onChildrenLoaded(List<String> names, List<String> ids) {
         childIds = ids;
-        view.displayChildren(names);
+        view.displayChildren(names, ids);
     }
 
     // Called when child selection fails
@@ -63,7 +63,6 @@ public class InventoryPresenter {
         }
 
         for (InventoryItem item : items) {
-
             // === TODO ALERT HOOKS ===
             if (item.amountLeft <= item.totalAmount * 0.2) {
                 // TODO: trigger low-stock alert service
@@ -113,12 +112,13 @@ public class InventoryPresenter {
             view.showError("Date format must be YYYY-MM-DD");
             return;
         }
+        String medType = view.getMedicationType();
 
         InventoryItem item = new InventoryItem(selectedChildId, name, total, left, purchaseDate,
-                expiryDate);
-
+                expiryDate, medType);
         model.saveItem(selectedChildId, item);
     }
+
 
     public void onSaveSuccess() {
         view.showSuccess("Saved!");
