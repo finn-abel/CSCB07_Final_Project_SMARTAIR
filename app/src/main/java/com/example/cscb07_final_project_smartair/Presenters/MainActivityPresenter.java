@@ -82,7 +82,7 @@ public class MainActivityPresenter extends AppCompatActivity {
         prefs.edit().clear().apply();
         model.signOut();
 
-        view.navigateToLoginScreen();
+        view.navigateToLoginScreen(role);
     }
 
     public void onScheduleButtonClicked(){

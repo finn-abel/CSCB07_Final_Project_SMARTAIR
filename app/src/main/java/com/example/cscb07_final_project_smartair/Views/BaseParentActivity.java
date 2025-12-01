@@ -268,7 +268,7 @@ public class BaseParentActivity extends BaseActivity {
         DatabaseReference inventoryRef = mdatabase
                 .child("users")
                 .child("children")
-                .child(activeChildId)
+                .child(childId)
                 .child("medicine")
                 .child("inventory");
 

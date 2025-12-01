@@ -37,27 +37,28 @@ public class TriagePresenter implements BaseModel.ChildFetchListener, TriageMode
     }//call triage from button
 
     public void submitForm(triageCapture capture){
-        boolean redFlag = Tmodel.isRedFlag(capture);
+        boolean isCurrentRedFlag = Tmodel.isRedFlag(capture);
         if (recheck) {
-            Tmodel.isImprovement(capture, shouldEscalate -> { //check against previous log for escalation
-                recheck = false; // reset flag
-                if (shouldEscalate) {
-                    this.guidance = "EMERGENCY";
-                    Tview.callEmergency(capture, true); //escalate
-                } else {
-                    this.guidance = "STABLE";
-                    Tview.showLogTriageSuccess();
-                    Tview.showError("Symptoms improved. Continue monitoring.");
-                    Tview.closeDialog();
-                }
-                logDecision(this.guidance, capture, shouldEscalate);
-            });
+
+            recheck = false; //reset flag
+
+            if (isCurrentRedFlag) {
+                // if recheck and symptoms are bad, call 911
+                this.guidance = "EMERGENCY";
+                Tview.callEmergency(capture, true);
+            } else {
+                // if your situation is stable, resolved
+                this.guidance = "RESOLVED";
+                Tview.showLogTriageSuccess();
+                Tview.showError("Symptoms improved. Continue monitoring.");
+                Tview.closeDialog();
+            }
 
             return;
         }
         if(Tmodel.isRedFlag(capture)) {this.guidance = "EMERGENCY";
         } else { this.guidance = "REMEDY";}
-        Tview.showDecision(redFlag);
+        Tview.showDecision(isCurrentRedFlag);
     }
     public void startTimer(long n, String childID){ //starts timer for n minutes
 
@@ -114,7 +115,7 @@ public class TriagePresenter implements BaseModel.ChildFetchListener, TriageMode
     }
 
     public void onChildSelected(String userID){
-        Tmodel.preloadRescueLogs(userID);
+        Tmodel.preloadData(userID);
     }
 
     public void getRemedy(triageCapture capture) {
