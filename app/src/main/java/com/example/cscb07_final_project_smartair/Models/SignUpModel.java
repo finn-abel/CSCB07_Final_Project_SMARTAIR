@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpModel {
 
-    private final FirebaseAuth mAuth;
+    protected final FirebaseAuth mAuth;
 
     public SignUpModel() {
         this.mAuth = FirebaseAuth.getInstance();

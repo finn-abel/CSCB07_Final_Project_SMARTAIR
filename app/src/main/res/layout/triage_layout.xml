@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/triage_layout"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="#AEFFFFFF"
+    android:textAlignment="center"
+    android:visibility="visible">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/decision_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/homeRemedyButton"
+            android:layout_width="204sp"
+            android:layout_height="150sp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="10dp"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:contentDescription="An emergency department sign"
+            android:cropToPadding="false"
+            android:labelFor="@id/emergencyLabel"
+            android:outlineProvider="bounds"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/triage_timer_length"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_wrapBehaviorInParent="included"
+            app:srcCompat="@drawable/pexels_cottonbro_5858855" />
+
+        <TextView
+            android:id="@+id/remedyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Conduct at-home remedies"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/homeRemedyButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp"
+            android:text="Please choose an option"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/emergencyLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/emergencyButton"
+            android:layout_width="204sp"
+            android:layout_height="150sp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="40dp"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:contentDescription="An emergency department sign"
+            android:cropToPadding="false"
+            android:labelFor="@id/emergencyLabel"
+            android:outlineProvider="bounds"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/remedyLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_wrapBehaviorInParent="included"
+            app:srcCompat="@drawable/pexels_pixabay_263402" />
+
+        <TextView
+            android:id="@+id/emergencyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Call Emergency Services"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/emergencyButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/triage_timer_length"
+            android:layout_width="46dp"
+            android:layout_height="41dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="12dp"
+            android:ems="10"
+            android:inputType="number"
+            android:text="10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:layout_marginBottom="12dp"
+            android:text="Set timer length in minutes"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/triage_timer_length"
+            app:layout_constraintHorizontal_bias="0.525"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/homeRemedyButton"
+            app:layout_constraintVertical_bias="0.384" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/checkup_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="false"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="gone">
+
+        <Button
+            android:id="@+id/cancel_triage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="8dp"
+            android:text="Cancel"
+            android:textSize="15sp"
+            app:flow_horizontalAlign="center"
+            app:flow_verticalAlign="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/submit_triage"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox_speak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="42dp"
+            android:layout_marginBottom="28dp"
+            android:text="I can't speak full sentences"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/checkBox_chest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox_lips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="My lips and/or nails are\nturning blue/gray"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            app:flow_horizontalAlign="center"
+            app:flow_verticalAlign="center"
+            app:layout_constraintBottom_toTopOf="@+id/share_rescue_checkbox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_chest"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/checkBox_chest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="36dp"
+            android:text="I can feel my chest pulling in"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_speak" />
+
+        <TextView
+            android:id="@+id/triage_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="20dp"
+            android:text="Having trouble breathing?\n\nSelect all symptoms that apply"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/checkBox_speak"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.576"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <Button
+            android:id="@+id/submit_triage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="47dp"
+            android:layout_marginBottom="10dp"
+            android:text="Submit"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cancel_triage"
+            app:layout_constraintTop_toBottomOf="@+id/optional_pef_field"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <CheckBox
+            android:id="@+id/share_rescue_checkbox"
+            android:layout_width="218dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="21dp"
+            android:text="I would like to share\nmy recent rescue attempts"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/select_child_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_lips" />
+
+        <TextView
+            android:id="@+id/triage_pef_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:text="(Optional)\nEnter most recent PEF score:"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/cancel_triage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.138"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/share_rescue_checkbox"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/optional_pef_field"
+            android:layout_width="52dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="10dp"
+            android:ems="10"
+            android:imeActionLabel="Option PEF entry"
+            android:inputType="text"
+            android:labelFor="@id/triage_pef_prompt"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/submit_triage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/triage_pef_prompt"
+            app:layout_constraintTop_toBottomOf="@+id/select_child_spinner" />
+
+        <Spinner
+            android:id="@+id/select_child_spinner"
+            android:layout_width="105dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginBottom="11dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/triage_pef_prompt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/select_child_prompt_triage"
+            app:layout_constraintTop_toBottomOf="@+id/share_rescue_checkbox" />
+
+        <TextView
+            android:id="@+id/select_child_prompt_triage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="Select child:"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/triage_pef_prompt"
+            app:layout_constraintEnd_toStartOf="@+id/select_child_spinner"
+            app:layout_constraintHorizontal_bias="0.573"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/share_rescue_checkbox"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

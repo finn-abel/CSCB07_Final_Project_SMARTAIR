@@ -4,6 +4,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -71,9 +77,19 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
         Button btnInventory = findViewById(R.id.btnInventory);
         Button btnPEF = findViewById(R.id.btnPEF);
         Button btnProviderReport = findViewById(R.id.btnProviderReport);
+        Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
+
+        Button btnSchedule = findViewById(R.id.btnSchedule);
+        Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
+        });
+        btnBadgeSettings.setOnClickListener(view -> {
+            presenter.onBadgeSettingsClicked();
+        });
+        btnSchedule.setOnClickListener(view -> {
+            presenter.onScheduleButtonClicked();
         });
 
 
@@ -84,6 +100,7 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
         check_in_button.setOnClickListener(view -> {
             presenter.onCheckInButtonClicked();
         });
+        btnCheckInHistory.setOnClickListener(v -> presenter.onCheckInHistoryClicked());
 
         btnLogs.setOnClickListener(v -> presenter.onMedicineLogsClicked());
         btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
@@ -111,12 +128,25 @@ public class MainActivityView extends BaseParentActivity implements MainView { /
     }
 
     @Override
+    public void navigateToCheckInHistoryScreen(){
+        startActivity(new Intent(this, CheckInHistoryActivity.class));
+    }
+
+    @Override
     public void navigateToMedicineLogs() {
         startActivity(new Intent(this, MedicineLogsActivity.class));
     }
     @Override
+    public void navigateToBadgeSettings() {
+        startActivity(new Intent(this, BadgeSettingsActivity.class));
+    }
+    @Override
     public void navigateToPEFEntry() {
         startActivity(new Intent(this, PEFActivity.class));
+    }
+    @Override
+    public void navigateToSchedule() {
+        startActivity(new Intent(this, ScheduleActivity.class));
     }
 
     @Override

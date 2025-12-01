@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -50,6 +52,27 @@
 
         <activity
             android:name=".Views.ProviderReportSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.ChildSignUpActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Views.ChildLoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Views.RoleLauncherActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Views.CheckInHistoryActivity"
+            android:exported="false" />
+        <activity
+                android:name=".Views.ScheduleActivity"
+                android:exported="false" />
+        <activity
+            android:name=".Views.BadgeSettingsActivity"
             android:exported="false" />
 
 

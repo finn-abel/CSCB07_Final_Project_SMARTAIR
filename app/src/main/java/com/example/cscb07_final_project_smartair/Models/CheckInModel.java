@@ -1,7 +1,10 @@
 package com.example.cscb07_final_project_smartair.Models;
 
+import static kotlinx.coroutines.internal.Concurrent_commonKt.setValue;
+
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.DataObjects.CheckInData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,7 +23,7 @@ public class CheckInModel {
 
     public CheckInModel() {
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("check_in");
     }
 
     public interface onCheckInFinishedListener {
@@ -31,36 +34,36 @@ public class CheckInModel {
 
     }
 
-    public void submitCheckIn(ArrayList<String> symptoms, ArrayList<String> triggers, String date, CheckInModel.onCheckInFinishedListener listener) {
+    public void submitCheckIn(ArrayList<String> symptoms, ArrayList<String> triggers, String date,
+                              onCheckInFinishedListener listener) {
+        String userID = null;
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        /*// Ensure a user is logged in before proceeding
         if (currentUser == null) {
-            listener.onFailure("No user is currently logged in.");
+            listener.onFailure("User not logged in. Restart app.");
             return;
-        }*/
+        }
 
-        String userId = currentUser.getUid();
+        //Creating object to store check-in info in database
+        String email = currentUser.getEmail();
+        CheckInData checkInData = new CheckInData(symptoms, triggers, email, date);
 
-        // Create a data structure to hold the check-in information
-        HashMap<String, Object> checkInData = new HashMap<>();
-        checkInData.put("date", date);
-        checkInData.put("symptoms", symptoms);
-        checkInData.put("triggers", triggers);
+        userID = currentUser.getUid();
 
-        // Upload the data to Firebase Realtime Database under the user's ID and the specific check-in date
-        mDatabase.child("users").child(userId).child("checkIns").child(date)
-                .setValue(checkInData).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            listener.onSuccess();
-                        } else {
-                            String errorMessage = task.getException() != null ?
-                                    task.getException().getMessage() : "Failed to save data.";
-                            listener.onFailure(errorMessage);
-                        }
-                    }
-                });
+
+
+        // Upload the data to Firebase
+        DatabaseReference logsRef = mDatabase.child(userID);
+        String logID = logsRef.push().getKey(); //get time-ordered key
+        if(logID!=null) {
+            logsRef.child(logID).setValue(checkInData).addOnSuccessListener(aVoid -> {
+                listener.onSuccess();
+            }).addOnFailureListener(e -> {
+                listener.onFailure(e.getMessage());
+            });
+        }
+        else {
+            listener.onFailure("Failed to generate LogID");
+        }
     }
 }
