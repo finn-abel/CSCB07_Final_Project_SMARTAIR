@@ -191,9 +191,11 @@ public class TriageFragment extends DialogFragment {
         } else if (level.equals("YELLOW")){
             this.remedyHeader.setText("Yellow Zone");
             this.remedyHeader.setTextColor(getResources().getColor(R.color.warning_yellow));
-        } else {
+        } else if (level.equals("GREEN")) {
             this.remedyHeader.setText("Green Zone");
             this.remedyHeader.setTextColor(getResources().getColor(R.color.safe_green));
+        } else {
+            this.remedyHeader.setText("Error");
         }
 
         // swap visibility

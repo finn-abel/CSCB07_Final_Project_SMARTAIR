@@ -2,6 +2,7 @@ package com.example.cscb07_final_project_smartair.Models;
 
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.DataObjects.pefData;
 import com.example.cscb07_final_project_smartair.DataObjects.triageCapture;
 import com.example.cscb07_final_project_smartair.DataObjects.triageData;
 import com.example.cscb07_final_project_smartair.Presenters.TriagePresenter;
@@ -156,40 +157,78 @@ public class TriageModel extends BaseModel{
     public interface getRemedyListener {
         void onRemedyRetrieved(String s, String level);
     }
+    public void getRemedy(triageCapture capture, getRemedyListener listener) {
 
-    public void getRemedy(triageCapture capture, getRemedyListener listener){
-        DatabaseReference path = FirebaseDatabase.getInstance()
-                .getReference("users/children")
-                .child(capture.userID);
+        if (capture.pef != null) { //user gave PEF
+            fetchProfileZone(capture.userID, capture.pef, listener);
+        }
+        else {  //get most recent PEF in last day
+            long now = System.currentTimeMillis();
+            long oneDayAgo = now - (24 * 60 * 60 * 1000);
 
-        path.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        if (!snapshot.exists()) { //no history
-                            listener.onRemedyRetrieved("No guidance", "Green");
-                            //default to current flags
-                            return;
-                        }
+            DatabaseReference logsRef = FirebaseDatabase.getInstance()
+                    .getReference("pef")
+                    .child(capture.userID);
 
-                        Child childProfile = snapshot.getValue(Child.class);
-
-                        // Safety check (in case the data was malformed)
-                        if (childProfile != null) {
-                            if (capture.pef < (0.5 * childProfile.pb_pef)) {
-                                listener.onRemedyRetrieved(childProfile.pef_guidance.red, "RED");
-                            } else if (capture.pef <= (0.8 * childProfile.pb_pef)) {
-                                listener.onRemedyRetrieved(childProfile.pef_guidance.yellow, "YELLOW");
-                            } else {
-                                listener.onRemedyRetrieved(childProfile.pef_guidance.green, "GREEN");
+            logsRef.orderByChild("timestamp")
+                    .startAt(oneDayAgo)
+                    .limitToLast(1)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                listener.onRemedyRetrieved("No recent Peak Flow data", "NONE");
+                                return;
+                            }
+                            for (DataSnapshot child : snapshot.getChildren()) {
+                                Integer recentPef = child.child("current").getValue(Integer.class);
+                                //get latest pef
+                                if (recentPef != null) {
+                                    fetchProfileZone(capture.userID, (float) recentPef, listener);
+                                } else {
+                                    listener.onRemedyRetrieved("Invalid data found", "NONE");
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            listener.onRemedyRetrieved("Error fetching logs", "NONE");
+                        }
+                    });
+        }
+    }
+    public void fetchProfileZone(String userID, float pefValue, getRemedyListener listener) {
+        DatabaseReference path = FirebaseDatabase.getInstance()
+                .getReference("users/children")
+                .child(userID);
 
+        path.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    listener.onRemedyRetrieved("None", "NONE");
+                    return;
+                }
+                Child childProfile = snapshot.getValue(Child.class);
+
+                if (childProfile != null) {
+
+                    if (pefValue < (0.5 * childProfile.pb_pef)) {
+                        listener.onRemedyRetrieved(childProfile.pef_guidance.red, "RED");
+                    } else if (pefValue < (0.8 * childProfile.pb_pef)) {
+                        listener.onRemedyRetrieved(childProfile.pef_guidance.yellow, "YELLOW");
+                    } else {
+                        listener.onRemedyRetrieved(childProfile.pef_guidance.green, "GREEN");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                listener.onRemedyRetrieved("Database Error", "Grey");
+            }
+        });
     }
 
 }
