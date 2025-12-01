@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.example.cscb07_final_project_smartair.DataObjects.triageCapture;
+import com.example.cscb07_final_project_smartair.Models.BaseModel;
 import com.example.cscb07_final_project_smartair.Models.TriageModel;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.example.cscb07_final_project_smartair.Views.TriageView;
@@ -15,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-public class TriagePresenter implements TriageModel.ChildFetchListener{
+public class TriagePresenter implements BaseModel.ChildFetchListener{
     private TriageView Tview;
     private Context context;
     public boolean recheck;

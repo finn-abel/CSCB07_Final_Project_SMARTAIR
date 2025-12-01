@@ -4,11 +4,18 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
 
+import com.example.cscb07_final_project_smartair.DataObjects.pefCapture;
+import com.example.cscb07_final_project_smartair.Models.BaseModel;
 import com.example.cscb07_final_project_smartair.Models.PEFmodel;
+import com.example.cscb07_final_project_smartair.Models.TriageModel;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.example.cscb07_final_project_smartair.Views.MainActivityView;
 import com.example.cscb07_final_project_smartair.Views.PEFView;
+import com.google.firebase.auth.FirebaseAuth;
 
-public class PEFPresenter {
+import java.util.List;
+
+public class PEFPresenter implements BaseModel.ChildFetchListener {
 
     PEFView view;
     PEFmodel model;
@@ -35,12 +42,37 @@ public class PEFPresenter {
             Float post = postText.isEmpty() ? null : Float.parseFloat(postText);
             //convert to null if empty
 
-            model.logPEF(pre,post,current);
+            pefCapture capture = new pefCapture(
+                    null,
+                    pre,
+                    post,
+                    current
+            );
+
+            capture.childID = view.isParent() ? view.getSpinnerOption().userID :
+                    FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            model.logPEF(capture);
         } catch (Exception e) {
             view.showFailure(e.getMessage());
         }
     }
 
+    public void getChildren(){
+        BaseModel Bmodel = new BaseModel();
+        Bmodel.fetchChildren(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                this);
+    }
+
+    @Override
+    public void onChildrenLoaded(List<ChildSpinnerOption> childrenList){
+        view.updateSpinner(childrenList);
+    }
+
+    @Override
+    public void onError(String message) {
+        view.showError(message);
+    }
     public void onLogSuccess(){
         view.showSuccess();
     }
