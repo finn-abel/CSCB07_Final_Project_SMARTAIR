@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Presenters.MainPresenter">
+    android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -22,182 +23,231 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/tile_today_zone"
+        <Spinner
+            android:id="@+id/SDspinnerChild"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="8dp">
+            android:layout_marginBottom="12dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tv_tile_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Today's Zone"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_today_zone_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/tile_last_rescue"
+        <!-- CHILD BADGE SECTION -->
+        <LinearLayout
+            android:id="@+id/childBadgeSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="8dp">
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="#EEF3FF">
 
-            <LinearLayout
+            <!-- TODAY ZONE -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tile_today_zone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginBottom="12dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp">
 
-                <TextView
-                    android:id="@+id/tv_tile_rescue_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Last Rescue Time"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_tile_rescue_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/tile_weekly_rescue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tv_tile_weekly_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Weekly Rescue Count"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_tile_weekly_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-
-            android:id="@+id/tile_chart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tv_tile_chart_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rescue Trend"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_toggle_range"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Show 30 days"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="italic"/>
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart_trend"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="12dp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_tile_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Today's Zone"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_today_zone_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- LAST RESCUE -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tile_last_rescue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_tile_rescue_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Last Rescue Time"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_tile_rescue_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- WEEKLY RESCUE -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tile_weekly_rescue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_tile_weekly_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Weekly Rescue Count"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_tile_weekly_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- CHART -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tile_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_tile_chart_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rescue Trend"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_toggle_range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Show 30 days"
+                        android:layout_marginTop="8dp"
+                        android:textStyle="italic" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart_trend"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="12dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <!-- BUTTONS -->
+        <Button
+            android:id="@+id/checkin"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="CHECK IN"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="16dp" />
+        <Button
+            android:id="@+id/btnBadgeSettings"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="BADGE SETTINGS"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnSchedule"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="CHILD SCHEDULE"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
 
         <Button
             android:id="@+id/btnInventory"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-            android:backgroundTint="#5C8AF2"
             android:text="INVENTORY"
-            android:layout_marginBottom="12dp"/>
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
 
         <Button
             android:id="@+id/btnMedicineLogs"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-            android:backgroundTint="#5C8AF2"
             android:text="MEDICINE LOGS"
-            android:layout_marginBottom="12dp"/>
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
 
         <Button
-            android:id="@+id/checkin"
+            android:id="@+id/btnCheckInHistory"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-            android:backgroundTint="#5C8AF2"
             android:text="DAILY CHECK IN"
-            android:layout_marginBottom="12dp"/>
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
 
         <Button
             android:id="@+id/btnProviderReport"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-            android:backgroundTint="#5C8AF2"
             android:text="PROVIDER REPORT"
-            android:layout_marginBottom="10dp"/>
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/triage_button"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="TRIAGE"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="12dp" />
 
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
-            android:layout_height="63dp"
+            android:layout_height="62dp"
+            android:text="SIGN OUT"
             android:backgroundTint="#5C8AF2"
-            android:text="SIGN OUT"/>
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp" />
 
     </LinearLayout>
 
