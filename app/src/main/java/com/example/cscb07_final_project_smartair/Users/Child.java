@@ -18,5 +18,4 @@ public class Child extends User{
         this.sharingPerms = new HashMap<>();
         this.pef_guidance = pef_guidance;
     }
-
 }

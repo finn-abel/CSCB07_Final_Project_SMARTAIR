@@ -6,7 +6,7 @@ import com.example.cscb07_final_project_smartair.DataObjects.Badge;
 import java.util.List;
 
 public interface BadgeSettingsView {
-    void populateChildList(List<String> childNames);
+    void populateChildList(List<String> childNames, List<String> childIDs);
     void displayThresholds(BadgeThresholds thresholds);
     void displayBadges(List<Badge> badges);
 

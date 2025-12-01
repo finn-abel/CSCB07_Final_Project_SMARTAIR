@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,6 +9,14 @@
         android:orientation="vertical"
         android:padding="24dp"
         android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/imgInhalerUsage"
+            android:layout_width="match_parent"
+            android:layout_height="238dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/inhaler_usage" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,35 +31,49 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Dose Amount"
-            android:inputType="number"
-            android:padding="8dp" />
+            android:inputType="number" />
 
-        <EditText
-            android:id="@+id/breathingBefore"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Breathing Before (1-5)"
-            android:inputType="number"
-            android:padding="8dp"
-            android:layout_marginTop="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate breathing 1–5 (1 = very bad, 5 = very good)"
+            android:layout_marginTop="20dp" />
 
-        <EditText
-            android:id="@+id/breathingAfter"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Breathing After (1-5)"
-            android:inputType="number"
-            android:padding="8dp"
-            android:layout_marginTop="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breathing Before:"
+            android:layout_marginTop="12dp"/>
 
-        <EditText
-            android:id="@+id/shortnessOfBreath"
+        <Spinner
+            android:id="@+id/spinnerBeforeRescue"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Shortness of Breath (1-5)"
-            android:inputType="number"
-            android:padding="8dp"
-            android:layout_marginTop="12dp" />
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breathing After:"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerAfterRescue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shortness of Breath:"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerSOB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
 
         <Button
             android:id="@+id/submitRescueDose"
@@ -60,6 +81,6 @@
             android:layout_height="50dp"
             android:text="SUBMIT"
             android:backgroundTint="#5C8AF2"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="24dp"/>
     </LinearLayout>
 </ScrollView>
