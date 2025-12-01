@@ -3,6 +3,7 @@ package com.example.cscb07_final_project_smartair.Models;
 import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.DataObjects.ControllerDose;
+import com.example.cscb07_final_project_smartair.DataObjects.InventoryItem;
 import com.example.cscb07_final_project_smartair.DataObjects.RescueDose;
 import com.example.cscb07_final_project_smartair.Presenters.MedicineLogsPresenter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +44,10 @@ public class MedicineLogsModel {
         }
 
         ref.child(logID).setValue(log)
-                .addOnSuccessListener(aVoid -> presenter.onControllerLogSuccess())
+                .addOnSuccessListener(aVoid -> {
+                    reduceInventory("controller", doseAmount);
+                    presenter.onControllerLogSuccess();
+                })
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
     }
 
@@ -71,7 +75,10 @@ public class MedicineLogsModel {
         }
 
         ref.child(logID).setValue(log)
-                .addOnSuccessListener(aVoid -> presenter.onRescueLogSuccess())
+                .addOnSuccessListener(aVoid -> {
+                    reduceInventory("rescue", doseAmount);
+                    presenter.onRescueLogSuccess();
+                })
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
     }
 
@@ -149,4 +156,47 @@ public class MedicineLogsModel {
                     }
                 });
     }
+
+    private void reduceInventory(String medType, int amountToReduce) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        String parentID = user.getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("children")
+                .child(parentID)
+                .child("inventory");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                InventoryItem target = null;
+                String key = null;
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    InventoryItem item = ds.getValue(InventoryItem.class);
+
+                    if (item == null) continue;
+
+                    String type = item.medType == null ? "" : item.medType;
+
+                    if (type.equals(medType)) {
+                        target = item;
+                        key = ds.getKey();
+                        break;
+                    }
+                }
+
+                if (target == null || key == null) {
+                    return;
+                }
+
+                target.amountLeft = Math.max(0, target.amountLeft - amountToReduce);
+                ref.child(key).setValue(target);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
 }
