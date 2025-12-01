@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">CSCB07_Final_Project_SMARTAIR</string>-->
+
+    <string name="onboarding_title">Welcome to SMART AIR</string>
+    <string name="onboarding_intro">
+        SMART AIR helps families understand asthma, practice good inhaler technique, track symptoms and medicines, and share Parent-approved information with Providers when needed.
+    </string>
+
+    <string name="medicine_title">Rescue vs Controller Medicines</string>
+    <string name="medicine_text">
+        • Rescue inhaler – fast relief for sudden symptoms.\n
+        • Controller medicine – taken daily to prevent swelling in the airways.\n
+        \n
+        SMART AIR keeps these separate so users always know what type of medicine they are logging.
+    </string>
+
+    <string name="privacy_roles_title">Who Can See What?</string>
+    <string name="privacy_roles_text">
+        SMART AIR protects your privacy by giving each role the right level of access:\n\n
+        • Child – sees only their own logs, technique guides, and progress.\n
+        • Parent – sees all information for each linked child and controls sharing.\n
+        • Provider – sees only the report a Parent chooses to share.\n\n
+        By default, no information is shared with a Provider.
+    </string>
+
+    <string name="parent_title">For Parents: How Sharing Works</string>
+    <string name="parent_text">
+        Parents manage children and choose what a Provider can view. Sharing is off by default.\n\n
+        You can turn sharing on or off for each child’s:\n
+        • Rescue logs\n
+        • Controller adherence summary\n
+        • Symptoms\n
+        • Triggers\n
+        • Peak-flow (PEF)\n
+        • Triage incidents\n
+        • Summary charts\n\n
+        Changes apply immediately and can be reversed at any time.
+    </string>
+
+    <string name="parent_invite_title">Inviting a Provider</string>
+    <string name="parent_invite_text">
+        To allow Provider access, you generate a one-time invite code or link.\n
+        • Valid for 7 days\n
+        • Can be revoked or regenerated anytime\n
+        Providers are always read-only and can view only what you have enabled.
+    </string>
+
+    <string name="child_title">For Children</string>
+    <string name="child_text">
+        SMART AIR helps you learn proper inhaler steps, log medicines, track symptoms, and earn streaks and badges.\n
+        Only you and your Parent can see what you enter. Nothing is shared with a Provider unless your Parent turns sharing on.
+    </string>
+
+    <string name="provider_title">For Providers</string>
+    <string name="provider_text">
+        Providers can accept a Parent’s one-time invite (valid 7 days) to view a child’s shared report.\n
+        Access is read-only and includes:\n
+        • Medicine summaries\n
+        • Symptoms and triggers\n
+        • Peak-flow trends\n
+        • Triage incidents (if shared)\n
+        • Summary charts and history\n
+        Access is limited to the specific children the Parent has enabled.
+    </string>
+
+    <string name="onboarding_finish_title">You’re Ready to Begin</string>
+    <string name="onboarding_finish_text">
+        SMART AIR keeps roles clear and privacy protected. Parents control sharing, and all sharing defaults to off. Rescue and controller medicines are explained clearly, and each user sees only what they need.\n\n
+        Start using SMART AIR to support safe, confident asthma management.
+    </string>
+
+    <string name="cta_text">Got It!</string>
+
+</resources>

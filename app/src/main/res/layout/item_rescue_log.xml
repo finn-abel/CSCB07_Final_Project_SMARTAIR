@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tvRescueDoseAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Dose: 2 puffs"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvBreathingBefore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Breathing Before: 3"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvRescueDoseAmount"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvBreathingAfter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Breathing After: 1"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvBreathingBefore"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvShortnessOfBreath"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Shortness of Breath: 4"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvBreathingAfter"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvRescueTimestamp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Time: 12:45 PM"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tvShortnessOfBreath"
+        app:layout_constraintStart_toStartOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

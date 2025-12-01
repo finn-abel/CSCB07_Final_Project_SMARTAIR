@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/imgInhalerUsage"
+            android:layout_width="match_parent"
+            android:layout_height="238dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/inhaler_usage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Controller Dose"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/controllerDoseAmount"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Dose Amount"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate breathing 1–5 (1 = very bad, 5 = very good)"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breathing Before:"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerBeforeController"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breathing After:"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerAfterController"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/submitControllerDose"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="SUBMIT"
+            android:backgroundTint="#5C8AF2"
+            android:layout_marginTop="24dp"/>
+    </LinearLayout>
+</ScrollView>

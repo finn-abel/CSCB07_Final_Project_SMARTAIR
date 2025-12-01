@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    card:cardCornerRadius="12dp"
+    card:cardElevation="6dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvScheduleTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="07:00"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvScheduleDose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dose: 2 puffs"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tvScheduleNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Note: Take before school"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/btnEditSchedule"
+                android:text="EDIT"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:backgroundTint="#5C8AF2"/>
+
+            <Space android:layout_width="12dp" android:layout_height="1dp"/>
+
+            <Button
+                android:id="@+id/btnDeleteSchedule"
+                android:text="DELETE"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:backgroundTint="#F25C5C"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

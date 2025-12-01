@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="6dp"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvMedicationName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medication Name"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tvMedType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type: "
+            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:textColor="#666" />
+
+
+        <TextView
+            android:id="@+id/tvAmountLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left: 0 / 0"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvExpiryDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expires: Jan 1, 2025"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp" />
+
+        <Button
+            android:id="@+id/btnEditMedication"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#5C8AF2"
+            android:text="EDIT" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
