@@ -66,7 +66,7 @@ public class PEFActivity extends BaseActivity implements PEFView{
     @Override
     public void showSuccess(){
         Toast.makeText(this, "Saved successfully!", Toast.LENGTH_SHORT).show();
-        navigateToMainActivity();
+        //navigateToMainActivity();
     }
 
     @Override
