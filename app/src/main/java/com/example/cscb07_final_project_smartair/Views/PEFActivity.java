@@ -101,7 +101,7 @@ public class PEFActivity extends BaseActivity implements PEFView{
                 childrenList);  //create adapter for spinner selections
         select_child.setAdapter(adapter); //set adapter
 
-        select_child.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        select_child.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { //set listener for child selection
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ChildSpinnerOption selectedChild = (ChildSpinnerOption) parent.getItemAtPosition(position);
