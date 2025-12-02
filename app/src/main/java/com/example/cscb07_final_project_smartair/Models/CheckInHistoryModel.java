@@ -40,7 +40,7 @@ public class CheckInHistoryModel {
         ArrayList<CheckInData> checkIns = new ArrayList<>();
         userID = currentUser.getUid();
         DatabaseReference checkinsRef = mDatabase.child(userID);
-        checkinsRef.addValueEventListener(new ValueEventListener(){
+        checkinsRef.addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot check_in_data) {
                 if (!check_in_data.exists()) {
@@ -81,7 +81,7 @@ public class CheckInHistoryModel {
         ArrayList<CheckInData> updatedCheckIns = new ArrayList<>();
         userID = currentUser.getUid();
         DatabaseReference checkinsRef = mDatabase.child(userID);
-        checkinsRef.addValueEventListener(new ValueEventListener(){
+        checkinsRef.addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot check_in_data) {
 
