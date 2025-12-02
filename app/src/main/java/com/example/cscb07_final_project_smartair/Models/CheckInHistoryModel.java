@@ -40,7 +40,7 @@ public class CheckInHistoryModel {
         ArrayList<CheckInData> checkIns = new ArrayList<>();
         userID = currentUser.getUid();
         DatabaseReference checkinsRef = mDatabase.child(userID);
-        checkinsRef.addValueEventListener(new ValueEventListener(){
+        checkinsRef.addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot check_in_data) {
                 if (!check_in_data.exists()) {
@@ -81,30 +81,47 @@ public class CheckInHistoryModel {
         ArrayList<CheckInData> updatedCheckIns = new ArrayList<>();
         userID = currentUser.getUid();
         DatabaseReference checkinsRef = mDatabase.child(userID);
-        checkinsRef.addValueEventListener(new ValueEventListener(){
+        checkinsRef.addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot check_in_data) {
 
-                int start_day=-1;
-                int start_month=-1;
-                int start_year=-1;
-                int end_day=-1;
-                int end_month=-1;
-                int end_year=-1;
+                int starting_date=0;
+                int ending_date=0;
 
 
-                if(!date[0].isEmpty()){
+                String starting_day = "";
+                String starting_month = "";
+                String starting_year = "";
+                String ending_day = "";
+                String ending_month = "";
+                String ending_year = "";
+
+
+                if(date.length==2){
                     String[] start_date_components = date[0].split("/");
                     String[] end_date_components = date[1].split("/");
 
-                    start_day = Integer.parseInt(start_date_components[0].trim());
-                    start_month = Integer.parseInt(start_date_components[1].trim());
-                    start_year = Integer.parseInt(start_date_components[2].trim());
-                    end_day = Integer.parseInt(end_date_components[0].trim());
-                    end_month = Integer.parseInt(end_date_components[1].trim());
-                    end_year = Integer.parseInt(end_date_components[2].trim());
-
+                    starting_day = start_date_components[0].trim();
+                    starting_month = start_date_components[1].trim();
+                    starting_year = start_date_components[2].trim();
+                    ending_day = end_date_components[0].trim();
+                    ending_month = end_date_components[1].trim();
+                    ending_year = end_date_components[2].trim();
+                    starting_date = Integer.parseInt(starting_year + starting_month + starting_day);
+                    ending_date = Integer.parseInt(ending_year + ending_month + ending_day);
                 }
+                else if(date.length==1){
+                    String[] date_components = date[0].split("/");
+                    starting_day = date_components[0].trim();
+                    ending_day = starting_day;
+                    starting_month = date_components[1].trim();
+                    ending_month = starting_month;
+                    starting_year = date_components[2].trim();
+                    ending_year =  starting_year;
+                    starting_date = Integer.parseInt(starting_year + starting_month + starting_day);
+                    ending_date = Integer.parseInt(ending_year + ending_month + ending_day);
+                }
+
 
                 if (!check_in_data.exists()) {
                     listener.onFailure("No check-ins found");
@@ -133,22 +150,15 @@ public class CheckInHistoryModel {
                         }
 
                         String[] check_in_date_components = checkInData.date.split("/");
-                        int day = Integer.parseInt(check_in_date_components[0].trim());
-                        int month = Integer.parseInt(check_in_date_components[1].trim());
-                        int year = Integer.parseInt(check_in_date_components[2].trim());
+                        String day = check_in_date_components[0].trim();
+                        String month = check_in_date_components[1].trim();
+                        String year = check_in_date_components[2].trim();
+                        int date = Integer.parseInt(year + month + day);
 
-                        if (start_year == end_year && year == start_year) {
-                            if (start_month == end_month && month == start_month) {
-                                if (start_day <= day && day <= end_day) {
-                                    matching_date = 1;
-                                }
-                            }else if (start_month <= month && month <= end_month && (day >= start_day || day <= end_day)) {
-                                    matching_date = 1;
-                            }
-                        } else if (start_year <= year && year <= end_year && (month >= start_month || month <= end_month) && (day >= start_day || day <= end_day)) {
-                                matching_date = 1;
+
+                        if (starting_date <= date && date <= ending_date||starting_date == 0){
+                            matching_date =1;
                         }
-
                         if (matching_symptoms == 1 || matching_triggers == 1 || matching_date == 1) {
                             updatedCheckIns.add(checkInData);
                         }

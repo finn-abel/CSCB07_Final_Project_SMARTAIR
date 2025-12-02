@@ -1,5 +1,7 @@
 package com.example.cscb07_final_project_smartair.Models;
 
+import android.util.Log;
+
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,9 +35,10 @@ public class BaseModel
 
                         if (snapshot.exists()) {
                             for (DataSnapshot childSnap : snapshot.getChildren()) {
-
                                 String childId = childSnap.getKey();
                                 String name = childSnap.child("name").getValue(String.class);
+
+                                Log.d("DEBUG", "Found childId=" + childId + " name=" + name);
 
                                 if (name == null) {name = "Unknown";}
                                 childrenList.add(new ChildSpinnerOption(childId, name));
