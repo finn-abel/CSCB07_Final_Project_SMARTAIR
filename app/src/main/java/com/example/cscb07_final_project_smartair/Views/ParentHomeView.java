@@ -27,6 +27,8 @@ public interface ParentHomeView {
 
     void navigateToManageChildren();
 
+    void navigateToInvites();
+
     public void displayChildren(List<String> names);
 
     void setActiveChild(String id);

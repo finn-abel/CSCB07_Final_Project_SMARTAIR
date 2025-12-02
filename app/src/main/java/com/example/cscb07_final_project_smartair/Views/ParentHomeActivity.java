@@ -1,5 +1,6 @@
 package com.example.cscb07_final_project_smartair.Views;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -9,9 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -84,7 +85,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
 
         Button btnSchedule = findViewById(R.id.btnSchedule);
         Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
-        Button btnManage = findViewById(R.id.manage);
+        Button btnManage = findViewById(R.id.manage),
+                btnInvite = findViewById(R.id.inviteBtn);
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
@@ -97,7 +99,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         });
 
         btnManage.setOnClickListener(view -> presenter.onManageChildrenClicked());
-
+        btnInvite.setOnClickListener(view -> presenter.onInvitesClicked());
 
         logout_button.setOnClickListener(view -> {
             presenter.onLogoutButtonClicked();
@@ -175,6 +177,11 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     @Override
     public void navigateToManageChildren() {
         startActivity(new Intent(this, ManageChildrenActivity.class));
+    }
+
+    @Override
+    public void navigateToInvites() {
+        startActivity(new Intent(this, InvitesActivity.class));
     }
 
     @Override

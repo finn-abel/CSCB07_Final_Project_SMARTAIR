@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -15,27 +15,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR">
-
-        <activity android:name=".Views.LoginActivity"
+        <activity
+            android:name=".Views.InvitesActivity"
             android:exported="false" />
-        <activity android:name=".Views.CheckInActivity"
-            android:exported = "false" />
-        <activity android:name=".Views.SignUpActivity"
+        <activity
+            android:name=".Views.LoginActivity"
             android:exported="false" />
-        <activity android:name=".Views.ParentHomeActivity"
-         android:exported="false" />
-        <activity android:name=".Views.MainActivityView"
+        <activity
+            android:name=".Views.CheckInActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".Views.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.ParentHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.MainActivityView"
+            android:exported="false" />
         <activity
             android:name=".Views.LauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Views.OnboardingActivity"
             android:exported="false"
@@ -43,7 +49,6 @@
         <activity
             android:name=".Views.MedicineLogsActivity"
             android:exported="false" />
-
         <activity
             android:name=".Views.InventoryActivity"
             android:exported="false" />
@@ -53,28 +58,24 @@
         <activity
             android:name=".Views.AddChildActivity"
             android:exported="false" />
-
         <activity
             android:name=".Views.ProviderReportSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".Views.ChildSignUpActivity"
             android:exported="false" />
-
         <activity
             android:name=".Views.ChildLoginActivity"
             android:exported="false" />
-
         <activity
             android:name=".Views.RoleLauncherActivity"
             android:exported="false" />
-
         <activity
             android:name=".Views.CheckInHistoryActivity"
             android:exported="false" />
         <activity
-                android:name=".Views.ScheduleActivity"
-                android:exported="false" />
+            android:name=".Views.ScheduleActivity"
+            android:exported="false" />
         <activity
             android:name=".Views.BadgeSettingsActivity"
             android:exported="false" />

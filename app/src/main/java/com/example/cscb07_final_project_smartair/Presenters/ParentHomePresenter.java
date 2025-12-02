@@ -73,6 +73,10 @@ public class ParentHomePresenter{
         view.navigateToManageChildren();
     }
 
+    public void onInvitesClicked() {
+        view.navigateToInvites();
+    }
+
     public void onChildSelectedDash(int index) {
         if (index < 0 || index >= childIds.size()) return;
 

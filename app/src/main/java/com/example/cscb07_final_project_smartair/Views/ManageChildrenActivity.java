@@ -24,9 +24,9 @@ import com.example.cscb07_final_project_smartair.Users.ChildPermissions;
 import java.util.List;
 
 public class ManageChildrenActivity extends AppCompatActivity implements ManageChildrenView {
-    private Spinner spinner, providers, invites;
+    private Spinner spinner, providers;
     private CheckBox rescue, adherence, symptoms, triggers, pef, triage, summary;
-    private Button add, generate, revoke;
+    private Button add;
     private ManageChildrenPresenter presenter;
 
     private final CompoundButton.OnCheckedChangeListener rescueListener = (view, isChecked) -> presenter.onRescueChanged(isChecked),
@@ -58,10 +58,6 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
         triage = findViewById(R.id.triage);
         summary = findViewById(R.id.summary);
         add = findViewById(R.id.add);
-
-        invites = findViewById(R.id.spinnerInvites);
-        generate = findViewById(R.id.addInvite);
-        revoke = findViewById(R.id.revoke);
 
         presenter = new ManageChildrenPresenter(this);
 

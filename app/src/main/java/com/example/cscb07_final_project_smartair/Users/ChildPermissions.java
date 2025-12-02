@@ -8,4 +8,5 @@ public class ChildPermissions {
     public boolean pef;
     public boolean triageIncidents;
     public boolean summaryCharts;
+    public String providerName;
 }

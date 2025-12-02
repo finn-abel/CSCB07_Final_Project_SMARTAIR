@@ -60,23 +60,6 @@
         android:layout_height="wrap_content"
         android:text="Summary charts" />
 
-    <Spinner
-        android:id="@+id/spinnerInvites"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/addInvite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Generate invite" />
-
-    <Button
-        android:id="@+id/revoke"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Revoke invite" />
-
     <Button
         android:id="@+id/add"
         android:layout_width="match_parent"

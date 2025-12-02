@@ -46,7 +46,7 @@ public class AddChildModel {
                         if (task.isSuccessful()) {
                             FirebaseUser user = secondaryAuth.getCurrentUser();
                             String uid = user.getUid();
-                            Child child = new Child(name, uid, email, parent, new pefGuidance());
+                            Child child = new Child(name, uid, email, parent, new pefGuidance(), dob, notes);
                             HashMap<String, Object> updates = new HashMap<>();
                             updates.put("users/children/" + uid, child);
                             updates.put("users/parents/" + parent + "/children/" + uid + "/name", name);
