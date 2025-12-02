@@ -101,6 +101,15 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         logout_button.setOnClickListener(v -> presenter.onLogoutButtonClicked());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (presenter != null) {
+            presenter.loadChildrenDash();
+        }
+    }
+
     public void setActiveChild(String id) {
         activeChildId = id;
 
