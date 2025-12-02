@@ -72,8 +72,7 @@
                 android:layout_height="62dp"
                 android:text="INVENTORY"
                 android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="22dp"/>
+                android:layout_marginTop="12dp" />
 
             <Button
                 android:id="@+id/btnManageChildren"
@@ -81,7 +80,8 @@
                 android:layout_height="62dp"
                 android:layout_marginTop="12dp"
                 android:backgroundTint="#5C8AF2"
-                android:text="MANAGE CHILDREN" />
+                android:text="MANAGE CHILDREN"
+                android:layout_marginBottom="22dp"/>
 
             <TextView
                 android:id="@+id/tv_dashboard"
@@ -91,7 +91,7 @@
                 android:layout_marginBottom="12dp"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_gravity="center_horizontal"/> <!-- CENTER TEXT -->
+                android:layout_gravity="center_horizontal"/>
 
             <Spinner
                 android:id="@+id/SDspinnerChild"
