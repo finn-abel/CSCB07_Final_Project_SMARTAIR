@@ -26,63 +26,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <Button
-                android:id="@+id/checkin"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="DAILY CHECK IN" />
-
-            <Button
-                android:id="@+id/btnPEF"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="PEF ENTRY" />
-
-            <Button
-                android:id="@+id/btnMedicineLogs"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="LOG MEDICINE" />
-
-            <Button
-                android:id="@+id/btnCheckInHistory"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="CHECK IN HISTORY" />
-
-            <Button
-                android:id="@+id/btnSchedule"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:text="CHILD SCHEDULE"
-                android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp" />
-
-            <Button
-                android:id="@+id/btnInventory"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:text="INVENTORY"
-                android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp" />
-
-            <Button
-                android:id="@+id/btnManageChildren"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="MANAGE CHILDREN"
-                android:layout_marginBottom="22dp"/>
-
             <TextView
                 android:id="@+id/tv_dashboard"
                 android:layout_width="wrap_content"
@@ -240,6 +183,63 @@
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/checkin"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="DAILY CHECK IN" />
+
+            <Button
+                android:id="@+id/btnPEF"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="PEF ENTRY" />
+
+            <Button
+                android:id="@+id/btnMedicineLogs"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="LOG MEDICINE" />
+
+            <Button
+                android:id="@+id/btnCheckInHistory"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="CHECK IN HISTORY" />
+
+            <Button
+                android:id="@+id/btnSchedule"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:text="CHILD SCHEDULE"
+                android:backgroundTint="#5C8AF2"
+                android:layout_marginTop="12dp" />
+
+            <Button
+                android:id="@+id/btnInventory"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:text="INVENTORY"
+                android:backgroundTint="#5C8AF2"
+                android:layout_marginTop="12dp" />
+
+            <Button
+                android:id="@+id/btnManageChildren"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="MANAGE CHILDREN"/>
+
             <Button
                 android:id="@+id/btnProviderReport"
                 android:layout_width="match_parent"
@@ -261,7 +261,7 @@
                 android:text="SIGN OUT"
                 android:backgroundTint="#5C8AF2"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
