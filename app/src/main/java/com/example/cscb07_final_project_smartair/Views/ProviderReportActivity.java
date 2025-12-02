@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,11 +14,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class ProviderReportActivity extends BaseParentActivity {
 
     private DatabaseReference mdatabase;
     private String parentId;
+    private HashMap<String, String> nameToIdMap = new HashMap<>();
+    private String selectedChildId;
+
+    private Spinner spinnerChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

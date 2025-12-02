@@ -1,6 +1,8 @@
 package com.example.cscb07_final_project_smartair.Views;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -9,7 +11,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.Helpers.ProviderReportGenerator;
+import com.example.cscb07_final_project_smartair.Presenters.ParentHomePresenter;
+import com.example.cscb07_final_project_smartair.Presenters.ProviderReportPresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,21 +24,33 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class ProviderReportSelectionActivity extends BaseParentActivity {
+public class ProviderReportSelectionActivity extends BaseParentActivity implements  ProviderReportView {
 
+    private ProviderReportPresenter presenter;
     private Spinner spinnerChild;
     private HashMap<String, String> nameToIdMap = new HashMap<>();
     private String selectedChildId;
+    DatabaseReference mdatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provider_report_selection);
 
+        if (mdatabase == null) {
+            mdatabase = FirebaseDatabase.getInstance().getReference();
+        }
+
         spinnerChild = findViewById(R.id.SDspinnerChild);
         Button btn3Months = findViewById(R.id.btn3Months);
         Button btn6Months = findViewById(R.id.btn6Months);
+
+        spinnerChild = findViewById(R.id.SDspinnerChild);
+
+        presenter = new ProviderReportPresenter(this);
+        presenter.loadChildrenProvider();
 
         String parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         loadChildren(parentId);
@@ -48,6 +65,26 @@ public class ProviderReportSelectionActivity extends BaseParentActivity {
             if (selectedChildId != null) {
                 new ProviderReportGenerator().generateReport(this, selectedChildId, 6);
             }
+        });
+    }
+
+    public void displayChildren(List<ChildSpinnerOption> names) {
+        ArrayAdapter<ChildSpinnerOption> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerChild.setAdapter(adapter);
+
+        if (!names.isEmpty()) {
+            spinnerChild.setSelection(0);
+            presenter.onChildSelectedProvider(0); // auto select a child
+        }
+
+        spinnerChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                presenter.onChildSelectedProvider(pos);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 

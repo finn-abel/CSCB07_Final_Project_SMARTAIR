@@ -2,10 +2,13 @@ package com.example.cscb07_final_project_smartair.Presenters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.Models.BaseModel;
 import com.example.cscb07_final_project_smartair.Models.ParentHomeModel;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.example.cscb07_final_project_smartair.Views.ParentHomeActivity;
 import com.example.cscb07_final_project_smartair.Views.ParentHomeView;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +24,7 @@ public class ParentHomePresenter{
 
     private final ParentHomeView view;
     public ParentHomeModel model;
-
-    private List<String> childIds = new ArrayList<>();
-    private List<String> childNames = new ArrayList<>();
+    private List<ChildSpinnerOption> children = new ArrayList<>();
 
     public ParentHomePresenter(ParentHomeView view){
         this.view = view;
@@ -70,37 +71,28 @@ public class ParentHomePresenter{
     }
 
     public void onChildSelectedDash(int index) {
-        if (index < 0 || index >= childIds.size()) return;
+        if (index < 0 || index >= children.size()) return;
 
-        String id = childIds.get(index);
-
-        // send childId back to ParentHomeActivity //// change to right parenthomeactivity
-        (view).setActiveChild(id);
+        ChildSpinnerOption selected = children.get(index);
+        view.setActiveChild(selected.userID);
     }
 
     public void loadChildrenDash() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child("users")
-                .child("children");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        String parentId = model.getCurrentUserId();
+
+        model.fetchChildren(parentId, new BaseModel.ChildFetchListener() {
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot receiver) {
-                childIds.clear();
-                childNames.clear();
-
-                for (DataSnapshot child : receiver.getChildren()) {
-                    childIds.add(child.getKey()); // get child's id
-                    String name = child.child("name").getValue(String.class);
-
-                    childNames.add(name);
-                }
-
-                view.displayChildren(childNames);
+            public void onChildrenLoaded(List<ChildSpinnerOption> childList) {
+                children = childList;
+                view.displayChildren(childList);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onError(String message) {
+                // Optional: handle errors, e.g. Toast
+            }
         });
     }
 }

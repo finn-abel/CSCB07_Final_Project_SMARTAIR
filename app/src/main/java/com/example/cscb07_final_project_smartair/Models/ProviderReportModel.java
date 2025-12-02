@@ -2,15 +2,11 @@ package com.example.cscb07_final_project_smartair.Models;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ParentHomeModel extends BaseModel {
+public class ProviderReportModel extends BaseModel {
     private FirebaseAuth mAuth;
 
-    public ParentHomeModel() {
+    public ProviderReportModel() {
         mAuth = FirebaseAuth.getInstance();
-    }
-
-    public void signOut() {
-        mAuth.signOut();
     }
 
     public String getCurrentUserId() {
@@ -22,7 +18,4 @@ public class ParentHomeModel extends BaseModel {
             return null;
         }
     }
-
-    //redirect to onboarding
-    //redirect to child/parent home
 }

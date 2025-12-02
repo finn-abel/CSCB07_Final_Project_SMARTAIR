@@ -22,13 +22,13 @@
             android:exported = "false" />
         <activity android:name=".Views.SignUpActivity"
             android:exported="false" />
-        <activity android:name=".Views.ParentHomeActivity"
+        <activity android:name=".Views.LauncherActivity"
          android:exported="false" />
         <activity android:name=".Views.MainActivityView"
             android:exported="false" />
 
         <activity
-            android:name=".Views.LauncherActivity"
+            android:name=".Views.ParentHomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
