@@ -30,4 +30,6 @@ public interface ParentHomeView {
     public void displayChildren(List<ChildSpinnerOption> names);
 
     void setActiveChild(String id);
+
+    void navigateToManageChildren();
 }

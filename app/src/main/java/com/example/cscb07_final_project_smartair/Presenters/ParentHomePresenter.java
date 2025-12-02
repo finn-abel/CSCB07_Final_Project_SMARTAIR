@@ -70,6 +70,10 @@ public class ParentHomePresenter{
         view.navigateToBadgeSettings();
     }
 
+    public void onManageChildrenClicked() {
+        view.navigateToManageChildren();
+    }
+
     public void onChildSelectedDash(int index) {
         if (index < 0 || index >= children.size()) return;
 
