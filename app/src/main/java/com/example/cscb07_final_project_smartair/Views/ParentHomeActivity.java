@@ -76,48 +76,32 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         presenter.loadChildrenDash();
 
         Button check_in_button = findViewById(R.id.checkin);
-        Button logout_button = findViewById(R.id.logout);
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
-        Button btnInventory = findViewById(R.id.btnInventory);
         Button btnPEF = findViewById(R.id.btnPEF);
-        Button btnProviderReport = findViewById(R.id.btnProviderReport);
         Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
 
+        Button logout_button = findViewById(R.id.logout);
+        Button btnInventory = findViewById(R.id.btnInventory);
+        Button btnProviderReport = findViewById(R.id.btnProviderReport);
         Button btnSchedule = findViewById(R.id.btnSchedule);
         Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
 
-        btnPEF.setOnClickListener(view -> {
-            presenter.onPEFButtonClicked();
-        });
-        btnBadgeSettings.setOnClickListener(view -> {
-            presenter.onBadgeSettingsClicked();
-        });
-        btnSchedule.setOnClickListener(view -> {
-            presenter.onScheduleButtonClicked();
-        });
-
-
-        logout_button.setOnClickListener(view -> {
-            presenter.onLogoutButtonClicked();
-        });
-
-        check_in_button.setOnClickListener(view -> {
-            presenter.onCheckInButtonClicked();
-        });
+        check_in_button.setOnClickListener(v -> presenter.onCheckInButtonClicked());
         btnCheckInHistory.setOnClickListener(v -> presenter.onCheckInHistoryClicked());
-
         btnLogs.setOnClickListener(v -> presenter.onMedicineLogsClicked());
-        btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
+        btnPEF.setOnClickListener(v -> presenter.onPEFButtonClicked());
 
-        btnProviderReport.setOnClickListener(view -> {
-            presenter.onProviderReportClicked();
-        });
+        btnBadgeSettings.setOnClickListener(v -> presenter.onBadgeSettingsClicked());
+        btnSchedule.setOnClickListener(v -> presenter.onScheduleButtonClicked());
+        btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
+        btnProviderReport.setOnClickListener(v -> presenter.onProviderReportClicked());
+
+        logout_button.setOnClickListener(v -> presenter.onLogoutButtonClicked());
     }
 
     public void setActiveChild(String id) {
         activeChildId = id;
 
-        // Reload UI using new child
         loadRescueTrend(id, showThirtyDays ? 30 : 7);
         getTodayZone();
         getLastRescueTime();

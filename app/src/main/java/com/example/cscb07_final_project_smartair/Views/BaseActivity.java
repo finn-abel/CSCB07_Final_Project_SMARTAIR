@@ -103,14 +103,24 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
                     Tpresenter.callTriage(false,null);
             });
         }
-        android.view.View navButton = findViewById(R.id.btnTopNav);
-        if (navButton != null) {
-            navButton.setOnClickListener(v -> showNavMenu(navButton));
+
+        if (isParent()) {
+            android.view.View navButton = findViewById(R.id.btnTopNav);
+            if (navButton != null) {
+                navButton.setOnClickListener(v -> showParentMenu(navButton));
+            }
+        } else {
+            android.view.View navButton = findViewById(R.id.btnTopNav);
+            if (navButton != null) {
+                navButton.setOnClickListener(v -> showNavMenu(navButton));
+            }
         }
     }
+
+
+
     private void showNavMenu(android.view.View anchor) {
         android.view.View menuView = getLayoutInflater().inflate(R.layout.view_nav_menu, null);
-
         PopupWindow popup = new PopupWindow(
                 menuView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -138,6 +148,56 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
         });
         menuView.findViewById(R.id.nav_home).setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivityView.class));
+            popup.dismiss();
+        });
+
+        popup.showAsDropDown(anchor, 0, 16);
+    }
+
+    private void showParentMenu(android.view.View anchor) {
+        android.view.View menu = getLayoutInflater().inflate(R.layout.view_nav_menu_parent, null);
+        PopupWindow popup = new PopupWindow(
+                menu,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+        );
+        popup.setElevation(12f);
+
+        menu.findViewById(R.id.nav_checkin_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, CheckInActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_pef_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, PEFActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_meds_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, MedicineLogsActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_history_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, CheckInHistoryActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_badge_settings_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, BadgeSettingsActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_child_schedule_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ScheduleActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_inventory_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, InventoryActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_provider_report_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProviderReportSelectionActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_home_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ParentHomeActivity.class));
             popup.dismiss();
         });
 
@@ -231,6 +291,4 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
     public void onChildSelected(String userID){
         Tpresenter.onChildSelected(userID);
     }
-
 }
-

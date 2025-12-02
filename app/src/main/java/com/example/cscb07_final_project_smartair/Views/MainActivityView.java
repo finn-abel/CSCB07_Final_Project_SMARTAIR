@@ -19,7 +19,7 @@ import com.example.cscb07_final_project_smartair.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivityView extends BaseParentActivity implements MainView {
+public class MainActivityView extends BaseActivity implements MainView {
     private MainActivityPresenter presenter;
 
     private LinearLayout badgeContainer;

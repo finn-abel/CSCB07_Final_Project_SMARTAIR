@@ -14,7 +14,7 @@ import com.example.cscb07_final_project_smartair.R;
 
 import java.util.List;
 
-public class BadgeSettingsActivity extends BaseActivity implements BadgeSettingsView {
+public class BadgeSettingsActivity extends BaseParentActivity implements BadgeSettingsView {
     private BadgeSettingsPresenter presenter;
 
     private Spinner spinnerChild;
@@ -35,7 +35,6 @@ public class BadgeSettingsActivity extends BaseActivity implements BadgeSettings
         badgeContainer = findViewById(R.id.BSbadgeListContainer);
 
         findViewById(R.id.BSbtnSave).setOnClickListener(v -> presenter.onSaveClicked());
-        findViewById(R.id.BSbtnBackToHome).setOnClickListener(v -> navigateHome());
     }
 
     @Override
