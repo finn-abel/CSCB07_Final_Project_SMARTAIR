@@ -98,10 +98,11 @@
                     android:layout_margin="8dp"/>
 
                 <CheckBox
-                    android:id="@+id/other"
-                    android:text="Other"
+                    android:id="@+id/pollen"
+                    android:layout_margin="8dp"
                     android:buttonTint="#5C8AF2"
-                    android:layout_margin="8dp"/>
+                    android:text="Pollen" />
+
             </GridLayout>
 
             <EditText
