@@ -265,7 +265,6 @@ public class BaseParentActivity extends BaseActivity {
     // Inventory low/expired listener, alerts the parent if the child's medication is low
     // or expired
     private void listenInventory(String childId) {
-        activeChildId = "l1Z0u0INnMZxsjae4MdRCOj8oqJ3";
         DatabaseReference inventoryRef = mdatabase
                 .child("users")
                 .child("children")

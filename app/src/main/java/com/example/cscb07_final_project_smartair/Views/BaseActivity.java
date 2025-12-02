@@ -26,8 +26,6 @@ This class acts as a superclass for all activities to be used in this app. It al
 implementation of additional functions shared between all activities
  */
 public abstract class BaseActivity extends AppCompatActivity implements TriageView{
-
-
     private TriagePresenter Tpresenter;
 
     @Override

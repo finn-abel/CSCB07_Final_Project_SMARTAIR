@@ -78,6 +78,10 @@ public class MainActivityPresenter extends AppCompatActivity {
                 view.setStreaks(controllerStreak, techniqueStreak);
             }
             @Override
+            public void onNextDoseLoaded(String nextDoseText) {
+                view.displayNextDose(nextDoseText);
+            }
+            @Override
             public void onFailure(String error) {}
         });
     }
