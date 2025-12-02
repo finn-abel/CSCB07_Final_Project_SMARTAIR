@@ -5,7 +5,11 @@ public class pefGuidance {
     public String yellow;
     public String green;
 
-    public pefGuidance() { }
+    public pefGuidance() {
+        red = "";
+        yellow = "";
+        green = "";
+    }
 
     public pefGuidance(String red, String yellow, String green) {
         this.red = red;

@@ -14,7 +14,10 @@ import com.google.firebase.database.DatabaseReference;
 
 import com.example.cscb07_final_project_smartair.Users.Child;
 import com.example.cscb07_final_project_smartair.Presenters.AddChildPresenter;
+import com.example.cscb07_final_project_smartair.Users.pefGuidance;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class AddChildModel {
     private final AddChildPresenter presenter;
@@ -43,22 +46,13 @@ public class AddChildModel {
                         if (task.isSuccessful()) {
                             FirebaseUser user = secondaryAuth.getCurrentUser();
                             String uid = user.getUid();
-                            Child child = new Child(name, uid, email, parent, null);
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users")
-                                    .child("children")
-                                    .child(uid);
-                            ref.setValue(child)
-                                    .addOnSuccessListener(aVoid -> {
-                                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("users")
-                                                .child("parents")
-                                                .child(parent)
-                                                .child("children")
-                                                .child(uid)
-                                                .child("name");
-                                        ref2.setValue(name)
-                                                .addOnSuccessListener(aVoid2 -> presenter.onSignUpSuccess())
-                                                .addOnFailureListener(e -> presenter.onSignUpFailure(e.getMessage()));
-                                    })
+                            Child child = new Child(name, uid, email, parent, new pefGuidance());
+                            HashMap<String, Object> updates = new HashMap<>();
+                            updates.put("users/children/" + uid, child);
+                            updates.put("users/parents/" + parent + "/children/" + uid + "/name", name);
+                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                            rootRef.updateChildren(updates)
+                                    .addOnSuccessListener(aVoid -> presenter.onSignUpSuccess())
                                     .addOnFailureListener(e -> presenter.onSignUpFailure(e.getMessage()));
                         } else {
                             String errorMessage = task.getException() != null ?
