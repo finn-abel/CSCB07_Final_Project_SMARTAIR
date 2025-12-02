@@ -12,4 +12,5 @@ public interface MainView {
     void navigateToCheckInHistoryScreen();
     void displayBadges(List<Badge> badges);
     void setStreaks(int controllerStreak, int techniqueStreak);
+    void displayNextDose(String text);
 }
