@@ -39,7 +39,7 @@ public class ParentHomePresenter{
 
         model.signOut();
 
-        view.navigateToLoginScreen();
+        view.navigateToRoleSelectionScreen();
     }
 
     public void onScheduleButtonClicked(){

@@ -63,6 +63,10 @@
 
         <activity
             android:screenOrientation="portrait"
+            android:name=".Views.ParentHomeActivity"
+            android:exported="false" />
+      <activity
+            android:screenOrientation="portrait"
             android:name=".Views.InventoryActivity"
             android:exported="false" />
         <activity
@@ -105,6 +109,16 @@
         <activity
             android:screenOrientation="portrait"
             android:name=".Views.PEFActivity"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.ProviderLoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.ProviderHomeActivity"
             android:exported="false" />
 
         <receiver
