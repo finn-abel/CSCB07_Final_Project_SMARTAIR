@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class InventoryActivity extends BaseActivity implements InventoryView{
+public class InventoryActivity extends BaseParentActivity implements InventoryView{
     private InventoryPresenter presenter;
 
     private Spinner childSpinner;
@@ -37,9 +37,6 @@ public class InventoryActivity extends BaseActivity implements InventoryView{
 
         Button addBtn = findViewById(R.id.btnAddItem);
         addBtn.setOnClickListener(v -> presenter.startAddNew());
-
-        Button back = findViewById(R.id.btnBackToHome);
-        back.setOnClickListener(v -> navigateToMainActivity());
 
         presenter.loadChildren();
     }

@@ -12,6 +12,7 @@ public interface SignUpView {
 
     void showSignUpSuccess(String message);
     void showSignUpFailure(String message);
+    String getName();
 
 
     void navigateToLoginScreen();

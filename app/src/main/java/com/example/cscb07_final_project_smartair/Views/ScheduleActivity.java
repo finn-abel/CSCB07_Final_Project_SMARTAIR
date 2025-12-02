@@ -12,7 +12,7 @@ import com.example.cscb07_final_project_smartair.R;
 
 import java.util.List;
 
-public class ScheduleActivity extends BaseActivity implements ScheduleView {
+public class ScheduleActivity extends BaseParentActivity implements ScheduleView {
     private SchedulePresenter presenter;
 
     private Spinner spinnerChild;
@@ -32,7 +32,6 @@ public class ScheduleActivity extends BaseActivity implements ScheduleView {
         scheduleContainer = findViewById(R.id.SDscheduleListContainer);
 
         findViewById(R.id.SDbtnAddEntry).setOnClickListener(v -> presenter.startAddEntry());
-        findViewById(R.id.SDbtnBack).setOnClickListener(v -> navigateBackHome());
 
         presenter.loadChildren();
     }

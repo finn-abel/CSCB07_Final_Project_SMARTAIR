@@ -19,6 +19,9 @@ import java.util.Map;
 public class CheckInModel {
 
     private FirebaseAuth mAuth;
+
+
+    //Initialises the database reference to the check-in data subtree
     private final DatabaseReference mDatabase;
 
     public CheckInModel() {
@@ -34,6 +37,7 @@ public class CheckInModel {
 
     }
 
+    //Creates a record of the user's check in in the database
     public void submitCheckIn(ArrayList<String> symptoms, ArrayList<String> triggers, String date,
                               onCheckInFinishedListener listener) {
         String userID = null;

@@ -4,8 +4,8 @@ import com.example.cscb07_final_project_smartair.Models.LauncherModel;
 import com.example.cscb07_final_project_smartair.Views.LauncherView;
 
 /**
- * The Presenter for the Launcher screen. It decides which
- * screen to show based on the user's authentication state.
+ * The Presenter for the Launcher screen. It determines which
+ * screen should be displayed based on whether or not the user is logged in.
  */
 public class LauncherPresenter {
 
@@ -17,10 +17,6 @@ public class LauncherPresenter {
         this.model = new LauncherModel();
     }
 
-    /**
-     * Checks the login status with the model and tells the view where to navigate.
-     * This is called as soon as the LauncherActivity starts.
-     */
     public void decideNextActivity() {
         if (!model.isUserLoggedIn()) {
             view.navigateToRoleLauncherScreen();

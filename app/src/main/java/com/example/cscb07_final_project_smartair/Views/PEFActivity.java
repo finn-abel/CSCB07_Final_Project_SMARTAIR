@@ -32,7 +32,7 @@ public class PEFActivity extends BaseActivity implements PEFView{
         this.presenter = new PEFPresenter(this);
 
         Button enter = findViewById(R.id.enter_pef);
-        Button return_pef = findViewById(R.id.return_pef);
+        //Button return_pef = findViewById(R.id.return_pef);
         select_child = findViewById(R.id.select_child_pef);
         TextView select_child_prompt = findViewById(R.id.select_child_prompt_pef);
 
@@ -45,9 +45,9 @@ public class PEFActivity extends BaseActivity implements PEFView{
             presenter.onEnterClicked();
         });
 
-        return_pef.setOnClickListener(view -> {
-            this.navigateToMainActivity();
-        });
+//        return_pef.setOnClickListener(view -> {
+//            this.navigateToMainActivity();
+//        });
 
     }
 
