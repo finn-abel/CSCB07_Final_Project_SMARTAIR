@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -95,8 +96,6 @@ public class ProviderReportGenerator {
             Toast.makeText(context, "No provider selected.", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
 
         DatabaseReference symptomRef = FirebaseDatabase.getInstance()
                 .getReference("check_in") // check in folder
@@ -176,7 +175,7 @@ public class ProviderReportGenerator {
                             Integer pb = childZoneSnap.child("pb_pef").getValue(Integer.class);
                             // Integer to allow for null
 
-                            if (zoneTimestamp == null || current == null)
+                            if (zoneTimestamp == null || current == null || pb == null)
                             {
                                 continue; // skip if no values in database
                             }
@@ -195,7 +194,7 @@ public class ProviderReportGenerator {
                                 // If valid day index
                                 if (day >= 0 && day < dailyFrequency.length)
                                 {
-                                    if (pb != null && pb != 0)
+                                    if (pb != 0)
                                     {
                                         zoneEntries
                                                 .add(new Entry(day, (((float) current) / pb) * 100));
@@ -214,7 +213,7 @@ public class ProviderReportGenerator {
                         }
 
                         if (!dataBeforeExists2 || !dataAfterExists2) {
-                            Toast.makeText(context, "Not enough data 2", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Not enough data", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -279,8 +278,9 @@ public class ProviderReportGenerator {
                                                 // Calculate planned days
                                                 int plannedDays = 0;
                                                 Calendar calendar = Calendar.getInstance();
+                                                long now = System.currentTimeMillis();
                                                 // increment by days from start time
-                                                for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24 * 60 * 60 * 1000)) {
+                                                for (long time = startTime; time <= now; time += ((long)24 * 60 * 60 * 1000)) {
                                                     calendar.setTimeInMillis(time);
                                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                                                     if (weekdayRequiredDoses.get(dayOfWeek) > 0) {
@@ -308,37 +308,60 @@ public class ProviderReportGenerator {
                                                             if (timestamp < startTime) continue;
                                                             // skip if out of time range
 
-                                                            // make all days' time midnight for consistency
-                                                            calendar.setTimeInMillis(timestamp);
-                                                            calendar.set(Calendar.HOUR_OF_DAY, 0);
-                                                            calendar.set(Calendar.MINUTE, 0);
-                                                            calendar.set(Calendar.SECOND, 0);
-                                                            calendar.set(Calendar.MILLISECOND, 0);
-                                                            long day = calendar.getTimeInMillis();
+                                                            Calendar cal = Calendar.getInstance();
+                                                            cal.setTimeInMillis(timestamp);
+                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                                                            cal.set(Calendar.MINUTE, 0);
+                                                            cal.set(Calendar.SECOND, 0);
+                                                            cal.set(Calendar.MILLISECOND, 0);
+                                                            long dayKey = cal.getTimeInMillis();
 
                                                             // update doses per day for 'day' and if no values already
                                                             // on that day, use 0, otherwise get 'day's values
-                                                            dosesPerDay.put(day, dosesPerDay.getOrDefault(day, 0) + doseAmount);
+                                                            dosesPerDay.put(dayKey, dosesPerDay.getOrDefault(dayKey, 0) + doseAmount);
                                                         }
 
                                                         int takenDays = 0;
-                                                        for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24L * 60 * 60 * 1000)) {
-                                                            calendar.setTimeInMillis(time);
-                                                            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                                                            int requiredDose = weekdayRequiredDoses.get(dayOfWeek);
-                                                            if (requiredDose == 0) continue; // not a planned day
-                                                                                             // so not a taken day
+                                                        Calendar cal = Calendar.getInstance();
 
-                                                            long dayKey = calendar.getTimeInMillis();
+                                                        Calendar loopCal = Calendar.getInstance();
+                                                        loopCal.setTimeInMillis(startTime);
 
-                                                            // find doses taken on dayKey's day
-                                                            int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
-                                                            if (takenDose >= requiredDose) takenDays++;
+                                                        loopCal.set(Calendar.HOUR_OF_DAY, 0);
+                                                        loopCal.set(Calendar.MINUTE, 0);
+                                                        loopCal.set(Calendar.SECOND, 0);
+                                                        loopCal.set(Calendar.MILLISECOND, 0);
+
+                                                        long end = System.currentTimeMillis();
+
+                                                        while (loopCal.getTimeInMillis() <= end) {
+
+                                                            long dayKey = loopCal.getTimeInMillis();
+
+                                                            int dayOfWeek = loopCal.get(Calendar.DAY_OF_WEEK);
+                                                            int requiredDose = weekdayRequiredDoses.getOrDefault(dayOfWeek, 0);
+
+                                                            if (requiredDose > 0) {
+                                                                int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
+
+                                                                Log.d("DEBUG_TAKEN_DAYS",
+                                                                        "Date: " + new Date(dayKey).toString() +
+                                                                                " requiredDose: " + requiredDose +
+                                                                                " takenDose: " + takenDose);
+
+                                                                if (takenDose >= requiredDose) {
+                                                                    takenDays++;
+                                                                }
+                                                            }
+
+                                                            loopCal.add(Calendar.DAY_OF_YEAR, 1);
                                                         }
+
+                                                        Log.d("TakenDays", "Final Taken Days = " + takenDays);
 
                                                         int finalTakenDays = takenDays;
 
-                                                        Log.d("TakenDays", "TakenDays: " + finalPlannedDays);
+                                                        Log.d("TakenDays", "TakenDays: " + finalTakenDays);
                                                         // Checks if permissions are enabled for triage sharing
                                                         triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -566,8 +589,6 @@ public class ProviderReportGenerator {
         // End of rescue frequency
 
         // Controller adherence, pie chart
-        int missedDays = plannedDays - takenDays;
-
         PieChart pieChart = new PieChart(context);
         pieChart.getDescription().setEnabled(false);
         pieChart.setDrawEntryLabels(false);
@@ -576,7 +597,7 @@ public class ProviderReportGenerator {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
 
         pieEntries.add(new PieEntry((float)takenDays, "Taken"));
-        pieEntries.add(new PieEntry((float)missedDays, "Missed"));
+        pieEntries.add(new PieEntry((float)plannedDays, "Planned"));
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Controller Adherence");
         pieDataSet.setColors(
@@ -609,7 +630,7 @@ public class ProviderReportGenerator {
 
         pieChart.draw(pieBitmapCanvas);
 
-        canvas.drawText("Controller Adherence (Days Used/Missed)", 50, 490, paint);
+        canvas.drawText("Controller Adherence (Days Taken/Planned)", 50, 490, paint);
         canvas.drawBitmap(pieBitmap, 50, 500, null);
         // End of controller adherence
 

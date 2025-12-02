@@ -1,6 +1,7 @@
 package com.example.cscb07_final_project_smartair.Views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,6 +96,10 @@ public class ProviderReportSelectionActivity extends BaseParentActivity implemen
 
     @Override
     public void displayProviders(List<BaseModel.ProviderSpinnerOption> providers) {
+        Log.d("ProviderSpinner", "Providers: " + providers.size());
+        for (BaseModel.ProviderSpinnerOption p : providers) {
+            Log.d("ProviderSpinner", "Provider: " + p.providerId + " " + p.name);
+        }
         ArrayAdapter<BaseModel.ProviderSpinnerOption> providerAdapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, providers);
         providerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
