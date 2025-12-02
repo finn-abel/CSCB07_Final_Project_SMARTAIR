@@ -11,7 +11,6 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
 
     private LoginView view;
     private LoginModel model;
-    private FirebaseAuth mAuth;
 
     public LoginPresenter(LoginView view) {
         this.view = view;
@@ -40,6 +39,7 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     public void onLoginSuccess() {
         if (view != null) {
 
+
             SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
 
@@ -67,6 +67,8 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
             view.showLoginFailure(errorMessage);
         }
     }
+
+
 }
 
 

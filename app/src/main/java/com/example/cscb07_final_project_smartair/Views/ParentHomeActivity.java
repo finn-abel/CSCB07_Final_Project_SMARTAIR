@@ -129,8 +129,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     }
 
     @Override
-    public void navigateToLoginScreen(){
-        Intent intent = new Intent(this, LoginActivity.class);
+    public void navigateToRoleSelectionScreen(){
+        Intent intent = new Intent(this, RoleLauncherActivity.class);
         startActivity(intent);
         finish();
     }

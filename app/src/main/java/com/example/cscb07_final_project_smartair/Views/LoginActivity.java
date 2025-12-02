@@ -93,7 +93,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
         String role = prefs.getString("USER_ROLE", "");
         //pull role
 
-        if (role.equals("PARENT")) {
+        if(role.equals("PARENT")) {
             startActivity(new Intent(this, ParentHomeActivity.class));
 
         } else if (role.equals("CHILD")) {

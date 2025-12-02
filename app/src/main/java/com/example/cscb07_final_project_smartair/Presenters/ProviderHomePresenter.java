@@ -13,7 +13,7 @@ public class ProviderHomePresenter {
 
 
     public void onLogoutButtonClicked() {
-        view.navigateToLoginScreen();
+        view.navigateToRoleSelectionScreen();
     }
 
     public void onProviderReportButtonClicked() {

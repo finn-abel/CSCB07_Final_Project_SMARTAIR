@@ -56,14 +56,8 @@ public class MainActivityView extends BaseActivity implements MainView {
 
 
     @Override
-    public void navigateToLoginScreen(String role) {
-        Intent intent;
-        if (role.equals("Child")) {
-            intent = new Intent(this, ChildLoginActivity.class);
-        } else {
-            intent = new Intent(this, LoginActivity.class);
-        }
-        startActivity(intent);
+    public void navigateToRoleSelectionScreen() {
+        startActivity(new Intent(this, RoleLauncherActivity.class));
         finish();
     }
 
