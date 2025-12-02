@@ -9,7 +9,7 @@ import java.util.List;
 public interface ParentHomeView {
     public Context getContext();
 
-    void navigateToLoginScreen();
+    void navigateToRoleSelectionScreen();
 
     void navigateToCheckInScreen();
 
@@ -26,6 +26,7 @@ public interface ParentHomeView {
     void navigateToInventory();
 
     void navigateToProviderReport();
+    void navigateToInvites();
 
     public void displayChildren(List<ChildSpinnerOption> names);
 

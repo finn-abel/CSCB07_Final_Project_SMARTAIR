@@ -39,7 +39,7 @@ public class ParentHomePresenter{
 
         model.signOut();
 
-        view.navigateToLoginScreen();
+        view.navigateToRoleSelectionScreen();
     }
 
     public void onScheduleButtonClicked(){
@@ -72,6 +72,9 @@ public class ParentHomePresenter{
 
     public void onManageChildrenClicked() {
         view.navigateToManageChildren();
+    }
+    public void onInvitesClicked() {
+        view.navigateToInvites();
     }
 
     public void onChildSelectedDash(int index) {

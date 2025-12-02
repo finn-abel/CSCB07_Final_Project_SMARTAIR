@@ -87,6 +87,15 @@
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/nav_invites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PROVIDER INVITES"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/secondary"
+            android:textColor="@android:color/white" />
+
+        <Button
             android:id="@+id/nav_provider_report_parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

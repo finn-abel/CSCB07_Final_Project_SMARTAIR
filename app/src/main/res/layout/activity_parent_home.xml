@@ -184,76 +184,126 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/checkin"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="DAILY CHECK IN" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="16dp">
 
-            <Button
-                android:id="@+id/btnPEF"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="PEF ENTRY" />
+                <Button
+                    android:id="@+id/checkin"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="DAILY CHECK IN"/>
+                <Button
+                    android:id="@+id/btnPEF"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="PEF ENTRY"/>
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/btnMedicineLogs"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="LOG MEDICINE" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="12dp">
 
-            <Button
-                android:id="@+id/btnCheckInHistory"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="CHECK IN HISTORY" />
+                <Button
+                    android:id="@+id/btnMedicineLogs"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="LOG MEDICINE"/>
+                <Button
+                    android:id="@+id/btnCheckInHistory"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="CHECK IN HISTORY"/>
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/btnSchedule"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:text="CHILD SCHEDULE"
-                android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="12dp">
 
-            <Button
-                android:id="@+id/btnInventory"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:text="INVENTORY"
-                android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp" />
+                <Button
+                    android:id="@+id/btnSchedule"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="CHILD SCHEDULE"/>
+                <Button
+                    android:id="@+id/btnInventory"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="INVENTORY"/>
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/btnManageChildren"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#5C8AF2"
-                android:text="MANAGE CHILDREN"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="12dp">
 
-            <Button
-                android:id="@+id/btnProviderReport"
+                <Button
+                    android:id="@+id/btnManageChildren"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="MANAGE CHILDREN"/>
+                <Button
+                    android:id="@+id/btnProviderReport"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="PROVIDER REPORT"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:text="PROVIDER REPORT"
-                android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp" />
-            <Button
-                android:id="@+id/btnBadgeSettings"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:text="BADGE SETTINGS"
-                android:backgroundTint="#5C8AF2"
-                android:layout_marginTop="12dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="12dp">
+
+                <Button
+                    android:id="@+id/btnProviderInvites"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="PROVIDER INVITES"/>
+                <Button
+                    android:id="@+id/btnBadgeSettings"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:backgroundTint="#5C8AF2"
+                    android:text="BADGE SETTINGS"/>
+            </LinearLayout>
+
             <Button
                 android:id="@+id/logout"
                 android:layout_width="match_parent"

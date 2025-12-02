@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cscb07_final_project_smartair.Presenters.RoleLauncherPresenter;
 import com.example.cscb07_final_project_smartair.R;
 
+//Allows for role selection and subsequent navigation to appropriate login screen
 public class RoleLauncherActivity extends BaseActivity implements RoleLauncherView {
 
     private RoleLauncherPresenter presenter;
@@ -34,7 +35,7 @@ public class RoleLauncherActivity extends BaseActivity implements RoleLauncherVi
         presenter = new RoleLauncherPresenter(this);
 
         child.setOnClickListener(view -> presenter.onChildClick());
-        parent.setOnClickListener((view -> presenter.onParentClick()));
+        parent.setOnClickListener(view -> presenter.onParentClick());
         provider.setOnClickListener(view -> presenter.onProviderClick());
     }
 
@@ -47,5 +48,11 @@ public class RoleLauncherActivity extends BaseActivity implements RoleLauncherVi
     public void navigateToGeneralLogin() {
         startActivity(new Intent(this, LoginActivity.class));
     }
+
+    @Override
+    public void navigateToProviderLogin() {
+        startActivity(new Intent(this, ProviderLoginActivity.class));
+    }
+
 
 }

@@ -15,11 +15,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-public class PEFPresenter implements BaseModel.ChildFetchListener {
+public class PEFPresenter implements BaseModel.ChildFetchListener, PEFmodel.getPBListener {
 
     PEFView view;
     PEFmodel model;
-
+    float pb_pef;
     public PEFPresenter(PEFView view){
         this.model = new PEFmodel(this);
         this.view = view;
@@ -46,7 +46,8 @@ public class PEFPresenter implements BaseModel.ChildFetchListener {
                     null,
                     pre,
                     post,
-                    current
+                    current,
+                    this.pb_pef
             );
 
             capture.childID = view.isParent() ? view.getSpinnerOption().userID :
@@ -79,5 +80,14 @@ public class PEFPresenter implements BaseModel.ChildFetchListener {
 
     public void onLogFailure(String s){
         view.showFailure(s);
+    }
+
+    @Override
+    public void onPBRetrieved(float pb){
+        this.pb_pef=pb;
+    }
+
+    public void getPEFpb(String childID){
+        model.getPB(childID, this);
     }
 }

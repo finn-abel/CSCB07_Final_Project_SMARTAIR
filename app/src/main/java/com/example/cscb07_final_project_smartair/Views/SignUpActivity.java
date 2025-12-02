@@ -120,6 +120,15 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
     }
 
     @Override
+    public void navigateToRoleSelectionScreen() {
+        Intent intent = new Intent(this, RoleLauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
+    @Override
     public String getName() {
         return Objects.requireNonNull(new_user_fname.getText()).toString().trim();
     }

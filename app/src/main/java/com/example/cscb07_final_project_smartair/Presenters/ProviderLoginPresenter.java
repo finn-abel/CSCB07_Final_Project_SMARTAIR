@@ -4,17 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.cscb07_final_project_smartair.Models.LoginModel;
+import com.example.cscb07_final_project_smartair.Models.ProviderLoginModel;
 import com.example.cscb07_final_project_smartair.Views.LoginView;
+import com.example.cscb07_final_project_smartair.Views.ProviderLoginView;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginPresenter implements LoginModel.OnLoginFinishedListener, LoginModel.OnResetPasswordFinishedListener {
+public class ProviderLoginPresenter implements ProviderLoginModel.OnLoginFinishedListener, ProviderLoginModel.OnResetPasswordFinishedListener {
 
-    private LoginView view;
-    private LoginModel model;
+    private ProviderLoginView view;
+    private ProviderLoginModel model;
+    private FirebaseAuth mAuth;
 
-    public LoginPresenter(LoginView view) {
+    public ProviderLoginPresenter(ProviderLoginView view) {
         this.view = view;
-        this.model = new LoginModel();
+        this.model = new ProviderLoginModel();
     }
 
     public void onLoginButtonClicked() {
@@ -40,14 +43,15 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
         if (view != null) {
 
 
-            SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+           /* SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
 
-            editor.putString("USER_ROLE", "PARENT");
+            editor.putString("USER_ROLE", "PROVIDER");
             editor.apply();
+           */
 
             view.showLoginSuccess("Sign in successful!");
-            view.navigateToMainScreen();
+            view.navigateToProviderHomeScreen();
         }
     }
 
@@ -67,8 +71,4 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
             view.showLoginFailure(errorMessage);
         }
     }
-
-
 }
-
-

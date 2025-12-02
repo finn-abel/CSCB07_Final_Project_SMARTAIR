@@ -81,19 +81,13 @@ public class MainActivityPresenter extends AppCompatActivity {
 
 
     public void onLogoutButtonClicked() {
-        String role="N/A";
-        if(mAuth.getCurrentUser().getEmail().contains("@smartair.com")) {
-            role = "Child";
-        }
         model.signOut();
-        view.navigateToLoginScreen(role);
-
 
         SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         prefs.edit().clear().apply();
         model.signOut();
 
-        view.navigateToLoginScreen(role);
+        view.navigateToRoleSelectionScreen();
     }
 
     public void onPEFButtonClicked(){
