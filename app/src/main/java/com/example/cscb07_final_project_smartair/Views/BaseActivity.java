@@ -96,23 +96,30 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
     @Override
     public void setContentView(int layoutResID){
         super.setContentView(layoutResID);
-
-        android.view.View triageButton = findViewById(R.id.triage_button);
-        if(triageButton!=null){ //if implemented
-            triageButton.setOnClickListener( v -> {
-                    Tpresenter.callTriage(false,null);
-            });
-        }
-
-        if (isParent()) {
-            android.view.View navButton = findViewById(R.id.btnTopNav);
-            if (navButton != null) {
-                navButton.setOnClickListener(v -> showParentMenu(navButton));
+        if(!(isProvider())) {
+            android.view.View triageButton = findViewById(R.id.triage_button);
+            if (triageButton != null) { //if implemented
+                triageButton.setOnClickListener(v -> {
+                    Tpresenter.callTriage(false, null);
+                });
             }
-        } else {
+
+            if (isParent()) {
+                android.view.View navButton = findViewById(R.id.btnTopNav);
+                if (navButton != null) {
+                    navButton.setOnClickListener(v -> showParentMenu(navButton));
+                }
+            } else {
+                android.view.View navButton = findViewById(R.id.btnTopNav);
+                if (navButton != null) {
+                    navButton.setOnClickListener(v -> showNavMenu(navButton));
+                }
+            }
+        }
+        else{
             android.view.View navButton = findViewById(R.id.btnTopNav);
             if (navButton != null) {
-                navButton.setOnClickListener(v -> showNavMenu(navButton));
+                navButton.setOnClickListener(v -> showProviderMenu(navButton));
             }
         }
     }
@@ -212,6 +219,23 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
         popup.showAsDropDown(anchor, 0, 16);
     }
 
+    private void showProviderMenu(android.view.View anchor) {
+        android.view.View menu = getLayoutInflater().inflate(R.layout.view_nav_menu_provider, null);
+        PopupWindow popup = new PopupWindow(
+                menu,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+        );
+        popup.setElevation(12f);
+
+        menu.findViewById(R.id.nav_home).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProviderHomeActivity.class));
+            popup.dismiss();
+        });
+
+        popup.showAsDropDown(anchor, 0, 16);
+    }
 
     @Override
     public void showTimerStart(triageCapture capture, long n){
@@ -272,6 +296,12 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         String role = prefs.getString("USER_ROLE", "");
         return role.equals("PARENT");
+    }
+
+    public boolean isProvider() {
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String role = prefs.getString("USER_ROLE", "");
+        return role.equals("PROVIDER");
     }
 
     public Context getContext(){

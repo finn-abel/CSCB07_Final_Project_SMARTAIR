@@ -17,7 +17,7 @@ public class ProviderHomePresenter {
     }
 
     public void onProviderReportButtonClicked() {
-        // TODO: navigate to provider report selection screen
+        view.navigateToProviderReport();
     }
 
     public void onLinkChildClicked() {

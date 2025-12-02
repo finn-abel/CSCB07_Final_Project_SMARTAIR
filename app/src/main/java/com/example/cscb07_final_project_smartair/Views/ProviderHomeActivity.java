@@ -39,6 +39,12 @@ public class ProviderHomeActivity extends BaseActivity implements ProviderHomeVi
         startActivity(intent);
         finish();
     }
+    @Override
+    public void navigateToProviderReport() {
+        Intent intent = new Intent(this, ProviderReportSelectionActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     public String getInviteCodeInput() {
