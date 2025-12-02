@@ -25,6 +25,8 @@ public interface ParentHomeView {
 
     void navigateToProviderReport();
 
+    void navigateToManageChildren();
+
     public void displayChildren(List<String> names);
 
     void setActiveChild(String id);
