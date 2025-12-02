@@ -3,14 +3,8 @@ package com.example.cscb07_final_project_smartair.Views;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.View;
+import android.widget.*;
 import androidx.annotation.Nullable;
 
 import com.example.cscb07_final_project_smartair.DataObjects.ControllerDose;
@@ -19,12 +13,14 @@ import com.example.cscb07_final_project_smartair.Presenters.MedicineLogsPresente
 import com.example.cscb07_final_project_smartair.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class MedicineLogsActivity extends BaseActivity implements MedicineLogsView {
     private MedicineLogsPresenter presenter;
+
+    private Spinner spinnerChild;
+    private List<String> childIds = new ArrayList<>();
+    private String selectedChildId;
 
     private Dialog controllerDialog;
     private Dialog rescueDialog;
@@ -44,6 +40,7 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
 
         presenter = new MedicineLogsPresenter(this);
 
+        spinnerChild = findViewById(R.id.spinnerChildSelect);
         controllerLogContainer = findViewById(R.id.recyclerControllerLogs);
         rescueLogContainer = findViewById(R.id.recyclerRescueLogs);
 
@@ -53,20 +50,32 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         btnController.setOnClickListener(v -> showControllerPopup());
         btnRescue.setOnClickListener(v -> showRescuePopup());
 
-        presenter.loadLogs();
+        presenter.loadChildren(); // FIRST STEP
+    }
+
+    @Override
+    public void showChildren(List<String> ids, List<String> names) {
+        this.childIds = ids;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_dropdown_item, names);
+        spinnerChild.setAdapter(adapter);
+
+        spinnerChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedChildId = childIds.get(position);
+                presenter.loadLogsForChild(selectedChildId);
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
     @Override
     public void showControllerPopup() {
         controllerDialog = new Dialog(this);
         controllerDialog.setContentView(R.layout.dialog_controller_dose);
-
-        if (controllerDialog.getWindow() != null) {
-            controllerDialog.getWindow().setLayout(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-        }
 
         setupSpinner(controllerDialog.findViewById(R.id.spinnerBeforeController),
                 value -> selectedBeforeController = value);
@@ -75,7 +84,8 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
                 value -> selectedAfterController = value);
 
         Button submitBtn = controllerDialog.findViewById(R.id.submitControllerDose);
-        submitBtn.setOnClickListener(v -> presenter.onLogControllerClicked());
+        submitBtn.setOnClickListener(v ->
+                presenter.onLogControllerClicked(selectedChildId));
 
         controllerDialog.show();
     }
@@ -89,13 +99,6 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         rescueDialog = new Dialog(this);
         rescueDialog.setContentView(R.layout.dialog_rescue_dose);
 
-        if (rescueDialog.getWindow() != null) {
-            rescueDialog.getWindow().setLayout(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-        }
-
         setupSpinner(rescueDialog.findViewById(R.id.spinnerBeforeRescue),
                 value -> selectedBeforeRescue = value);
 
@@ -106,7 +109,8 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
                 value -> selectedSOB = value);
 
         Button submit = rescueDialog.findViewById(R.id.submitRescueDose);
-        submit.setOnClickListener(v -> presenter.onLogRescueClicked());
+        submit.setOnClickListener(v ->
+                presenter.onLogRescueClicked(selectedChildId));
 
         rescueDialog.show();
     }
@@ -119,19 +123,14 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
     private void setupSpinner(Spinner spinner, java.util.function.Consumer<Integer> setter) {
         Integer[] values = {1, 2, 3, 4, 5};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                values
-        );
-
+                this, android.R.layout.simple_spinner_dropdown_item, values);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setter.accept(values[position]);
             }
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -178,34 +177,29 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
     public void showNoControllerLogs() {
         TextView tv = new TextView(this);
         tv.setText("No controller doses logged in last 72 hours.");
-        tv.setPadding(0, 16, 0, 16);
         controllerLogContainer.addView(tv);
     }
     @Override
     public void showNoRescueLogs() {
         TextView tv = new TextView(this);
         tv.setText("No rescue doses logged in last 72 hours.");
-        tv.setPadding(0, 16, 0, 16);
         rescueLogContainer.addView(tv);
     }
     @Override
     public void addControllerLog(String text) {
         TextView tv = new TextView(this);
-        tv.setPadding(0, 16, 0, 16);
         tv.setText(text);
         controllerLogContainer.addView(tv);
     }
     @Override
     public void addRescueLog(String text) {
         TextView tv = new TextView(this);
-        tv.setPadding(0, 16, 0, 16);
         tv.setText(text);
         rescueLogContainer.addView(tv);
     }
     @Override
     public void displayControllerLogs(List<ControllerDose> logs) {
         clearControllerLogs();
-
         if (logs == null || logs.isEmpty()) {
             showNoControllerLogs();
             return;
@@ -223,7 +217,6 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
     @Override
     public void displayRescueLogs(List<RescueDose> logs) {
         clearRescueLogs();
-
         if (logs == null || logs.isEmpty()) {
             showNoRescueLogs();
             return;
@@ -239,13 +232,11 @@ public class MedicineLogsActivity extends BaseActivity implements MedicineLogsVi
         }
     }
 
-    @Override
-    public void showError(String msg) {
+
+    @Override public void showError(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public void showSuccess(String msg) {
+    @Override public void showSuccess(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 

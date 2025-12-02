@@ -173,7 +173,7 @@ public class ProviderReportGenerator {
                                     childZoneSnap.child("timestamp").getValue(Long.class);
                             Integer current =
                                     childZoneSnap.child("current").getValue(Integer.class);
-                            Integer pb = childZoneSnap.child("pb").getValue(Integer.class);
+                            Integer pb = childZoneSnap.child("pb_pef").getValue(Integer.class);
                             // Integer to allow for null
 
                             if (zoneTimestamp == null || current == null)

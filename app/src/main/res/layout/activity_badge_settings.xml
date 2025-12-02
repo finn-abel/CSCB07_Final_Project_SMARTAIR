@@ -37,29 +37,58 @@
             android:textStyle="bold"
             android:layout_marginTop="20dp"/>
 
+        <TextView
+            android:id="@+id/labelPerfectWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Perfect Controller Week Goal"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
         <EditText
             android:id="@+id/BSperfectWeekThreshold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Perfect Controller Week Goal"
             android:inputType="number"
-            android:layout_marginTop="12dp" />
+            android:hint="Enter number of days"
+            android:layout_marginTop="6dp" />
+
+
+        <TextView
+            android:id="@+id/labelTechniqueGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Technique Sessions Goal"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
 
         <EditText
             android:id="@+id/BStechniqueThreshold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Technique Sessions Goal"
             android:inputType="number"
-            android:layout_marginTop="12dp" />
+            android:hint="Enter number of sessions"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:id="@+id/labelLowRescue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max Rescue Days (per 30 days)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
 
         <EditText
             android:id="@+id/BSlowRescueThreshold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Max Rescue Days (per 30 days)"
             android:inputType="number"
-            android:layout_marginTop="12dp" />
+            android:hint="Enter max rescue days"
+            android:layout_marginTop="6dp" />
+
 
         <Button
             android:id="@+id/BSbtnSave"

@@ -200,6 +200,10 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
             startActivity(new Intent(this, ParentHomeActivity.class));
             popup.dismiss();
         });
+        menu.findViewById(R.id.nav_manage_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ManageChildrenActivity.class));
+            popup.dismiss();
+        });
 
         popup.showAsDropDown(anchor, 0, 16);
     }

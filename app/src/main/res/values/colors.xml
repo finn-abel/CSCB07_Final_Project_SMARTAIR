@@ -7,4 +7,5 @@
     <color name="safe_green">#0cba06</color>
     <color name="danger_red">#c40e0e</color>
     <color name="warning_yellow">#b1b52f</color>
+    <color name="selected_bg">#1bc4f7</color>
 </resources>

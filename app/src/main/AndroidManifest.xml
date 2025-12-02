@@ -65,10 +65,15 @@
             android:screenOrientation="portrait"
             android:name=".Views.ParentHomeActivity"
             android:exported="false" />
-
-        <activity
+      <activity
             android:screenOrientation="portrait"
             android:name=".Views.InventoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.ManageChildrenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.AddChildActivity"
             android:exported="false" />
 
         <activity

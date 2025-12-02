@@ -1,9 +1,9 @@
 package com.example.cscb07_final_project_smartair.Users;
 
 public abstract class User {
-    String name;
+    public String name;
     String uid; //firebase id
-    String email; //becomes username for children
+    public String email; //becomes username for children
     String role; // PARENT, CHILD, PROVIDER
 
 

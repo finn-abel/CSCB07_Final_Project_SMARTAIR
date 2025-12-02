@@ -88,17 +88,22 @@ public class LoginActivity extends BaseActivity implements LoginView {
 
     @Override
     public void navigateToMainScreen() {
-
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        String role = prefs.getString("USER_ROLE", "");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("USER_ROLE", "PARENT");
+        editor.apply();
+//        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+//        String role = prefs.getString("USER_ROLE", "");
         //pull role
-
-        if(role.equals("PARENT")) {
-            startActivity(new Intent(this, ParentHomeActivity.class));
-
-        } else if (role.equals("CHILD")) {
-            startActivity(new Intent(this, MainActivityView.class));
-        }
+        startActivity(new Intent(this, ParentHomeActivity.class));
+//
+//        if (role.equals("PARENT")) {
+//
+//            startActivity(new Intent(this, ParentHomeActivity.class));
+//
+//        } else if (role.equals("CHILD")) {
+//            startActivity(new Intent(this, MainActivityView.class));
+//        }
         finish();
     }
 

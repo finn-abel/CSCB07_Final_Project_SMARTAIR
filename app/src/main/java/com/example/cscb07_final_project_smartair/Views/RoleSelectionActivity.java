@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Presenters.RoleSelectionPresenter;
-import com.example.cscb07_final_project_smartair.Views.RoleSelectionView;
 
 public class RoleSelectionActivity extends BaseActivity implements RoleSelectionView {
 
@@ -22,7 +20,7 @@ public class RoleSelectionActivity extends BaseActivity implements RoleSelection
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_role_selection);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
