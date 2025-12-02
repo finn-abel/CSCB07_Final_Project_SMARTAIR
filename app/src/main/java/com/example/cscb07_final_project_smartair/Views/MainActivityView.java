@@ -25,6 +25,7 @@ public class MainActivityView extends BaseParentActivity implements MainView {
     private LinearLayout badgeContainer;
     private TextView tvControllerStreak;
     private TextView tvTechniqueStreak;
+    private TextView tvNextDose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class MainActivityView extends BaseParentActivity implements MainView {
         badgeContainer = findViewById(R.id.badgeContainer);
         tvControllerStreak = findViewById(R.id.tvControllerStreak);
         tvTechniqueStreak = findViewById(R.id.tvTechniqueStreak);
+        tvNextDose = findViewById(R.id.tvNextDose);
 
         presenter.loadMainPageData();
     }
@@ -116,6 +118,11 @@ public class MainActivityView extends BaseParentActivity implements MainView {
     public void setStreaks(int controllerStreak, int techniqueStreak) {
         tvControllerStreak.setText("Controller Streak: " + controllerStreak + " days");
         tvTechniqueStreak.setText("Technique Streak: " + techniqueStreak + " days");
+    }
+
+    @Override
+    public void displayNextDose(String text) {
+        tvNextDose.setText(text);
     }
 
 }
