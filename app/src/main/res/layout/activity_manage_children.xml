@@ -1,86 +1,320 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/space_large"
-    android:id="@+id/main">
+    android:layout_height="match_parent">
 
 
-    <Spinner
-        android:id="@+id/spinnerChildren"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/providers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <CheckBox
-        android:id="@+id/rescueLogs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Rescue logs" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/permissionLayout"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView24">
 
-    <CheckBox
-        android:id="@+id/adherence"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Controller adherence summary" />
+                <CheckBox
+                    android:id="@+id/symptomsCheck"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Symptoms"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/adherence" />
 
-    <CheckBox
-        android:id="@+id/symptomsCheck"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Symptoms" />
+                <CheckBox
+                    android:id="@+id/triggersCheck"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Triggers"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/symptomsCheck" />
 
-    <CheckBox
-        android:id="@+id/triggersCheck"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Triggers" />
+                <CheckBox
+                    android:id="@+id/pef"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Peak Expiry Flow (PEF)"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/triggersCheck" />
 
-    <CheckBox
-        android:id="@+id/pef"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Peak flow (PEF)" />
+                <CheckBox
+                    android:id="@+id/rescueLogs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Rescue logs"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/triage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Triage incidents" />
+                <CheckBox
+                    android:id="@+id/triage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Triage incidents"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pef" />
 
-    <CheckBox
-        android:id="@+id/summary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Summary charts" />
+                <CheckBox
+                    android:id="@+id/summary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Summary charts"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/triage" />
 
-    <Spinner
-        android:id="@+id/spinnerInvites"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <CheckBox
+                    android:id="@+id/adherence"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Controller adherence summary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rescueLogs" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/addInvite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Generate invite" />
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="20dp"
+                android:text="Personal Best PEF"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
-    <Button
-        android:id="@+id/revoke"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Revoke invite" />
+            <EditText
+                android:id="@+id/editTextNumber"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_marginStart="51dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="116dp"
+                android:ems="10"
+                android:inputType="number"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView23"
+                app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
-    <Button
-        android:id="@+id/add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add child" />
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Green Guidance"
+                android:textColor="@color/safe_green"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/yellow_guidance_entry" />
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/yellow_guidance_entry"
+                android:layout_width="300sp"
+                android:layout_height="100sp"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+            <EditText
+                android:id="@+id/green_guidance_entry"
+                android:layout_width="300sp"
+                android:layout_height="100sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Red Guidance"
+                android:textColor="@color/danger_red"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Yellow Guidance"
+                android:textColor="@color/warning_yellow"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/red_guidance_entry" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginEnd="249dp"
+                android:text="Edit PEF Guidance"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/permissionLayout" />
+
+            <Button
+                android:id="@+id/edit_pef_details_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="30dp"
+                android:backgroundTint="@color/primary"
+                android:text="Set\nPEF\nGuidance"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/childrenDisplay" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="160dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="160dp"
+                android:text="Select Child"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="116dp"
+                android:text="Toggle Provider Permissions"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_child_btn" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="152dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="153dp"
+                android:text="Manage Children"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/childrenDisplay"
+                android:layout_width="271dp"
+                android:layout_height="280dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="22dp"
+                android:layout_marginEnd="70dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView11">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/add_child_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/primary"
+                android:text="Add\nNew\nChild"
+                app:layout_constraintEnd_toStartOf="@+id/provider_permissions_btn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/childrenDisplay" />
+
+            <Button
+                android:id="@+id/provider_permissions_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/primary"
+                android:text="Toggle\nProvider\nPermissions"
+                app:layout_constraintEnd_toStartOf="@+id/edit_pef_details_btn"
+                app:layout_constraintTop_toBottomOf="@+id/childrenDisplay" />
+
+            <Spinner
+                android:id="@+id/providers"
+                android:layout_width="0dp"
+                android:layout_height="27dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="65dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/textView24"
+                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="54dp"
+                android:layout_marginTop="20dp"
+                android:text="Select Provider"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+            <EditText
+                android:id="@+id/red_guidance_entry"
+                android:layout_width="300sp"
+                android:layout_height="100sp"
+                android:layout_marginTop="11dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,13 +5,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
 
+import com.example.cscb07_final_project_smartair.Models.BaseModel;
 import com.example.cscb07_final_project_smartair.Models.ManageChildrenModel;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.example.cscb07_final_project_smartair.Views.ManageChildrenView;
 import com.example.cscb07_final_project_smartair.Users.Child;
 import com.example.cscb07_final_project_smartair.Users.ChildPermissions;
+import com.google.firebase.auth.FirebaseAuth;
 
 
-public class ManageChildrenPresenter {
+public class ManageChildrenPresenter implements BaseModel.ChildFetchListener{
     private final ManageChildrenView view;
     private final ManageChildrenModel model;
     private List<String> childIds, providers;
@@ -25,12 +28,17 @@ public class ManageChildrenPresenter {
     }
 
     public void loadChildren() {
-        model.getChildren();
+        model.fetchChildren(FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
     }
 
-    public void onChildrenLoaded(List<String> names, List<String> ids) {
-        childIds = ids;
-        view.displayChildren(names);
+    @Override
+    public void onChildrenLoaded(List<ChildSpinnerOption> childrenList) {
+        view.displayChildren(childrenList);
+    }
+
+    @Override
+    public void onError(String message){
+        view.showError(message);
     }
 
     public void onProvidersLoaded(Child child) {
@@ -45,12 +53,8 @@ public class ManageChildrenPresenter {
         view.showError(msg);
     }
 
-    public void onChildSelected(int index) {
-        if (index < 0 || index >= childIds.size()) {
-            view.showError("Invalid child selection.");
-            return;
-        }
-        selectedChildId = childIds.get(index);
+    public void onChildSelected(String childId) {
+        this.selectedChildId = childId;
         loadProviders();
     }
 

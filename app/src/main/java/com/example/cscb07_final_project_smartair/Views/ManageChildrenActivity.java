@@ -16,17 +16,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cscb07_final_project_smartair.Adapters.ManageChildAdapter;
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Presenters.ManageChildrenPresenter;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.example.cscb07_final_project_smartair.Users.ChildPermissions;
 
 import java.util.List;
 
-public class ManageChildrenActivity extends AppCompatActivity implements ManageChildrenView {
-    private Spinner spinner, providers, invites;
+public class ManageChildrenActivity extends BaseActivity implements ManageChildrenView {
+    private RecyclerView childrenDisplay;
+    private Spinner providers;
     private CheckBox rescue, adherence, symptoms, triggers, pef, triage, summary;
-    private Button add, generate, revoke;
+    private Button add;
     private ManageChildrenPresenter presenter;
 
     private final CompoundButton.OnCheckedChangeListener rescueListener = (view, isChecked) -> presenter.onRescueChanged(isChecked),
@@ -42,13 +47,15 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_manage_children);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        spinner = findViewById(R.id.spinnerChildren);
+        childrenDisplay = findViewById(R.id.childrenDisplay);
+        childrenDisplay.setLayoutManager(new LinearLayoutManager(this));
+
         providers = findViewById(R.id.providers);
         rescue = findViewById(R.id.rescueLogs);
         adherence = findViewById(R.id.adherence);
@@ -57,11 +64,7 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
         pef = findViewById(R.id.pef);
         triage = findViewById(R.id.triage);
         summary = findViewById(R.id.summary);
-        add = findViewById(R.id.add);
-
-        invites = findViewById(R.id.spinnerInvites);
-        generate = findViewById(R.id.addInvite);
-        revoke = findViewById(R.id.revoke);
+        add = findViewById(R.id.add_child_btn);
 
         presenter = new ManageChildrenPresenter(this);
 
@@ -78,13 +81,12 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
     }
 
     @Override
-    public void displayChildren(List<String> names) {
-        displayNames(names, spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
-                presenter.onChildSelected(i);
+    public void displayChildren(List<ChildSpinnerOption> childrenList) {
+        ManageChildAdapter adapter = new ManageChildAdapter(childrenList, new ManageChildAdapter.OnChildClickListener() {
+            @Override
+            public void onChildClick(int position, String childId) {
+                presenter.onChildSelected(childId);
             }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 

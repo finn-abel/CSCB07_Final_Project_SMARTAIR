@@ -18,47 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ManageChildrenModel {
+public class ManageChildrenModel extends BaseModel{
     private final ManageChildrenPresenter presenter;
 
     public ManageChildrenModel(ManageChildrenPresenter presenter) {
         this.presenter = presenter;
-    }
-
-    public void getChildren() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user == null) {
-            presenter.onFailure("User not logged in.");
-            return;
-        }
-
-        String parentID = user.getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users")
-                .child("parents")
-                .child(user.getUid())
-                .child("children");
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> names = new ArrayList<>();
-                List<String> ids = new ArrayList<>();
-
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    String name = ds.child("name").getValue(String.class);
-                    names.add(name);
-                    ids.add(ds.getKey());
-                }
-
-                presenter.onChildrenLoaded(names, ids);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                presenter.onFailure(error.getMessage());
-            }
-        });
     }
 
     public void getProviders(String childId) {

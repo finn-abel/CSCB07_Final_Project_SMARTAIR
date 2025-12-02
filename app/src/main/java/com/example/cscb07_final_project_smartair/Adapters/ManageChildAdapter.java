@@ -57,18 +57,18 @@ public class ManageChildAdapter extends RecyclerView.Adapter<ManageChildAdapter.
             int previous = selectedPos;
             selectedPos = holder.getAdapterPosition();
 
-            // Refresh rows to update colors
+            // refresh row
             notifyItemChanged(previous);
             notifyItemChanged(selectedPos);
 
-            // Pass ID back to Activity
-            listener.onChildClick(selectedPos, child.getId());
+            // send ID to activity
+            listener.onChildClick(selectedPos, child.userID);
         });
     }
 
     @Override
     public int getItemCount() {
-        return children.size();
+        return childrenList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -15,9 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Presenters.AddChildPresenter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Objects;
 
 public class AddChildActivity extends AppCompatActivity implements AddChildView {
@@ -29,7 +26,7 @@ public class AddChildActivity extends AppCompatActivity implements AddChildView 
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_child);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
