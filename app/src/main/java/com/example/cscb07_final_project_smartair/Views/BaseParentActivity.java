@@ -123,30 +123,41 @@ public class BaseParentActivity extends BaseActivity {
             // Runs whenever child id's pef data changes
             @Override
             public void onDataChange(@NonNull DataSnapshot receiver) {
-                double newestRatio = -1;
-                long newestTimestamp = 0;
+                double lowestRatio = 10; // so no alert by default
+                long lowestTimestamp = 0;
+
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                cal.set(java.util.Calendar.MINUTE, 0);
+                cal.set(java.util.Calendar.SECOND, 0);
+                cal.set(java.util.Calendar.MILLISECOND, 0);
+                long startOfToday = cal.getTimeInMillis();
+                long now = System.currentTimeMillis();
 
                 // Gets newest timestamp to ensure that a previous pef entry
                 // is not considered
                 for (DataSnapshot child : receiver.getChildren()) {
                     Double current = child.child("current").getValue(Double.class);
-                    Double pb = child.child("pb").getValue(Double.class);
+                    Double pb = child.child("pb_pef").getValue(Double.class);
                     Long timestamp = child.child("timestamp").getValue(Long.class);
 
                     if (current == null || pb == null || timestamp == null) continue;
                     // Skip if any of the above are missing
 
+                    if (timestamp < startOfToday || timestamp > now) continue;
+                    // ignore entries that are not today
+
                     double ratio = current / pb;
 
-                    if (timestamp > newestTimestamp) {
-                        newestTimestamp = timestamp;
-                        newestRatio = ratio;
+                    if (ratio < lowestRatio) {
+                        lowestRatio = ratio;
+                        lowestTimestamp = timestamp;
                     }
                 }
 
-                if (newestRatio < 0.5 && newestTimestamp > getLast("redzone_" + childId)) {
+                if (lowestRatio < 0.5 && lowestTimestamp > getLast("redzone_" + childId)) {
                     showAlert("Red Zone", "Your child is in the red asthma zone.");
-                    setLast("redzone_" + childId, newestTimestamp);
+                    setLast("redzone_" + childId, lowestTimestamp);
                 }
             }
 
