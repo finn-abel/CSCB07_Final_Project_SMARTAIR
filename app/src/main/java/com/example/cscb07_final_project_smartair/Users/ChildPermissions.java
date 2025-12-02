@@ -1,11 +1,11 @@
 package com.example.cscb07_final_project_smartair.Users;
 
 public class ChildPermissions {
-    boolean rescueLogs;
-    boolean contrSummary;
-    boolean symptoms;
-    boolean triggers;
-    boolean pef;
-    boolean triageIncidents;
-    boolean summaryCharts;
+    public boolean rescueLogs;
+    public boolean contrSummary;
+    public boolean symptoms;
+    public boolean triggers;
+    public boolean pef;
+    public boolean triageIncidents;
+    public boolean summaryCharts;
 }

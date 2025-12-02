@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/space_large"
+    android:id="@+id/main">
+
+
+    <Spinner
+        android:id="@+id/spinnerChildren"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/providers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/rescueLogs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rescue logs" />
+
+    <CheckBox
+        android:id="@+id/adherence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Controller adherence summary" />
+
+    <CheckBox
+        android:id="@+id/symptomsCheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Symptoms" />
+
+    <CheckBox
+        android:id="@+id/triggersCheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Triggers" />
+
+    <CheckBox
+        android:id="@+id/pef"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Peak flow (PEF)" />
+
+    <CheckBox
+        android:id="@+id/triage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Triage incidents" />
+
+    <CheckBox
+        android:id="@+id/summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Summary charts" />
+
+    <Spinner
+        android:id="@+id/spinnerInvites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/addInvite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate invite" />
+
+    <Button
+        android:id="@+id/revoke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Revoke invite" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add child" />
+
+</LinearLayout>

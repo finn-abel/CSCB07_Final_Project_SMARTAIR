@@ -84,6 +84,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
 
         Button btnSchedule = findViewById(R.id.btnSchedule);
         Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
+        Button btnManage = findViewById(R.id.manage);
 
         btnPEF.setOnClickListener(view -> {
             presenter.onPEFButtonClicked();
@@ -94,6 +95,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         btnSchedule.setOnClickListener(view -> {
             presenter.onScheduleButtonClicked();
         });
+
+        btnManage.setOnClickListener(view -> presenter.onManageChildrenClicked());
 
 
         logout_button.setOnClickListener(view -> {
@@ -168,6 +171,12 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     public void navigateToBadgeSettings() {
         startActivity(new Intent(this, BadgeSettingsActivity.class));
     }
+
+    @Override
+    public void navigateToManageChildren() {
+        startActivity(new Intent(this, ManageChildrenActivity.class));
+    }
+
     @Override
     public void navigateToPEFEntry() {
         startActivity(new Intent(this, PEFActivity.class));
