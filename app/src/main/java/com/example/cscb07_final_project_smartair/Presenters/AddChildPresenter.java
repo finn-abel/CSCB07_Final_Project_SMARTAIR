@@ -17,8 +17,10 @@ public class AddChildPresenter {
     }
 
     public void onAddChildButtonClicked() {
-        String name = view.getName(), email = view.getEmail(), password = view.getPassword(), dob = view.getDob(), notes = view.getNotes();
+        String name = view.getName(), email = view.getEmail(), password = view.getPassword(), dob = view.getDob(),
+                notes = view.getNotes(), pefString = view.getPEF();
         long date;
+        float pef;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             date = sdf.parse(dob).getTime();
@@ -26,7 +28,17 @@ public class AddChildPresenter {
             view.showSignUpFailure("Date format must be YYYY-MM-DD");
             return;
         }
-        model.createUser(name, email, password, date, notes);
+        if(name.isEmpty()||email.isEmpty()||password.isEmpty()||dob.isEmpty()){
+            view.showSignUpFailure("Please fill in necessary fields");
+            return;
+        }
+        try{
+            pef = (pefString.isEmpty()) ? 300 : Float.parseFloat(pefString);
+        } catch (NumberFormatException e) {
+            view.showSignUpFailure("Please enter a number for PEF");
+            return;
+        }
+        model.createUser(name, email, password, date, notes,pef);
     }
 
     public void onSignUpSuccess() {

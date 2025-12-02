@@ -8,11 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,6 +35,23 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
     private CheckBox rescue, adherence, symptoms, triggers, pef, triage, summary;
     private Button add;
     private ManageChildrenPresenter presenter;
+    private View permissionLayout;
+
+    private TextView noProvidersMsg;
+
+    private TextView select_providers_label;
+
+    private EditText redGuidance;
+    private EditText yellowGuidance;
+    private EditText greenGuidance;
+    private EditText pefPB;
+    private Button goToPermissions;
+    private Button goToPEF;
+    private Button savePEF;
+    private TextView permissionsHeader;
+    private TextView pefHeader;
+    private ScrollView scroll;
+
 
     private final CompoundButton.OnCheckedChangeListener rescueListener = (view, isChecked) -> presenter.onRescueChanged(isChecked),
     adherenceListener = (view, isChecked) -> presenter.onAdherenceChanged(isChecked),
@@ -53,8 +72,25 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
             return insets;
         });
 
+
+        //initialize items
+
         childrenDisplay = findViewById(R.id.childrenDisplay);
         childrenDisplay.setLayoutManager(new LinearLayoutManager(this));
+        permissionLayout = findViewById(R.id.permissionLayout);
+        noProvidersMsg = findViewById(R.id.no_providers_msg);
+        select_providers_label = findViewById(R.id.select_provider_label);
+        scroll = findViewById(R.id.manage_children_scroll);
+
+        redGuidance = findViewById(R.id.red_guidance_entry);
+        yellowGuidance = findViewById(R.id.yellow_guidance_entry);
+        greenGuidance = findViewById(R.id.green_guidance_entry);
+        pefPB = findViewById(R.id.editPEFpb);
+        goToPEF = findViewById(R.id.edit_pef_details_btn);
+        goToPermissions = findViewById(R.id.provider_permissions_btn);
+        savePEF = findViewById(R.id.save_pef_guidance);
+        permissionsHeader = findViewById(R.id.permissions_header);
+        pefHeader = findViewById(R.id.pef_header);
 
         providers = findViewById(R.id.providers);
         rescue = findViewById(R.id.rescueLogs);
@@ -65,6 +101,12 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
         triage = findViewById(R.id.triage);
         summary = findViewById(R.id.summary);
         add = findViewById(R.id.add_child_btn);
+
+        //initialize UI view
+        permissionLayout.setVisibility(View.GONE);
+        noProvidersMsg.setVisibility(View.VISIBLE);
+        providers.setVisibility(View.GONE);
+        select_providers_label.setVisibility(View.GONE);
 
         presenter = new ManageChildrenPresenter(this);
 
@@ -77,6 +119,25 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
         triage.setOnCheckedChangeListener(triageListener);
         summary.setOnCheckedChangeListener(summaryListener);
 
+        savePEF.setOnClickListener( v -> {
+            String red = redGuidance.getText().toString().trim();
+            String yellow = yellowGuidance.getText().toString().trim();
+            String green = greenGuidance.getText().toString().trim();
+            String pb = pefPB.getText().toString().trim();
+            presenter.onSavePefClicked(red,yellow,green,pb);
+        });
+
+        //scroll to relevant section on page
+
+        goToPermissions.setOnClickListener(v -> {
+            int targetY = permissionsHeader.getTop();
+            scroll.smoothScrollTo(0, targetY);
+        });
+        goToPEF.setOnClickListener(v -> {
+            int targetY = pefHeader.getTop();
+            scroll.smoothScrollTo(0, targetY);
+        });
+
         presenter.loadChildren();
     }
 
@@ -88,16 +149,28 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
                 presenter.onChildSelected(childId);
             }
         });
+        childrenDisplay.setAdapter(adapter);
     }
 
     @Override
-    public void displayProviders(List<String> names) {
-        displayNames(names, providers);
+    public void displayProviders(List<ChildPermissions> providerList) {
+        ArrayAdapter<ChildPermissions> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                providerList
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        providers.setAdapter(adapter);
+
         providers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
                 presenter.onProviderSelected(i);
             }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -139,15 +212,6 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
             summary.setOnCheckedChangeListener(summaryListener);
         }
     }
-
-    private void displayNames(List<String> names, Spinner s) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, names);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        s.setAdapter(adapter);
-    }
-
     @Override
     public void navigateToAddChild() {
         Intent intent = new Intent(this, AddChildActivity.class);
@@ -161,4 +225,41 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
     public void showError(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
+
+    @Override
+    public void updateUI(int state){
+        if(state == 0){ //not loaded yet
+            permissionLayout.setVisibility(View.GONE);
+            noProvidersMsg.setVisibility(View.GONE);
+            providers.setVisibility(View.GONE);
+            select_providers_label.setVisibility(View.GONE);
+        } else if (state == 1){ //no providers
+            permissionLayout.setVisibility(View.GONE);
+            noProvidersMsg.setVisibility(View.VISIBLE);
+            providers.setVisibility(View.GONE);
+            select_providers_label.setVisibility(View.GONE);
+        } else { //providers found
+            permissionLayout.setVisibility(View.VISIBLE);
+            noProvidersMsg.setVisibility(View.GONE);
+            providers.setVisibility(View.VISIBLE);
+            select_providers_label.setVisibility(View.GONE);
+        }
+    }
+
+
+    @Override
+    public void populatePefFields(String red, String yellow, String green, float pb) {
+        // fill in text fields
+        redGuidance.setText(red);
+        yellowGuidance.setText(yellow);
+        greenGuidance.setText(green);
+
+        if (pb > 0) {
+            pefPB.setText(String.valueOf(pb));
+        } else {
+            pefPB.setText("");
+        }
+    }
+
 }

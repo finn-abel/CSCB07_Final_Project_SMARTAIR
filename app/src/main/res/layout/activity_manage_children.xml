@@ -8,6 +8,7 @@
 
 
     <ScrollView
+        android:id="@+id/manage_children_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,10 +20,9 @@
                 android:id="@+id/permissionLayout"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView24">
+                app:layout_constraintTop_toBottomOf="@+id/providers">
 
                 <CheckBox
                     android:id="@+id/symptomsCheck"
@@ -90,10 +90,10 @@
                 android:text="Personal Best PEF"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView20" />
+                app:layout_constraintTop_toBottomOf="@+id/pef_header" />
 
             <EditText
-                android:id="@+id/editTextNumber"
+                android:id="@+id/editPEFpb"
                 android:layout_width="50sp"
                 android:layout_height="50sp"
                 android:layout_marginStart="51dp"
@@ -104,7 +104,7 @@
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView23"
-                app:layout_constraintTop_toBottomOf="@+id/textView20" />
+                app:layout_constraintTop_toBottomOf="@+id/pef_header" />
 
             <TextView
                 android:id="@+id/textView22"
@@ -137,11 +137,9 @@
                 android:layout_width="300sp"
                 android:layout_height="100sp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
                 app:layout_constraintStart_toStartOf="parent"
@@ -172,15 +170,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/red_guidance_entry" />
 
             <TextView
-                android:id="@+id/textView20"
+                android:id="@+id/pef_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginEnd="249dp"
                 android:text="Edit PEF Guidance"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.269"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/permissionLayout" />
 
@@ -210,7 +210,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
             <TextView
-                android:id="@+id/textView18"
+                android:id="@+id/permissions_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
@@ -247,13 +247,7 @@
                 android:layout_marginEnd="70dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"></LinearLayout>
-            </androidx.recyclerview.widget.RecyclerView>
+                app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
             <Button
                 android:id="@+id/add_child_btn"
@@ -288,19 +282,19 @@
                 android:layout_marginEnd="65dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/textView24"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                app:layout_constraintStart_toEndOf="@+id/select_provider_label"
+                app:layout_constraintTop_toBottomOf="@+id/permissions_header" />
 
             <TextView
-                android:id="@+id/textView24"
+                android:id="@+id/select_provider_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="54dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:text="Select Provider"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                app:layout_constraintTop_toBottomOf="@+id/permissions_header" />
 
             <EditText
                 android:id="@+id/red_guidance_entry"
@@ -313,6 +307,35 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+            <TextView
+                android:id="@+id/no_providers_msg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:text="No Providers Found"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/permissions_header" />
+
+            <Button
+                android:id="@+id/save_pef_guidance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/primary"
+                android:text="Save PEF Changes"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.884"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/green_guidance_entry"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

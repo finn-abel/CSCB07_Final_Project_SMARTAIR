@@ -26,7 +26,7 @@ public class AddChildModel {
         this.presenter = presenter;
         mAuth = FirebaseAuth.getInstance();
     }
-    public void createUser(String name, String email, String password, long dob, String notes) {
+    public void createUser(String name, String email, String password, long dob, String notes, Float pef) {
         String parent = mAuth.getCurrentUser().getUid();
 
         FirebaseOptions options = FirebaseApp.getInstance().getOptions(); //get current instance data
@@ -46,7 +46,9 @@ public class AddChildModel {
                         if (task.isSuccessful()) {
                             FirebaseUser user = secondaryAuth.getCurrentUser();
                             String uid = user.getUid();
-                            Child child = new Child(name, uid, email, parent, new pefGuidance());
+                            Child child = new Child(name, uid, email, parent, new pefGuidance(),
+                                    dob,notes,pef);
+
                             HashMap<String, Object> updates = new HashMap<>();
                             updates.put("users/children/" + uid, child);
                             updates.put("users/parents/" + parent + "/children/" + uid + "/name", name);

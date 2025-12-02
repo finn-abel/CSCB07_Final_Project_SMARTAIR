@@ -1,26 +1,25 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.ArrayList;
 
 import com.example.cscb07_final_project_smartair.Models.BaseModel;
 import com.example.cscb07_final_project_smartair.Models.ManageChildrenModel;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.example.cscb07_final_project_smartair.Views.ManageChildrenView;
-import com.example.cscb07_final_project_smartair.Users.Child;
 import com.example.cscb07_final_project_smartair.Users.ChildPermissions;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class ManageChildrenPresenter implements BaseModel.ChildFetchListener{
+public class ManageChildrenPresenter implements BaseModel.ChildFetchListener,
+                                                    ManageChildrenModel.GuidanceListener{
     private final ManageChildrenView view;
     private final ManageChildrenModel model;
-    private List<String> childIds, providers;
+    private String selectedChildId;
+    private List<ChildPermissions> providerList;
     private Map<String, ChildPermissions> permMap;
-    private ChildPermissions perms;
-    private String selectedChildId, selectedProvider;
+    private ChildPermissions selectedProviderPerms;
 
     public ManageChildrenPresenter(ManageChildrenView view) {
         this.view = view;
@@ -41,47 +40,51 @@ public class ManageChildrenPresenter implements BaseModel.ChildFetchListener{
         view.showError(message);
     }
 
-    public void onProvidersLoaded(Child child) {
-        permMap = child.sharingPerms;
-        Set<String> providerSet = permMap.keySet();
-        providers = new ArrayList<>(providerSet);
-        view.displayProviders(providers);
-    }
-
-    // Called when child selection fails
+    // called when child selection fails
     public void onFailure(String msg) {
         view.showError(msg);
     }
 
     public void onChildSelected(String childId) {
         this.selectedChildId = childId;
-        loadProviders();
+        this.permMap = null;
+        this.selectedProviderPerms = null;
+        view.updateUI(0); // hide notices during loading
+        model.getProviders(childId);
+        model.getPefDetails(childId, this); //obtain guidance
+    }
+
+    public void onProvidersLoaded(List<ChildPermissions> providers) {
+        this.providerList = providers;
+
+        this.permMap = new HashMap<>();
+        for (ChildPermissions p : providers) {
+            if (p.providerID != null) {
+                permMap.put(p.providerID, p);
+            }
+        }
+
+        if (providers.isEmpty()) {
+            view.updateUI(1); //no providers
+            return;
+        }
+
+        //providers found
+        view.updateUI(2);
+
+        view.displayProviders(providers);  //populate spinner
+
+        if (!providers.isEmpty()) {
+            onProviderSelected(0);
+        }
     }
 
     public void onProviderSelected(int index) {
-        if (index < 0 || index >= permMap.size()) {
-            view.showError("Invalid child selection.");
-            return;
-        }
-        selectedProvider = providers.get(index);
-        loadPerms();
-    }
+        if (providerList == null || index < 0 || index >= providerList.size()) return;
 
-    public void loadProviders() {
-        if (selectedChildId == null) {
-            view.showError("No child selected.");
-            return;
-        }
-        model.getProviders(selectedChildId);
-    }
+        this.selectedProviderPerms = providerList.get(index);
 
-    public void loadPerms() {
-        if (selectedProvider == null) {
-            view.showError("No provider selected.");
-            return;
-        }
-        perms = permMap.get(selectedProvider);
-        view.displayPerms(perms);
+        view.displayPerms(selectedProviderPerms);
     }
 
     public void onAddChildClicked() {
@@ -89,37 +92,74 @@ public class ManageChildrenPresenter implements BaseModel.ChildFetchListener{
     }
 
     public void onRescueChanged(boolean val) {
-        perms.rescueLogs = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.rescueLogs = val;
+            model.setPerms(selectedChildId, permMap);
+        }
     }
 
     public void onAdherenceChanged(boolean val) {
-        perms.contrSummary = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.contrSummary = val;
+            model.setPerms(selectedChildId, permMap);
+        }
     }
 
     public void onSymptomsChanged(boolean val) {
-        perms.symptoms = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.symptoms = val;
+            model.setPerms(selectedChildId, permMap);
+        }
     }
 
     public void onTriggersChanged(boolean val) {
-        perms.triggers = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.triggers = val;
+            model.setPerms(selectedChildId, permMap);
+        }
     }
 
     public void onPefChanged(boolean val) {
-        perms.pef = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.pef = val;
+            model.setPerms(selectedChildId, permMap);
+        }
     }
 
     public void onTriageChanged(boolean val) {
-        perms.triageIncidents = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.triageIncidents = val;
+            model.setPerms(selectedChildId, permMap);
+        }
     }
 
     public void onSummaryChanged(boolean val) {
-        perms.summaryCharts = val;
-        model.setPerms(selectedChildId, permMap);
+        if (selectedProviderPerms != null) {
+            selectedProviderPerms.summaryCharts = val;
+            model.setPerms(selectedChildId, permMap);
+        }
+    }
+
+
+    //PEF IMPLEMENTATION//
+    @Override
+    public void onGuidanceLoaded(String red, String yellow, String green, float pb) {
+        view.populatePefFields(red, yellow, green, pb);
+    }
+
+    public void onSavePefClicked(String red, String yellow, String green, String pbString) {
+        float pb = 0;
+        try {
+            pb = Float.parseFloat(pbString);
+        } catch (NumberFormatException e) {
+            view.showError("Invalid Personal Best number");
+            return;
+        }
+
+        model.savePefDetails(selectedChildId, red, yellow, green, pb);
+    }
+
+    public void onSuccess(String msg){
+        view.showError(msg);
     }
 }

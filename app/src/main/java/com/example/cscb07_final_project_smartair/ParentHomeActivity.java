@@ -128,12 +128,12 @@ public class ParentHomeActivity extends BaseParentActivity implements ScheduleVi
 
         if (!names.isEmpty()) {
             spinnerChild.setSelection(0);
-            presenter.onChildSelectedDash(0); // auto select a child
+            presenter.onChildSelected(0); // auto select a child
         }
 
         spinnerChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                presenter.onChildSelectedDash(pos);
+                presenter.onChildSelected(pos);
             }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });

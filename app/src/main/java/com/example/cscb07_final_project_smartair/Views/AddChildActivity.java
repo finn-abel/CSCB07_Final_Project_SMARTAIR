@@ -18,7 +18,7 @@ import com.example.cscb07_final_project_smartair.Presenters.AddChildPresenter;
 import java.util.Objects;
 
 public class AddChildActivity extends AppCompatActivity implements AddChildView {
-    private EditText name, username, password, dob, notes;
+    private EditText name, username, password, dob, notes, pef;
     private Button add;
 
     @Override
@@ -38,6 +38,7 @@ public class AddChildActivity extends AppCompatActivity implements AddChildView 
         dob = findViewById(R.id.dob);
         notes = findViewById(R.id.notes);
         add = findViewById(R.id.add_child);
+        pef = findViewById(R.id.add_child_pef);
 
         AddChildPresenter presenter = new AddChildPresenter(this);
         add.setOnClickListener(view -> presenter.onAddChildButtonClicked());
@@ -55,17 +56,22 @@ public class AddChildActivity extends AppCompatActivity implements AddChildView 
 
     @Override
     public String getPassword() {
-        return Objects.requireNonNull(password.getText()).toString();
+        return Objects.requireNonNull(password.getText()).toString().trim();
     }
 
     @Override
     public String getDob() {
-        return Objects.requireNonNull(dob.getText()).toString();
+        return Objects.requireNonNull(dob.getText()).toString().trim();
     }
 
     @Override
     public String getNotes() {
-        return Objects.requireNonNull(notes.getText()).toString();
+        return Objects.requireNonNull(notes.getText()).toString().trim();
+    }
+
+    @Override
+    public String getPEF() {
+        return Objects.requireNonNull(pef.getText()).toString().trim();
     }
 
     @Override
