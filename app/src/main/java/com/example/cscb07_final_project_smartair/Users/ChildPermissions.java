@@ -35,4 +35,8 @@ public class ChildPermissions {
         return this.provider_name;
     }
 
+    public static ChildPermissions getDefault(String provider_name, String providerID) {
+        return new ChildPermissions(false, false, false,
+                false, false, false, false, provider_name, providerID);
+    }
 }
