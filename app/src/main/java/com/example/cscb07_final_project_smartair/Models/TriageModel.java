@@ -107,7 +107,7 @@ public class TriageModel extends BaseModel{
         //find most recent pef in last 24hrs
         long oneDayAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
         DatabaseReference pefRef = FirebaseDatabase.getInstance()
-                .getReference("pef").child(childID);
+                .getReference("users/chidren").child(childID);
 
         pefRef.orderByChild("timestamp").startAt(oneDayAgo).limitToLast(1)
                 .addListenerForSingleValueEvent(new ValueEventListener() {

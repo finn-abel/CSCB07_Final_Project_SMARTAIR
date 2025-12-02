@@ -5,6 +5,7 @@ import static androidx.core.content.ContentProviderCompat.requireContext;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.example.cscb07_final_project_smartair.Presenters.PEFPresenter;
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class PEFActivity extends BaseActivity implements PEFView{
         if(!isParent()){
             select_child.setVisibility(View.GONE);
             select_child_prompt.setVisibility(View.GONE);
+            presenter.getPEFpb(FirebaseAuth.getInstance().getCurrentUser().getUid());
         } else { presenter.getChildren();}
 
         enter.setOnClickListener(view -> {
@@ -97,6 +100,19 @@ public class PEFActivity extends BaseActivity implements PEFView{
                 android.R.layout.simple_spinner_item,
                 childrenList);  //create adapter for spinner selections
         select_child.setAdapter(adapter); //set adapter
+
+        select_child.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ChildSpinnerOption selectedChild = (ChildSpinnerOption) parent.getItemAtPosition(position);
+                presenter.getPEFpb(selectedChild.userID);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public ChildSpinnerOption getSpinnerOption(){
