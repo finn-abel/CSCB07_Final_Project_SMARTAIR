@@ -86,6 +86,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         Button btnSchedule = findViewById(R.id.btnSchedule);
         Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
         Button btnManageChildren = findViewById(R.id.btnManageChildren);
+        Button btnInvites = findViewById(R.id.btnProviderInvites);
 
         check_in_button.setOnClickListener(v -> presenter.onCheckInButtonClicked());
         btnCheckInHistory.setOnClickListener(v -> presenter.onCheckInHistoryClicked());
@@ -97,6 +98,7 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
         btnProviderReport.setOnClickListener(v -> presenter.onProviderReportClicked());
         btnManageChildren.setOnClickListener(v -> presenter.onManageChildrenClicked());
+        btnInvites.setOnClickListener(v -> presenter.onInvitesClicked());
 
         logout_button.setOnClickListener(v -> presenter.onLogoutButtonClicked());
     }
@@ -186,6 +188,10 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     @Override
     public void navigateToProviderReport() {
         startActivity(new Intent(this, ProviderReportSelectionActivity.class));
+    }
+    @Override
+    public void navigateToInvites() {
+        startActivity(new Intent(this, InvitesActivity.class));
     }
 
     private void loadRescueTrend(String childId, int days) {

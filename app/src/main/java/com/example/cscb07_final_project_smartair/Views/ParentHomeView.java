@@ -26,6 +26,7 @@ public interface ParentHomeView {
     void navigateToInventory();
 
     void navigateToProviderReport();
+    void navigateToInvites();
 
     public void displayChildren(List<ChildSpinnerOption> names);
 
