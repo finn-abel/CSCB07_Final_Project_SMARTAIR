@@ -5,18 +5,19 @@ import android.os.Bundle;
 
 import android.content.Intent;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.Presenters.ParentHomePresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -123,8 +124,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         getWeeklyRescueCount();
     }
 
-    public void displayChildren(List<String> names) {
-        ArrayAdapter<String> adapter =
+    public void displayChildren(List<ChildSpinnerOption> names) {
+        ArrayAdapter<ChildSpinnerOption> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
