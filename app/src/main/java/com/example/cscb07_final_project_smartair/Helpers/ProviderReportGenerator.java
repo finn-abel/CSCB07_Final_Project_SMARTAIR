@@ -53,7 +53,8 @@ public class ProviderReportGenerator {
     // Checks if the report is generatable
     // I.e. checks if there is enough data for the last 'months' months
 
-    public void generateReport(ProviderReportSelectionActivity context, String childId, int months) {
+    public void generateReport(ProviderReportSelectionActivity context, String childId, int months,
+                               String providerId) {
 
         if (childId == null)
         {
@@ -79,11 +80,23 @@ public class ProviderReportGenerator {
                 .child(childId)  // node matching child's id
                 .child("name"); // name of the child
 
-        DatabaseReference triageRef = FirebaseDatabase.getInstance()
-                .getReference("users") // users folder
-                .child("children") // children folder
-                .child(childId) // child id's folder
-                .child("permissions"); // permissions folder
+        DatabaseReference triageRef;
+
+        if (providerId != null) {
+            triageRef = FirebaseDatabase.getInstance()
+                    .getReference("users") // users folder
+                    .child("children") // children folder
+                    .child(childId) // child id's folder
+                    .child("sharingPerms")
+                    .child(providerId); // permissions folder
+        }
+
+        else {
+            Toast.makeText(context, "No provider selected.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
 
         DatabaseReference symptomRef = FirebaseDatabase.getInstance()
                 .getReference("check_in") // check in folder
@@ -412,6 +425,8 @@ public class ProviderReportGenerator {
                 String lipsStatus = null;
                 String speakStatus = null;
                 String triageIncident = null;
+                String pefString = null;
+                String rescueAttemptsString = null;
 
                 for (DataSnapshot childSnap : triageReceiver.getChildren()) {
                     Boolean chest = childSnap.child("chest").getValue(Boolean.class);
@@ -419,6 +434,8 @@ public class ProviderReportGenerator {
                     String guidance = childSnap.child("guidance").getValue(String.class);
                     Boolean lips = childSnap.child("lips").getValue(Boolean.class);
                     Boolean speak = childSnap.child("speak").getValue(Boolean.class);
+                    Integer pef = childSnap.child("pef").getValue(Integer.class);
+                    Integer rescueAttempts = childSnap.child("rescue_attempts").getValue(Integer.class);
 
                     if (chest) chestStatus = "☑";
                     else chestStatus = "☐";
@@ -429,8 +446,15 @@ public class ProviderReportGenerator {
                     if (speak) speakStatus = "☑";
                     else speakStatus = "☐";
 
+                    if (pef != null) pefString = pef.toString();
+                    else pefString = "N/A";
+
+                    if (rescueAttempts != null) rescueAttemptsString = rescueAttempts.toString();
+                    else rescueAttemptsString = "N/A";
+
                     triageIncident = chestStatus + "!!" + lipsStatus + "!!" +
-                            speakStatus + "!!" + decision + "!!" + guidance;
+                            speakStatus + "!!" + pefString + "!!" + rescueAttemptsString +
+                            "!!" + decision + "!!" + guidance + "!!";
 
                     triageList.add(triageIncident);
                 }
@@ -693,17 +717,21 @@ public class ProviderReportGenerator {
             Canvas canvas3 = page3.getCanvas();
 
             canvas3.drawText("Notable Triage Incidents", 50, 50, paint);
+            canvas3.drawText("Note: N/A indicates no data.", 50, 80, paint);
+            canvas3.drawText("RA: Rescue Attempts", 50, 110, paint);
 
-            paint.setTextSize(16);
+            paint.setTextSize(12);
 
-            canvas3.drawText("Incident", 50, 80, paint);
-            canvas3.drawText("Chest", 135, 80, paint);
-            canvas3.drawText("Lips", 200, 80, paint);
-            canvas3.drawText("Speak", 260, 80, paint);
-            canvas3.drawText("Decision", 330, 80, paint);
-            canvas3.drawText("Guidance", 460, 80, paint);
+            canvas3.drawText("Incident", 50, 140, paint);
+            canvas3.drawText("Chest", 120, 140, paint);
+            canvas3.drawText("Lips", 190, 140, paint);
+            canvas3.drawText("PEF", 240, 140, paint);
+            canvas3.drawText("RA", 280, 140, paint);
+            canvas3.drawText("Speak", 320, 140, paint);
+            canvas3.drawText("Decision", 380, 140, paint);
+            canvas3.drawText("Guidance", 480, 140, paint);
 
-            int y = 110;
+            int y = 170;
 
             for (int i = 0; i < triageList.size(); i++) {
                 String triageIncident = triageList.get(i);
@@ -712,11 +740,13 @@ public class ProviderReportGenerator {
 
                 // add the associated check marks and info
                 canvas3.drawText(String.valueOf(i + 1), 50, y, paint); // incident number
-                canvas3.drawText(triageParts[0], 135, y, paint); // chest
-                canvas3.drawText(triageParts[1], 200, y, paint); // lips
-                canvas3.drawText(triageParts[2], 260, y, paint); // speak
-                canvas3.drawText(triageParts[3], 330, y, paint); // decision
-                canvas3.drawText(triageParts[4], 460, y, paint); // guidance
+                canvas3.drawText(triageParts[0], 120, y, paint); // chest
+                canvas3.drawText(triageParts[1], 190, y, paint); // lips
+                canvas3.drawText(triageParts[2], 240, y, paint); // speak
+                canvas3.drawText(triageParts[3], 280, y, paint); // pef
+                canvas3.drawText(triageParts[4], 320, y, paint); // rescue attempts
+                canvas3.drawText(triageParts[3], 380, y, paint); // decision
+                canvas3.drawText(triageParts[4], 480, y, paint); // guidance
 
                 y += 30;
 
@@ -730,11 +760,13 @@ public class ProviderReportGenerator {
                     y = 50;
 
                     canvas3.drawText("Incident", 50, 50, paint);
-                    canvas3.drawText("Chest", 135, 50, paint);
-                    canvas3.drawText("Lips", 200, 50, paint);
-                    canvas3.drawText("Speak", 260, 50, paint);
-                    canvas3.drawText("Decision", 330, 50, paint);
-                    canvas3.drawText("Guidance", 460, 50, paint);
+                    canvas3.drawText("Chest", 120, 50, paint);
+                    canvas3.drawText("Lips", 190, 50, paint);
+                    canvas3.drawText("PEF", 240, 50, paint);
+                    canvas3.drawText("RA", 280, 50, paint);
+                    canvas3.drawText("Speak", 320, 50, paint);
+                    canvas3.drawText("Decision", 380, 50, paint);
+                    canvas3.drawText("Guidance", 480, 50, paint);
 
                     y = 80;
                 }

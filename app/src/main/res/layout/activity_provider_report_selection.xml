@@ -19,14 +19,61 @@ tools:context=".Views.ProviderReportSelectionActivity">
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent" />
 
-    <Spinner
-        android:id="@+id/SDspinnerChild"
-        android:layout_width="254dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
+    <LinearLayout
+        android:id="@+id/childPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/selectionTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/childTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Child:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#5C8AF2" />
+
+        <Spinner
+            android:id="@+id/SDspinnerChild"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/providerPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/childPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/providerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Provider:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#5C8AF2" />
+
+        <Spinner
+            android:id="@+id/SDspinnerProvider"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"/>
+    </LinearLayout>
 
     <Button
     android:id="@+id/btn3Months"
@@ -35,7 +82,7 @@ tools:context=".Views.ProviderReportSelectionActivity">
     android:layout_marginTop="20dp"
     android:backgroundTint="#5C8AF2"
     android:text="3 MONTHS"
-    app:layout_constraintTop_toBottomOf="@+id/SDspinnerChild"
+    app:layout_constraintTop_toBottomOf="@+id/providerPicker"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.503"
     app:layout_constraintStart_toStartOf="parent" />
