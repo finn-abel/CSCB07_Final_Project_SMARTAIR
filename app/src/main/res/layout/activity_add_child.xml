@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="date"
-        android:hint="Expiry Date (YYYY-MM-DD)" />
+        android:hint="Date of Birth (YYYY-MM-DD)" />
 
     <EditText
         android:id="@+id/notes"
