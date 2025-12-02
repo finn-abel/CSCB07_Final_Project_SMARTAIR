@@ -111,7 +111,7 @@ public class SignUpModel {
             } else if (role.equals("provider")) {
                 mDatabase.child("providers").child(userID).child("name").setValue(name);
                 mDatabase.child("providers").child(userID).child("email").setValue(email);
-
+                //mDatabase.child("providers").child(userID).child("role").setValue("Provider");
             }
         }
         else{

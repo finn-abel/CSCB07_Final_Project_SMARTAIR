@@ -61,7 +61,7 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
     public void onSignUpSuccess() {
         if (view != null) {
             view.showSignUpSuccess("Account created successfully! Please log in.");
-            view.navigateToLoginScreen();
+            view.navigateToRoleSelectionScreen();
         }
     }
 
