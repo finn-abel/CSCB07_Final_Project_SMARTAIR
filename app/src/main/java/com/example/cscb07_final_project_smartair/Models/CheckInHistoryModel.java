@@ -18,7 +18,10 @@ public class CheckInHistoryModel {
     private final DatabaseReference mDatabase;
 
     public CheckInHistoryModel() {
+        //Initialises the firebase authentication
         mAuth = FirebaseAuth.getInstance();
+
+        //Initialises the database reference to the check-in data subtree
         mDatabase = FirebaseDatabase.getInstance().getReference("check_in");
     }
 
@@ -28,6 +31,7 @@ public class CheckInHistoryModel {
     }
 
 
+    //Retrieves all check in entries for the current user from the database
     public void browseCheckIns(OnSearchFinishedListener listener) {
         String userID = null;
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -63,6 +67,7 @@ public class CheckInHistoryModel {
         });
     }
 
+    //Chooses which check in entries to display based on user input
     public void filterCheckIns(ArrayList<String> symptoms, ArrayList<String> triggers, String[] date, OnSearchFinishedListener listener) {
         if(symptoms.isEmpty() && triggers.isEmpty() && date[0].isEmpty()){
             browseCheckIns(listener);

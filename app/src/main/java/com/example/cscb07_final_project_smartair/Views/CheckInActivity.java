@@ -58,6 +58,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     }
 
 
+    //Stores triggers based on checked off items on the check in screen
     @Override
     public ArrayList<String> getTriggers(){
         ArrayList<String> triggers = new ArrayList<>();
@@ -84,6 +85,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
         return triggers;
     }
 
+    //Gathers other triggers entered by the user
     @Override
     public ArrayList<String> getOtherTriggers(){
         String[] split_triggers = Objects.requireNonNull(other_triggers.getText()).toString().split(",");
@@ -98,6 +100,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     }
 
 
+    //Stores symptoms entered by the user
     @Override
     public ArrayList<String> getSymptoms(){
         String[] split_symptoms = Objects.requireNonNull(symptoms.getText()).toString().split(",");

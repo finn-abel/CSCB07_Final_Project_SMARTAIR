@@ -20,10 +20,12 @@ public class CheckInHistoryPresenter implements CheckInHistoryModel.OnSearchFini
         this.model = new CheckInHistoryModel();
     }
 
+    //Displays all check in entries for the current user.
     public void showCheckInHistory() {
         model.browseCheckIns(this);
     }
 
+    //Gathers user's filter choices and calls method to filter results accordingly
     public void onFilterButtonClicked() {
         ArrayList<String> symptoms = view.getSymptoms();
         ArrayList<String> triggers = view.getTriggers();

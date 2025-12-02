@@ -29,8 +29,8 @@ public class LoginModel {
 
 
 
+    //Carries out Firebase authentication based on user input to sign in to the app
     public void signInUser(String email, String password, OnLoginFinishedListener listener) {
-        // Credential Validation by Liam
 
         if (email.isEmpty()){
             listener.onLoginFailure("Email cannot be empty.");
@@ -56,6 +56,7 @@ public class LoginModel {
                 });
     }
 
+    //Sends a password reset email to the user's email address
     public void sendPasswordResetEmail(String email, OnResetPasswordFinishedListener listener) {
 
         if (email.isEmpty()) {
@@ -70,9 +71,7 @@ public class LoginModel {
                         if (task.isSuccessful()) {
                             listener.onResetPasswordSuccess("Password reset email sent. Please check your email.");
                         } else {
-                            String errorMessage = task.getException() != null ?
-                                    task.getException().getMessage() : "Password reset failed.";
-                            listener.onResetPasswordFailure(errorMessage);
+                            listener.onResetPasswordFailure("Password reset failed.");
                         }
                     }
                 });

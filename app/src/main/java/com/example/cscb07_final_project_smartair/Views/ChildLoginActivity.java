@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 
 
+//Specific log in screen for children
 public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
 
     private TextInputEditText username;

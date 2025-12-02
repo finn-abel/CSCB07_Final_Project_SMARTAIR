@@ -62,6 +62,7 @@ public class SignUpModel {
         return -1;  // invalid password
     }
 
+    //Creates a new user with the given credentials and role.
     public void createUser(String email, String password, String name, String role, OnSignUpFinishedListener listener) {
 
         if (email.isEmpty()) {
@@ -74,13 +75,18 @@ public class SignUpModel {
             return;
         }
 
-        //Assuming valid credentials
+        if (name.isEmpty()) {
+            listener.onSignUpFailure("Name cannot be empty");
+            return;
+        }
+
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // The user was created successfully.
+                            // If user is successfully created, a record is created in the database.
                             createDBUser(email,name,role, listener);
                             listener.onSignUpSuccess();
                         } else {
@@ -93,6 +99,8 @@ public class SignUpModel {
                 });
     }
 
+
+    //Method to create a new user record in the database once a user signs up.
     public void createDBUser(String email, String name, String role, OnSignUpFinishedListener listener) {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {

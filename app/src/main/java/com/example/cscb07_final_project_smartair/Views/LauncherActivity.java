@@ -6,11 +6,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.cscb07_final_project_smartair.Presenters.LauncherPresenter;
 
-/**
- * This is the first activity that launches. Its sole purpose is to check
- * the user's login status and navigate to the appropriate screen.
- * It implements the LauncherView interface and contains no logic.
- */
 public class LauncherActivity extends AppCompatActivity implements LauncherView {
 
     @Override
@@ -19,7 +14,6 @@ public class LauncherActivity extends AppCompatActivity implements LauncherView 
         LauncherPresenter presenter = new LauncherPresenter(this);
         presenter.decideNextActivity();
     }
-
 
 
     @Override

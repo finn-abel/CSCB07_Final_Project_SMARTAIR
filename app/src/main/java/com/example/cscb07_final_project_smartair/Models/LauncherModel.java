@@ -4,8 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
- * The Model for the launcher screen. Its only job is to check
- * if a user is currently logged in.
+ * The Model for the app launcher. Launcher simply checks if a user is logged in.
  */
 public class LauncherModel {
 
