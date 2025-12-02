@@ -86,7 +86,10 @@ public class ProviderLoginActivity extends BaseActivity implements ProviderLogin
 
     @Override
     public void navigateToProviderHomeScreen() {
-
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("USER_ROLE", "PROVIDER");
+        editor.apply();
         Intent intent = new Intent(this, ProviderHomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

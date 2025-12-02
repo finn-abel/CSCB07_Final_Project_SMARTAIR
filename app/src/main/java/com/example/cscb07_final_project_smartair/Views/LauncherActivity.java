@@ -19,20 +19,16 @@ public class LauncherActivity extends AppCompatActivity implements LauncherView 
     @Override
     public void navigateToMainScreen() {
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.putString("USER_ROLE", "PARENT");   // or "CHILD"
         String role = prefs.getString("USER_ROLE", "");
-//        editor.apply();
         Class<?> activityClass;
 
         if(role.equals("PARENT")) { //redirect to parent home
             activityClass = ParentHomeActivity.class;
-//            editor.putString("USER_ROLE", "CHILD");   // or "CHILD"
-//            editor.apply();
-//            String role2 = prefs.getString("USER_ROLE", "");
-//            activityClass = MainActivityView.class;
-
-        } else { //redirect to child home
+        }
+        else if(role.equals("PROVIDER")) { //redirect to provider home
+            activityClass = ProviderHomeActivity.class;
+        }
+        else { //redirect to child home
             activityClass = MainActivityView.class;
         }
 
