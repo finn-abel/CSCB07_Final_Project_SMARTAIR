@@ -16,9 +16,9 @@ public class ProviderHomePresenter {
         view.navigateToRoleSelectionScreen();
     }
 
-    public void onProviderReportButtonClicked() {
-        view.navigateToProviderReport();
-    }
+    //public void onProviderReportButtonClicked() {
+    //    view.navigateToProviderReport();
+    //}
 
     public void onLinkChildClicked() {
         String code = view.getInviteCodeInput();
