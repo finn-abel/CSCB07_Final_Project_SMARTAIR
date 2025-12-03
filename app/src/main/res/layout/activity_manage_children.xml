@@ -31,31 +31,31 @@
                 app:layout_constraintTop_toBottomOf="@+id/providers">
 
                 <CheckBox
-                    android:id="@+id/symptomsCheck"
+                    android:id="@+id/symptomsCheck_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Symptoms"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/adherence" />
+                    app:layout_constraintTop_toBottomOf="@+id/adherence_filter" />
 
                 <CheckBox
-                    android:id="@+id/triggersCheck"
+                    android:id="@+id/triggersCheck_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Triggers"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/symptomsCheck" />
+                    app:layout_constraintTop_toBottomOf="@+id/symptomsCheck_filter" />
 
                 <CheckBox
-                    android:id="@+id/pef"
+                    android:id="@+id/pef_filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Peak Expiry Flow (PEF)"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/triggersCheck" />
+                    app:layout_constraintTop_toBottomOf="@+id/triggersCheck_filter" />
 
                 <CheckBox
-                    android:id="@+id/rescueLogs"
+                    android:id="@+id/rescueLogs_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Rescue logs"
@@ -63,28 +63,28 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <CheckBox
-                    android:id="@+id/triage"
+                    android:id="@+id/triage_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Triage incidents"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pef" />
+                    app:layout_constraintTop_toBottomOf="@+id/pef_filter" />
 
                 <CheckBox
-                    android:id="@+id/summary"
+                    android:id="@+id/summary_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Summary charts"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/triage" />
+                    app:layout_constraintTop_toBottomOf="@+id/triage_filter" />
 
                 <CheckBox
-                    android:id="@+id/adherence"
+                    android:id="@+id/adherence_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Controller adherence summary"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rescueLogs" />
+                    app:layout_constraintTop_toBottomOf="@+id/rescueLogs_filter" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

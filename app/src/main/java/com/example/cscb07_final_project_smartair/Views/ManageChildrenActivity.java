@@ -93,13 +93,13 @@ public class ManageChildrenActivity extends BaseActivity implements ManageChildr
         pefHeader = findViewById(R.id.pef_header);
 
         providers = findViewById(R.id.providers);
-        rescue = findViewById(R.id.rescueLogs);
-        adherence = findViewById(R.id.adherence);
-        symptoms = findViewById(R.id.symptomsCheck);
-        triggers = findViewById(R.id.triggersCheck);
-        pef = findViewById(R.id.pef);
-        triage = findViewById(R.id.triage);
-        summary = findViewById(R.id.summary);
+        rescue = findViewById(R.id.rescueLogs_filter);
+        adherence = findViewById(R.id.adherence_filter);
+        symptoms = findViewById(R.id.symptomsCheck_filter);
+        triggers = findViewById(R.id.triggersCheck_filter);
+        pef = findViewById(R.id.pef_filter);
+        triage = findViewById(R.id.triage_filter);
+        summary = findViewById(R.id.summary_filter);
         add = findViewById(R.id.add_child_btn);
 
         //initialize UI view
