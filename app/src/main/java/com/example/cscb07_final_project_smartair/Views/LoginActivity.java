@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.cscb07_final_project_smartair.Models.LoginModel;
 import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
 import com.example.cscb07_final_project_smartair.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,7 +35,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
         Button forgot_password_button = findViewById(R.id.fpb);
 
 
-        presenter = new LoginPresenter(this);
+        presenter = new LoginPresenter(this, new LoginModel());
 
 
         sign_in_button.setOnClickListener(view -> {
@@ -94,6 +95,11 @@ public class LoginActivity extends BaseActivity implements LoginView {
         editor.apply();
         startActivity(new Intent(this, ParentHomeActivity.class));
         finish();
+         /* SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putString("USER_ROLE", "PARENT");
+            editor.apply();*/
     }
 
     @Override

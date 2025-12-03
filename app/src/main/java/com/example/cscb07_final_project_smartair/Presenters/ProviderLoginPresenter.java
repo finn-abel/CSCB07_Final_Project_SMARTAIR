@@ -15,20 +15,37 @@ public class ProviderLoginPresenter implements ProviderLoginModel.OnLoginFinishe
     private ProviderLoginModel model;
     private FirebaseAuth mAuth;
 
-    public ProviderLoginPresenter(ProviderLoginView view) {
+    public ProviderLoginPresenter(ProviderLoginView view, ProviderLoginModel model) {
         this.view = view;
-        this.model = new ProviderLoginModel();
+        this.model = model;
     }
 
     public void onLoginButtonClicked() {
         String email = view.getEmail();
         String password = view.getPassword();
 
+        if (email.isEmpty() && password.isEmpty()) {
+            view.showValidationError("Please enter login credentials.");
+            return;
+        }
+        else if (email.isEmpty()) {
+            view.showValidationError("Email cannot be empty.");
+            return;
+        }
+        else if (password.isEmpty()) {
+            view.showValidationError("Password cannot be empty.");
+            return;
+        }
+
         model.signInUser(email, password, this);
     }
 
     public void onForgotPasswordButtonClicked() {
         String email = view.getEmail();
+        if (email.isEmpty()) {
+            view.showPasswordResetFailure("Email cannot be empty.");
+            return;
+        }
         model.sendPasswordResetEmail(email,this);
     }
 

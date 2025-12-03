@@ -12,20 +12,36 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     private LoginView view;
     private LoginModel model;
 
-    public LoginPresenter(LoginView view) {
+    public LoginPresenter(LoginView view, LoginModel model) {
         this.view = view;
-        this.model = new LoginModel();
+        this.model = model;
     }
 
     public void onLoginButtonClicked() {
         String email = view.getEmail();
         String password = view.getPassword();
 
+        if (email.isEmpty() && password.isEmpty()) {
+            view.showValidationError("Please enter login credentials.");
+            return;
+        }
+        else if (email.isEmpty()) {
+            view.showValidationError("Email cannot be empty.");
+            return;
+        }
+        else if (password.isEmpty()) {
+            view.showValidationError("Password cannot be empty.");
+            return;
+        }
         model.signInUser(email, password, this);
     }
 
     public void onForgotPasswordButtonClicked() {
         String email = view.getEmail();
+        if (email.isEmpty()) {
+            view.showPasswordResetFailure("Email cannot be empty.");
+            return;
+        }
         model.sendPasswordResetEmail(email,this);
     }
 
@@ -38,6 +54,14 @@ public class LoginPresenter implements LoginModel.OnLoginFinishedListener, Login
     @Override
     public void onLoginSuccess() {
         if (view != null) {
+
+
+           /* SharedPreferences prefs = view.getContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putString("USER_ROLE", "PARENT");
+            editor.apply();*/
+
             view.showLoginSuccess("Sign in successful!");
             view.navigateToMainScreen();
         }
