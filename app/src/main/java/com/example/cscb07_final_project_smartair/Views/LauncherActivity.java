@@ -6,11 +6,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.cscb07_final_project_smartair.Presenters.LauncherPresenter;
 
-/**
- * This is the first activity that launches. Its sole purpose is to check
- * the user's login status and navigate to the appropriate screen.
- * It implements the LauncherView interface and contains no logic.
- */
 public class LauncherActivity extends AppCompatActivity implements LauncherView {
 
     @Override
@@ -21,18 +16,19 @@ public class LauncherActivity extends AppCompatActivity implements LauncherView 
     }
 
 
-
     @Override
     public void navigateToMainScreen() {
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         String role = prefs.getString("USER_ROLE", "");
-
         Class<?> activityClass;
 
         if(role.equals("PARENT")) { //redirect to parent home
-            //activityClass = ParentHomeActivity.class;
-            activityClass = MainActivityView.class;
-        } else { //redirect to child home
+            activityClass = ParentHomeActivity.class;
+        }
+        else if(role.equals("PROVIDER")) { //redirect to provider home
+            activityClass = ProviderHomeActivity.class;
+        }
+        else { //redirect to child home
             activityClass = MainActivityView.class;
         }
 

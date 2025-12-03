@@ -29,7 +29,7 @@ public interface MedicineLogsView {
 
     void displayRescueLogs(List<RescueDose> logs);
     void displayControllerLogs(List<ControllerDose> logs);
-
+    void showChildren(List<String> ids, List<String> names);
     void showError(String msg);
     void showSuccess(String msg);
     void navigateToMainActivity();

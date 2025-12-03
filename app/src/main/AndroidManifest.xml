@@ -16,18 +16,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR">
 
-        <activity android:name=".Views.LoginActivity"
-            android:exported="false" />
-        <activity android:name=".Views.CheckInActivity"
-            android:exported = "false" />
-        <activity android:name=".Views.SignUpActivity"
-            android:exported="false" />
-        <activity android:name=".Views.ParentHomeActivity"
-         android:exported="false" />
-        <activity android:name=".Views.MainActivityView"
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.LoginActivity"
             android:exported="false" />
 
         <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.CheckInActivity"
+            android:exported = "false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.SignUpActivity"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.ParentHomeActivity"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.MainActivityView"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
             android:name=".Views.LauncherActivity"
             android:exported="true">
             <intent-filter>
@@ -37,43 +52,77 @@
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.OnboardingActivity"
             android:exported="false"
             android:theme="@style/Theme.CSCB07_Final_Project_SMARTAIR" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.MedicineLogsActivity"
             android:exported="false" />
 
         <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.ParentHomeActivity"
+            android:exported="false" />
+      <activity
+            android:screenOrientation="portrait"
             android:name=".Views.InventoryActivity"
             android:exported="false" />
+        <activity
+            android:name=".Views.ManageChildrenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.AddChildActivity"
+            android:exported="false" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.ProviderReportSelectionActivity"
             android:exported="false" />
-        <activity
-            android:name=".Views.ChildSignUpActivity"
-            android:exported="false" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.ChildLoginActivity"
             android:exported="false" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.RoleLauncherActivity"
             android:exported="false" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.CheckInHistoryActivity"
             android:exported="false" />
+
         <activity
+            android:screenOrientation="portrait"
                 android:name=".Views.ScheduleActivity"
                 android:exported="false" />
+
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.BadgeSettingsActivity"
             android:exported="false" />
+
         <activity
+            android:screenOrientation="portrait"
             android:name=".Views.PEFActivity"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.ProviderLoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.ProviderHomeActivity"
+            android:exported="false" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Views.InvitesActivity"
             android:exported="false" />
 
         <receiver

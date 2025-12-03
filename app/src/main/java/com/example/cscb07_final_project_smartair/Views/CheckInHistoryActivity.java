@@ -77,8 +77,19 @@ public class CheckInHistoryActivity extends BaseActivity implements CheckInHisto
 
     @Override
     public void generatePDF(ArrayList<CheckInData> checkInEntries) {
+
+        if (checkInEntries.isEmpty()) {
+            Toast.makeText(this, "No check-ins found.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //Selects a directory to store the PDF
         File pdfDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+
+        //Generates a unique name for the PDF based on the current date and time
         String uniqueStamp = LocalDateTime.now().toString().replace(":", "_");
+
+        //Creates the path for the PDF
         String pdfPath = pdfDirectory.toString() + "/CheckInHistory_" + uniqueStamp + ".pdf";
 
         PdfFont boldFont = null;
@@ -88,6 +99,7 @@ public class CheckInHistoryActivity extends BaseActivity implements CheckInHisto
         PdfWriter writer = null;
         Document exportDoc = null;
 
+        //Formats PDF elements (e.g. font, text) and creates the PDF
         try {
             regularFont = PdfFontFactory.createFont(StandardFonts.COURIER);
             boldFont = PdfFontFactory.createFont(StandardFonts.COURIER_BOLD);
@@ -102,6 +114,7 @@ public class CheckInHistoryActivity extends BaseActivity implements CheckInHisto
             Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
         }
 
+        //Verifies that PDF formatting elements were successfully created and adds data to the PDF
         if ((exportDoc != null) && boldFont!=null && regularFont!=null && italicFont!=null && boldItalicFont!=null) {
             exportDoc.add(new Paragraph("CHECK-IN HISTORY").setTextAlignment(TextAlignment.CENTER)
                     .setFont(boldFont).setFontSize(26));
@@ -109,9 +122,6 @@ public class CheckInHistoryActivity extends BaseActivity implements CheckInHisto
 
             exportDoc.add(new Paragraph("\n"));
 
-            if(checkInEntries.isEmpty()) {
-                exportDoc.add(new Paragraph("No check-ins found.").setFont(regularFont).setFontSize(16));
-            }
 
 
             for (CheckInData submission : checkInEntries) {
@@ -132,6 +142,7 @@ public class CheckInHistoryActivity extends BaseActivity implements CheckInHisto
 
     }
 
+    //Displays all of the current user's check in entries on the screen
     @Override
     public void displayCheckInHistory(ArrayList<CheckInData> checkIns) {
          recyclerView.setVisibility(View.VISIBLE);

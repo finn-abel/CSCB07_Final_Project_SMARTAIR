@@ -11,7 +11,7 @@
         android:id="@+id/tvScheduleDialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Schedule Entry"
+        android:text="   Schedule Entry    "
         android:textSize="20sp"
         android:textStyle="bold"/>
 
@@ -28,7 +28,7 @@
         android:id="@+id/etScheduleDose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Dose Amount (puffs)"
+        android:hint="Dose Count"
         android:inputType="number"
         android:layout_marginTop="12dp"/>
 

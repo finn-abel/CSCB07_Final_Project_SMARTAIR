@@ -20,7 +20,7 @@ public class RoleLauncherPresenter {
     }
 
     public void onProviderClick(){
-        view.navigateToGeneralLogin();
+        view.navigateToProviderLogin();
     }
 
 }

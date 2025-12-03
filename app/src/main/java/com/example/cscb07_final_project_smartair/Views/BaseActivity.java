@@ -26,8 +26,6 @@ This class acts as a superclass for all activities to be used in this app. It al
 implementation of additional functions shared between all activities
  */
 public abstract class BaseActivity extends AppCompatActivity implements TriageView{
-
-
     private TriagePresenter Tpresenter;
 
     @Override
@@ -98,21 +96,38 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
     @Override
     public void setContentView(int layoutResID){
         super.setContentView(layoutResID);
+        if(!(isProvider())) {
+            android.view.View triageButton = findViewById(R.id.triage_button);
+            if (triageButton != null) { //if implemented
+                triageButton.setOnClickListener(v -> {
+                    Tpresenter.callTriage(false, null);
+                });
+            }
 
-        android.view.View triageButton = findViewById(R.id.triage_button);
-        if(triageButton!=null){ //if implemented
-            triageButton.setOnClickListener( v -> {
-                    Tpresenter.callTriage(false,null);
-            });
+            if (isParent()) {
+                android.view.View navButton = findViewById(R.id.btnTopNav);
+                if (navButton != null) {
+                    navButton.setOnClickListener(v -> showParentMenu(navButton));
+                }
+            } else {
+                android.view.View navButton = findViewById(R.id.btnTopNav);
+                if (navButton != null) {
+                    navButton.setOnClickListener(v -> showNavMenu(navButton));
+                }
+            }
         }
-        android.view.View navButton = findViewById(R.id.btnTopNav);
-        if (navButton != null) {
-            navButton.setOnClickListener(v -> showNavMenu(navButton));
+        else{
+            android.view.View navButton = findViewById(R.id.btnTopNav);
+            if (navButton != null) {
+                navButton.setOnClickListener(v -> showProviderMenu(navButton));
+            }
         }
     }
+
+
+
     private void showNavMenu(android.view.View anchor) {
         android.view.View menuView = getLayoutInflater().inflate(R.layout.view_nav_menu, null);
-
         PopupWindow popup = new PopupWindow(
                 menuView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -146,6 +161,81 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
         popup.showAsDropDown(anchor, 0, 16);
     }
 
+    private void showParentMenu(android.view.View anchor) {
+        android.view.View menu = getLayoutInflater().inflate(R.layout.view_nav_menu_parent, null);
+        PopupWindow popup = new PopupWindow(
+                menu,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+        );
+        popup.setElevation(12f);
+
+        menu.findViewById(R.id.nav_checkin_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, CheckInActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_pef_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, PEFActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_meds_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, MedicineLogsActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_history_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, CheckInHistoryActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_badge_settings_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, BadgeSettingsActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_child_schedule_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ScheduleActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_inventory_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, InventoryActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_provider_report_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProviderReportSelectionActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_home_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ParentHomeActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_manage_parent).setOnClickListener(v -> {
+            startActivity(new Intent(this, ManageChildrenActivity.class));
+            popup.dismiss();
+        });
+        menu.findViewById(R.id.nav_invites).setOnClickListener(v -> {
+            startActivity(new Intent(this, InvitesActivity.class));
+            popup.dismiss();
+        });
+
+        popup.showAsDropDown(anchor, 0, 16);
+    }
+
+    private void showProviderMenu(android.view.View anchor) {
+        android.view.View menu = getLayoutInflater().inflate(R.layout.view_nav_menu_provider, null);
+        PopupWindow popup = new PopupWindow(
+                menu,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+        );
+        popup.setElevation(12f);
+
+        menu.findViewById(R.id.nav_home).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProviderHomeActivity.class));
+            popup.dismiss();
+        });
+
+        popup.showAsDropDown(anchor, 0, 16);
+    }
 
     @Override
     public void showTimerStart(triageCapture capture, long n){
@@ -208,6 +298,12 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
         return role.equals("PARENT");
     }
 
+    public boolean isProvider() {
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String role = prefs.getString("USER_ROLE", "");
+        return role.equals("PROVIDER");
+    }
+
     public Context getContext(){
         return this;
     }
@@ -233,6 +329,4 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
     public void onChildSelected(String userID){
         Tpresenter.onChildSelected(userID);
     }
-
 }
-

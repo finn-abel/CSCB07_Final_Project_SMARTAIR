@@ -12,6 +12,9 @@ public interface SignUpView {
 
     void showSignUpSuccess(String message);
     void showSignUpFailure(String message);
+    void navigateToRoleSelectionScreen();
+
+    String getName();
 
 
     void navigateToLoginScreen();

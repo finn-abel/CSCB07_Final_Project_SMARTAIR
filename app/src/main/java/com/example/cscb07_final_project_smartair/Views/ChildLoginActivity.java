@@ -1,6 +1,7 @@
 package com.example.cscb07_final_project_smartair.Views;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 
 
+//Specific log in screen for children
 public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
 
     private TextInputEditText username;
@@ -71,6 +73,10 @@ public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
 
     @Override
     public void navigateToMainScreen() {
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("USER_ROLE", "CHILD");
+        editor.apply();
         startActivity(new Intent(this, MainActivityView.class));
         finish();
     }

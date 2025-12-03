@@ -11,8 +11,6 @@ import com.example.cscb07_final_project_smartair.Presenters.CheckInPresenter;
 import com.example.cscb07_final_project_smartair.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 
 public class CheckInActivity extends BaseActivity implements CheckInView{
@@ -26,7 +24,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     private CheckBox pets;
     private CheckBox cold_air;
     private CheckBox odour;
-    private CheckBox other;
+    private CheckBox pollen;
 
 
     private CheckInPresenter presenter;
@@ -44,7 +42,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
         pets = findViewById(R.id.pets);
         cold_air = findViewById(R.id.cold_air);
         odour = findViewById(R.id.odour);
-        other = findViewById(R.id.other);
+        pollen = findViewById(R.id.pollen);
         Button submit = findViewById(R.id.submit_triage);
 
         presenter = new CheckInPresenter(this);
@@ -52,8 +50,6 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
         submit.setOnClickListener(view -> {
             presenter.onSubmitButtonClicked();
         });
-
-
     }
 
     @Override
@@ -62,6 +58,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     }
 
 
+    //Stores triggers based on checked off items on the check in screen
     @Override
     public ArrayList<String> getTriggers(){
         ArrayList<String> triggers = new ArrayList<>();
@@ -81,18 +78,14 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
             triggers.add(odour.getText().toString().toLowerCase());
         }
 
-        if(other.isChecked()) {
-            ArrayList<String> other_triggers = getOtherTriggers();
-            for (String trigger : other_triggers) {
-                if (!triggers.contains(trigger)) {
-                    triggers.add(trigger);
-                }
-            }
+        if(pollen.isChecked()) {
+            triggers.add(pollen.getText().toString().toLowerCase());
         }
-
+        triggers.addAll(getOtherTriggers());
         return triggers;
     }
 
+    //Gathers other triggers entered by the user
     @Override
     public ArrayList<String> getOtherTriggers(){
         String[] split_triggers = Objects.requireNonNull(other_triggers.getText()).toString().split(",");
@@ -107,6 +100,7 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
     }
 
 
+    //Stores symptoms entered by the user
     @Override
     public ArrayList<String> getSymptoms(){
         String[] split_symptoms = Objects.requireNonNull(symptoms.getText()).toString().split(",");

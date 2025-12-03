@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class InventoryActivity extends BaseActivity implements InventoryView{
+public class InventoryActivity extends BaseParentActivity implements InventoryView{
     private InventoryPresenter presenter;
 
     private Spinner childSpinner;
@@ -37,9 +37,6 @@ public class InventoryActivity extends BaseActivity implements InventoryView{
 
         Button addBtn = findViewById(R.id.btnAddItem);
         addBtn.setOnClickListener(v -> presenter.startAddNew());
-
-        Button back = findViewById(R.id.btnBackToHome);
-        back.setOnClickListener(v -> navigateToMainActivity());
 
         presenter.loadChildren();
     }
@@ -141,7 +138,7 @@ public class InventoryActivity extends BaseActivity implements InventoryView{
         controller.setOnClickListener(typeClickListener);
 
         if (existingItem != null) {
-            title.setText("Edit Medication");
+            title.setText("         Edit Medication         ");
 
             name.setText(existingItem.medicationName);
             total.setText(String.valueOf(existingItem.totalAmount));
@@ -169,7 +166,7 @@ public class InventoryActivity extends BaseActivity implements InventoryView{
             delete.setOnClickListener(v -> presenter.deleteItem(existingItem));
 
         } else {
-            title.setText("Add Medication");
+            title.setText("         Add Medication         ");
             delete.setVisibility(View.GONE);
 
             rescue.setChecked(false);

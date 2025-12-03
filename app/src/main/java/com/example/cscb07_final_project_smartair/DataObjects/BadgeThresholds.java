@@ -6,6 +6,7 @@ public class BadgeThresholds {
     public int lowRescueGoal;
 
     public BadgeThresholds() {
+        //empty for FB
     }
 
     public BadgeThresholds(int perfectWeekGoal, int techniqueGoal, int lowRescueGoal) {

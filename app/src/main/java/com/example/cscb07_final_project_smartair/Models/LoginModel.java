@@ -2,15 +2,25 @@ package com.example.cscb07_final_project_smartair.Models;
 
 import androidx.annotation.NonNull;
 
-import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
+import com.example.cscb07_final_project_smartair.DataObjects.CheckInData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LoginModel {
 
     protected FirebaseAuth mAuth;
+
 
     public interface OnResetPasswordFinishedListener {
         void onResetPasswordSuccess(String message);
@@ -29,8 +39,8 @@ public class LoginModel {
 
 
 
+    //Carries out Firebase authentication based on user input to sign in to the app
     public void signInUser(String email, String password, OnLoginFinishedListener listener) {
-        // Credential Validation by Liam
 
         if (email.isEmpty()){
             listener.onLoginFailure("Email cannot be empty.");
@@ -56,6 +66,8 @@ public class LoginModel {
                 });
     }
 
+
+    //Sends a password reset email to the user's email address
     public void sendPasswordResetEmail(String email, OnResetPasswordFinishedListener listener) {
 
         if (email.isEmpty()) {
@@ -70,13 +82,12 @@ public class LoginModel {
                         if (task.isSuccessful()) {
                             listener.onResetPasswordSuccess("Password reset email sent. Please check your email.");
                         } else {
-                            String errorMessage = task.getException() != null ?
-                                    task.getException().getMessage() : "Password reset failed.";
-                            listener.onResetPasswordFailure(errorMessage);
+                            listener.onResetPasswordFailure("Password reset failed.");
                         }
                     }
                 });
     }
+
 }
 
 

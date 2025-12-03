@@ -31,88 +31,89 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <TextView
+                android:id="@+id/tvNextDose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next Dose: Loading..."
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:id="@+id/tvControllerStreak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Controller Streak: 0 days"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTechniqueStreak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Technique Streak: 0 days"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <!-- BADGES -->
+            <TextView
+                android:id="@+id/tvBadgesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Badges:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <LinearLayout
-                android:id="@+id/main_container"
+                android:id="@+id/badgeContainer"
                 android:layout_width="match_parent"
-                android:layout_height="760dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingTop="8dp" />
+            <Button
+                android:id="@+id/checkin"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="DAILY CHECK IN" />
 
+            <Button
+                android:id="@+id/btnPEF"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="PEF ENTRY" />
 
-                <TextView
-                    android:id="@+id/tvControllerStreak"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Controller Streak: 0 days"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+            <Button
+                android:id="@+id/btnMedicineLogs"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="LOG MEDICINE" />
 
-                <TextView
-                    android:id="@+id/tvTechniqueStreak"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Technique Streak: 0 days"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+            <Button
+                android:id="@+id/btnCheckInHistory"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="CHECK IN HISTORY" />
 
-                <TextView
-                    android:id="@+id/tvBadgesTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Badges:"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/badgeContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp" />
-                <Button
-                    android:id="@+id/checkin"
-                    android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginTop="16dp"
-                    android:backgroundTint="#5C8AF2"
-                    android:text="DAILY CHECK IN" />
-
-                <Button
-                    android:id="@+id/btnPEF"
-                    android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginTop="12dp"
-                    android:backgroundTint="#5C8AF2"
-                    android:text="PEF ENTRY" />
-
-                <Button
-                    android:id="@+id/btnMedicineLogs"
-                    android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginTop="12dp"
-                    android:backgroundTint="#5C8AF2"
-                    android:text="LOG MEDICINE " />
-
-                <Button
-                    android:id="@+id/btnCheckInHistory"
-                    android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginTop="12dp"
-                    android:backgroundTint="#5C8AF2"
-                    android:text="CHECK IN HISTORY" />
-
-                <Button
-                    android:id="@+id/logout"
-                    android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="24dp"
-                    android:backgroundTint="#5C8AF2"
-                    android:text="SIGN OUT" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="#5C8AF2"
+                android:text="SIGN OUT" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

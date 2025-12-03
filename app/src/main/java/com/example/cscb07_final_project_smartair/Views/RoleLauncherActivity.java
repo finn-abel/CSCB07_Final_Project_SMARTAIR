@@ -5,16 +5,14 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cscb07_final_project_smartair.Presenters.RoleLauncherPresenter;
 import com.example.cscb07_final_project_smartair.R;
-import com.example.cscb07_final_project_smartair.Presenters.RoleSelectionPresenter;
-import com.example.cscb07_final_project_smartair.Views.RoleSelectionView;
 
+//Allows for role selection and subsequent navigation to appropriate login screen
 public class RoleLauncherActivity extends BaseActivity implements RoleLauncherView {
 
     private RoleLauncherPresenter presenter;
@@ -24,7 +22,7 @@ public class RoleLauncherActivity extends BaseActivity implements RoleLauncherVi
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_role_launcher);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -37,7 +35,7 @@ public class RoleLauncherActivity extends BaseActivity implements RoleLauncherVi
         presenter = new RoleLauncherPresenter(this);
 
         child.setOnClickListener(view -> presenter.onChildClick());
-        parent.setOnClickListener((view -> presenter.onParentClick()));
+        parent.setOnClickListener(view -> presenter.onParentClick());
         provider.setOnClickListener(view -> presenter.onProviderClick());
     }
 
@@ -50,5 +48,11 @@ public class RoleLauncherActivity extends BaseActivity implements RoleLauncherVi
     public void navigateToGeneralLogin() {
         startActivity(new Intent(this, LoginActivity.class));
     }
+
+    @Override
+    public void navigateToProviderLogin() {
+        startActivity(new Intent(this, ProviderLoginActivity.class));
+    }
+
 
 }

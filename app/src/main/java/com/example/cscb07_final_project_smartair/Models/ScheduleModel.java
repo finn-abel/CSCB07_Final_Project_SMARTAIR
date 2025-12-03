@@ -17,7 +17,8 @@ public class ScheduleModel {
         this.presenter = presenter;
     }
 
-    public void fetchChildren() {
+    // loads children for logged in user (parent)
+    public void getChildren() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             presenter.onFailure("User not logged in.");
@@ -54,6 +55,7 @@ public class ScheduleModel {
         });
     }
 
+    // returns a childs schedule entry for a given day
     public void fetchScheduleDay(String childId, String day) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
@@ -80,6 +82,7 @@ public class ScheduleModel {
         });
     }
 
+    // save new schedule entry for given child
     public void saveScheduleEntry(String childId, String day, ScheduleEntry newEntry, ScheduleEntry oldEntry) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
@@ -102,7 +105,6 @@ public class ScheduleModel {
                             entry.time.equals(oldEntry.time) &&
                             entry.doseAmount == oldEntry.doseAmount &&
                             Objects.equals(entry.note, oldEntry.note)) {
-
                         continue;
                     }
                     entries.add(entry);
@@ -119,6 +121,7 @@ public class ScheduleModel {
         });
     }
 
+    // delete schedule entry for given child on given day
     public void deleteScheduleEntry(String childId, String day, ScheduleEntry target) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")

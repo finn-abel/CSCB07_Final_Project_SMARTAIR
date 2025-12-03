@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +54,8 @@ public class ProviderReportGenerator {
     // Checks if the report is generatable
     // I.e. checks if there is enough data for the last 'months' months
 
-    public void generateReport(ProviderReportSelectionActivity context, String childId, int months) {
+    public void generateReport(ProviderReportSelectionActivity context, String childId, int months,
+                               String providerId) {
 
         if (childId == null)
         {
@@ -79,11 +81,21 @@ public class ProviderReportGenerator {
                 .child(childId)  // node matching child's id
                 .child("name"); // name of the child
 
-        DatabaseReference triageRef = FirebaseDatabase.getInstance()
-                .getReference("users") // users folder
-                .child("children") // children folder
-                .child(childId) // child id's folder
-                .child("permissions"); // permissions folder
+        DatabaseReference triageRef;
+
+        if (providerId != null) {
+            triageRef = FirebaseDatabase.getInstance()
+                    .getReference("users") // users folder
+                    .child("children") // children folder
+                    .child(childId) // child id's folder
+                    .child("sharingPerms")
+                    .child(providerId); // permissions folder
+        }
+
+        else {
+            Toast.makeText(context, "No provider selected.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         DatabaseReference symptomRef = FirebaseDatabase.getInstance()
                 .getReference("check_in") // check in folder
@@ -160,10 +172,10 @@ public class ProviderReportGenerator {
                                     childZoneSnap.child("timestamp").getValue(Long.class);
                             Integer current =
                                     childZoneSnap.child("current").getValue(Integer.class);
-                            Integer pb = childZoneSnap.child("pb").getValue(Integer.class);
+                            Integer pb = childZoneSnap.child("pb_pef").getValue(Integer.class);
                             // Integer to allow for null
 
-                            if (zoneTimestamp == null || current == null)
+                            if (zoneTimestamp == null || current == null || pb == null)
                             {
                                 continue; // skip if no values in database
                             }
@@ -182,7 +194,7 @@ public class ProviderReportGenerator {
                                 // If valid day index
                                 if (day >= 0 && day < dailyFrequency.length)
                                 {
-                                    if (pb != null && pb != 0)
+                                    if (pb != 0)
                                     {
                                         zoneEntries
                                                 .add(new Entry(day, (((float) current) / pb) * 100));
@@ -201,7 +213,7 @@ public class ProviderReportGenerator {
                         }
 
                         if (!dataBeforeExists2 || !dataAfterExists2) {
-                            Toast.makeText(context, "Not enough data 2", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Not enough data", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -266,8 +278,9 @@ public class ProviderReportGenerator {
                                                 // Calculate planned days
                                                 int plannedDays = 0;
                                                 Calendar calendar = Calendar.getInstance();
+                                                long now = System.currentTimeMillis();
                                                 // increment by days from start time
-                                                for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24 * 60 * 60 * 1000)) {
+                                                for (long time = startTime; time <= now; time += ((long)24 * 60 * 60 * 1000)) {
                                                     calendar.setTimeInMillis(time);
                                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                                                     if (weekdayRequiredDoses.get(dayOfWeek) > 0) {
@@ -295,37 +308,60 @@ public class ProviderReportGenerator {
                                                             if (timestamp < startTime) continue;
                                                             // skip if out of time range
 
-                                                            // make all days' time midnight for consistency
-                                                            calendar.setTimeInMillis(timestamp);
-                                                            calendar.set(Calendar.HOUR_OF_DAY, 0);
-                                                            calendar.set(Calendar.MINUTE, 0);
-                                                            calendar.set(Calendar.SECOND, 0);
-                                                            calendar.set(Calendar.MILLISECOND, 0);
-                                                            long day = calendar.getTimeInMillis();
+                                                            Calendar cal = Calendar.getInstance();
+                                                            cal.setTimeInMillis(timestamp);
+                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                                                            cal.set(Calendar.MINUTE, 0);
+                                                            cal.set(Calendar.SECOND, 0);
+                                                            cal.set(Calendar.MILLISECOND, 0);
+                                                            long dayKey = cal.getTimeInMillis();
 
                                                             // update doses per day for 'day' and if no values already
                                                             // on that day, use 0, otherwise get 'day's values
-                                                            dosesPerDay.put(day, dosesPerDay.getOrDefault(day, 0) + doseAmount);
+                                                            dosesPerDay.put(dayKey, dosesPerDay.getOrDefault(dayKey, 0) + doseAmount);
                                                         }
 
                                                         int takenDays = 0;
-                                                        for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24L * 60 * 60 * 1000)) {
-                                                            calendar.setTimeInMillis(time);
-                                                            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                                                            int requiredDose = weekdayRequiredDoses.get(dayOfWeek);
-                                                            if (requiredDose == 0) continue; // not a planned day
-                                                                                             // so not a taken day
+                                                        Calendar cal = Calendar.getInstance();
 
-                                                            long dayKey = calendar.getTimeInMillis();
+                                                        Calendar loopCal = Calendar.getInstance();
+                                                        loopCal.setTimeInMillis(startTime);
 
-                                                            // find doses taken on dayKey's day
-                                                            int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
-                                                            if (takenDose >= requiredDose) takenDays++;
+                                                        loopCal.set(Calendar.HOUR_OF_DAY, 0);
+                                                        loopCal.set(Calendar.MINUTE, 0);
+                                                        loopCal.set(Calendar.SECOND, 0);
+                                                        loopCal.set(Calendar.MILLISECOND, 0);
+
+                                                        long end = System.currentTimeMillis();
+
+                                                        while (loopCal.getTimeInMillis() <= end) {
+
+                                                            long dayKey = loopCal.getTimeInMillis();
+
+                                                            int dayOfWeek = loopCal.get(Calendar.DAY_OF_WEEK);
+                                                            int requiredDose = weekdayRequiredDoses.getOrDefault(dayOfWeek, 0);
+
+                                                            if (requiredDose > 0) {
+                                                                int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
+
+                                                                Log.d("DEBUG_TAKEN_DAYS",
+                                                                        "Date: " + new Date(dayKey).toString() +
+                                                                                " requiredDose: " + requiredDose +
+                                                                                " takenDose: " + takenDose);
+
+                                                                if (takenDose >= requiredDose) {
+                                                                    takenDays++;
+                                                                }
+                                                            }
+
+                                                            loopCal.add(Calendar.DAY_OF_YEAR, 1);
                                                         }
+
+                                                        Log.d("TakenDays", "Final Taken Days = " + takenDays);
 
                                                         int finalTakenDays = takenDays;
 
-                                                        Log.d("TakenDays", "TakenDays: " + finalPlannedDays);
+                                                        Log.d("TakenDays", "TakenDays: " + finalTakenDays);
                                                         // Checks if permissions are enabled for triage sharing
                                                         triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -412,6 +448,8 @@ public class ProviderReportGenerator {
                 String lipsStatus = null;
                 String speakStatus = null;
                 String triageIncident = null;
+                String pefString = null;
+                String rescueAttemptsString = null;
 
                 for (DataSnapshot childSnap : triageReceiver.getChildren()) {
                     Boolean chest = childSnap.child("chest").getValue(Boolean.class);
@@ -419,6 +457,8 @@ public class ProviderReportGenerator {
                     String guidance = childSnap.child("guidance").getValue(String.class);
                     Boolean lips = childSnap.child("lips").getValue(Boolean.class);
                     Boolean speak = childSnap.child("speak").getValue(Boolean.class);
+                    Integer pef = childSnap.child("pef").getValue(Integer.class);
+                    Integer rescueAttempts = childSnap.child("rescue_attempts").getValue(Integer.class);
 
                     if (chest) chestStatus = "☑";
                     else chestStatus = "☐";
@@ -429,8 +469,15 @@ public class ProviderReportGenerator {
                     if (speak) speakStatus = "☑";
                     else speakStatus = "☐";
 
+                    if (pef != null) pefString = pef.toString();
+                    else pefString = "N/A";
+
+                    if (rescueAttempts != null) rescueAttemptsString = rescueAttempts.toString();
+                    else rescueAttemptsString = "N/A";
+
                     triageIncident = chestStatus + "!!" + lipsStatus + "!!" +
-                            speakStatus + "!!" + decision + "!!" + guidance;
+                            speakStatus + "!!" + pefString + "!!" + rescueAttemptsString +
+                            "!!" + decision + "!!" + guidance + "!!";
 
                     triageList.add(triageIncident);
                 }
@@ -542,8 +589,6 @@ public class ProviderReportGenerator {
         // End of rescue frequency
 
         // Controller adherence, pie chart
-        int missedDays = plannedDays - takenDays;
-
         PieChart pieChart = new PieChart(context);
         pieChart.getDescription().setEnabled(false);
         pieChart.setDrawEntryLabels(false);
@@ -552,7 +597,7 @@ public class ProviderReportGenerator {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
 
         pieEntries.add(new PieEntry((float)takenDays, "Taken"));
-        pieEntries.add(new PieEntry((float)missedDays, "Missed"));
+        pieEntries.add(new PieEntry((float)plannedDays, "Planned"));
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Controller Adherence");
         pieDataSet.setColors(
@@ -585,7 +630,7 @@ public class ProviderReportGenerator {
 
         pieChart.draw(pieBitmapCanvas);
 
-        canvas.drawText("Controller Adherence (Days Used/Missed)", 50, 490, paint);
+        canvas.drawText("Controller Adherence (Days Taken/Planned)", 50, 490, paint);
         canvas.drawBitmap(pieBitmap, 50, 500, null);
         // End of controller adherence
 
@@ -693,17 +738,21 @@ public class ProviderReportGenerator {
             Canvas canvas3 = page3.getCanvas();
 
             canvas3.drawText("Notable Triage Incidents", 50, 50, paint);
+            canvas3.drawText("Note: N/A indicates no data.", 50, 80, paint);
+            canvas3.drawText("RA: Rescue Attempts", 50, 110, paint);
 
-            paint.setTextSize(16);
+            paint.setTextSize(12);
 
-            canvas3.drawText("Incident", 50, 80, paint);
-            canvas3.drawText("Chest", 135, 80, paint);
-            canvas3.drawText("Lips", 200, 80, paint);
-            canvas3.drawText("Speak", 260, 80, paint);
-            canvas3.drawText("Decision", 330, 80, paint);
-            canvas3.drawText("Guidance", 460, 80, paint);
+            canvas3.drawText("Incident", 50, 140, paint);
+            canvas3.drawText("Chest", 120, 140, paint);
+            canvas3.drawText("Lips", 190, 140, paint);
+            canvas3.drawText("PEF", 240, 140, paint);
+            canvas3.drawText("RA", 280, 140, paint);
+            canvas3.drawText("Speak", 320, 140, paint);
+            canvas3.drawText("Decision", 380, 140, paint);
+            canvas3.drawText("Guidance", 480, 140, paint);
 
-            int y = 110;
+            int y = 170;
 
             for (int i = 0; i < triageList.size(); i++) {
                 String triageIncident = triageList.get(i);
@@ -712,11 +761,13 @@ public class ProviderReportGenerator {
 
                 // add the associated check marks and info
                 canvas3.drawText(String.valueOf(i + 1), 50, y, paint); // incident number
-                canvas3.drawText(triageParts[0], 135, y, paint); // chest
-                canvas3.drawText(triageParts[1], 200, y, paint); // lips
-                canvas3.drawText(triageParts[2], 260, y, paint); // speak
-                canvas3.drawText(triageParts[3], 330, y, paint); // decision
-                canvas3.drawText(triageParts[4], 460, y, paint); // guidance
+                canvas3.drawText(triageParts[0], 120, y, paint); // chest
+                canvas3.drawText(triageParts[1], 190, y, paint); // lips
+                canvas3.drawText(triageParts[2], 240, y, paint); // speak
+                canvas3.drawText(triageParts[3], 280, y, paint); // pef
+                canvas3.drawText(triageParts[4], 320, y, paint); // rescue attempts
+                canvas3.drawText(triageParts[3], 380, y, paint); // decision
+                canvas3.drawText(triageParts[4], 480, y, paint); // guidance
 
                 y += 30;
 
@@ -730,11 +781,13 @@ public class ProviderReportGenerator {
                     y = 50;
 
                     canvas3.drawText("Incident", 50, 50, paint);
-                    canvas3.drawText("Chest", 135, 50, paint);
-                    canvas3.drawText("Lips", 200, 50, paint);
-                    canvas3.drawText("Speak", 260, 50, paint);
-                    canvas3.drawText("Decision", 330, 50, paint);
-                    canvas3.drawText("Guidance", 460, 50, paint);
+                    canvas3.drawText("Chest", 120, 50, paint);
+                    canvas3.drawText("Lips", 190, 50, paint);
+                    canvas3.drawText("PEF", 240, 50, paint);
+                    canvas3.drawText("RA", 280, 50, paint);
+                    canvas3.drawText("Speak", 320, 50, paint);
+                    canvas3.drawText("Decision", 380, 50, paint);
+                    canvas3.drawText("Guidance", 480, 50, paint);
 
                     y = 80;
                 }

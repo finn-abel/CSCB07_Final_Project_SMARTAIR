@@ -3,6 +3,7 @@ package com.example.cscb07_final_project_smartair.DataObjects;
 import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -23,8 +24,7 @@ public class CheckInData extends Data {
         if(email.contains("@smartair.com")){
             this.authorRole = "Child";
         } else {
-            this.authorRole = "Parent";
-        }
+            this.authorRole = "Parent";}
     }
 }
 

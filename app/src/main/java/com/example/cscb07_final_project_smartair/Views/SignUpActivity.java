@@ -18,6 +18,8 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
 
     private TextInputEditText new_user_email;
     private TextInputEditText new_user_password;
+    private TextInputEditText new_user_fname;
+
 
 
     private SignUpPresenter presenter;
@@ -27,10 +29,13 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        new_user_fname = findViewById(R.id.new_user_fname);
         new_user_email = findViewById(R.id.new_user_email);
         new_user_password = findViewById(R.id.new_user_password);
         Button sign_up_button = findViewById(R.id.sign_up_button);
         Button sign_in_button = findViewById(R.id.SIB);
+        Button provider_sign_up_btn = findViewById(R.id.provider_sign_up);
+
 
 
 
@@ -42,6 +47,10 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
 
         sign_in_button.setOnClickListener(view -> {
             presenter.onSignInButtonClicked();
+        });
+
+        provider_sign_up_btn.setOnClickListener(view -> {
+            presenter.onProviderSignUpButtonClicked();
         });
 
 
@@ -102,13 +111,26 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-
     @Override
     public void navigateToLoginScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void navigateToRoleSelectionScreen() {
+        Intent intent = new Intent(this, RoleLauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
+    @Override
+    public String getName() {
+        return Objects.requireNonNull(new_user_fname.getText()).toString().trim();
     }
 
 }

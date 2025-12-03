@@ -1,12 +1,16 @@
 package com.example.cscb07_final_project_smartair.Presenters;
 
+import com.example.cscb07_final_project_smartair.Models.LoginModel;
 import com.example.cscb07_final_project_smartair.Models.SignUpModel;
+import com.example.cscb07_final_project_smartair.Views.LoginActivity;
+import com.example.cscb07_final_project_smartair.Views.LoginView;
 import com.example.cscb07_final_project_smartair.Views.SignUpView;
 
 public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
 
     private final SignUpView view;
     private final SignUpModel model;
+
 
     public SignUpPresenter(SignUpView view) {
         this.view = view;
@@ -35,7 +39,15 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
     public void onSignUpButtonClicked() {
         String email = view.getEmail();
         String password = view.getPassword();
-        model.createUser(email, password, this);
+        String name = view.getName();
+        model.createUser(email, password, name,"parent",this);
+    }
+
+    public void onProviderSignUpButtonClicked() {
+        String email = view.getEmail();
+        String password = view.getPassword();
+        String name = view.getName();
+        model.createUser(email, password, name,"provider",this);
     }
 
     public void onSignInButtonClicked() {
@@ -49,7 +61,7 @@ public class SignUpPresenter implements SignUpModel.OnSignUpFinishedListener {
     public void onSignUpSuccess() {
         if (view != null) {
             view.showSignUpSuccess("Account created successfully! Please log in.");
-            view.navigateToLoginScreen();
+            view.navigateToRoleSelectionScreen();
         }
     }
 

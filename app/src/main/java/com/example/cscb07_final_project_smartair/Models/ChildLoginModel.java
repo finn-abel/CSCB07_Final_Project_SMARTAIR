@@ -16,8 +16,7 @@ public class ChildLoginModel extends LoginModel {
     }
 
 
-
-
+    //Carries out Firebase authentication based on user input to sign in to the app
     @Override
     public void signInUser(String email, String password, OnLoginFinishedListener listener) {
 

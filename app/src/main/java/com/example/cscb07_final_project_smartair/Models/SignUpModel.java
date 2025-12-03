@@ -1,23 +1,35 @@
 package com.example.cscb07_final_project_smartair.Models;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.DataObjects.CheckInData;
+import com.example.cscb07_final_project_smartair.Users.Child;
+import com.example.cscb07_final_project_smartair.Users.Parent;
+import com.example.cscb07_final_project_smartair.Users.User;
+import com.example.cscb07_final_project_smartair.Views.SignUpActivity;
+import com.example.cscb07_final_project_smartair.Views.SignUpView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class SignUpModel {
 
     protected final FirebaseAuth mAuth;
+    private final DatabaseReference mDatabase;
 
     public SignUpModel() {
+
         this.mAuth = FirebaseAuth.getInstance();
+        this.mDatabase = FirebaseDatabase.getInstance().getReference("users");
     }
 
     public interface OnSignUpFinishedListener {
@@ -50,7 +62,8 @@ public class SignUpModel {
         return -1;  // invalid password
     }
 
-    public void createUser(String email, String password, OnSignUpFinishedListener listener) {
+    //Creates a new user with the given credentials and role.
+    public void createUser(String email, String password, String name, String role, OnSignUpFinishedListener listener) {
 
         if (email.isEmpty()) {
             listener.onSignUpFailure("Email cannot be empty");
@@ -62,13 +75,19 @@ public class SignUpModel {
             return;
         }
 
-        //Assuming valid credentials
+        if (name.isEmpty()) {
+            listener.onSignUpFailure("Name cannot be empty");
+            return;
+        }
+
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // The user was created successfully.
+                            // If user is successfully created, a record is created in the database.
+                            createDBUser(email,name,role, listener);
                             listener.onSignUpSuccess();
                         } else {
                             // If sign up fails, display a message to the user.
@@ -78,5 +97,25 @@ public class SignUpModel {
                         }
                     }
                 });
+    }
+
+
+    //Method to create a new user record in the database once a user signs up.
+    public void createDBUser(String email, String name, String role, OnSignUpFinishedListener listener) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userID = user.getUid();
+            if (role.equals("parent")) {
+                mDatabase.child("parents").child(userID).child("name").setValue(name);
+                mDatabase.child("parents").child(userID).child("email").setValue(email);
+            } else if (role.equals("provider")) {
+                mDatabase.child("providers").child(userID).child("name").setValue(name);
+                mDatabase.child("providers").child(userID).child("email").setValue(email);
+                //mDatabase.child("providers").child(userID).child("role").setValue("Provider");
+            }
+        }
+        else{
+            listener.onSignUpFailure("User not found");
+        }
     }
 }

@@ -5,18 +5,19 @@ import android.os.Bundle;
 
 import android.content.Intent;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.Presenters.ParentHomePresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -75,56 +76,53 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         presenter.loadChildrenDash();
 
         Button check_in_button = findViewById(R.id.checkin);
-        Button logout_button = findViewById(R.id.logout);
         Button btnLogs = findViewById(R.id.btnMedicineLogs);
-        Button btnInventory = findViewById(R.id.btnInventory);
         Button btnPEF = findViewById(R.id.btnPEF);
-        Button btnProviderReport = findViewById(R.id.btnProviderReport);
         Button btnCheckInHistory = findViewById(R.id.btnCheckInHistory);
 
+        Button logout_button = findViewById(R.id.logout);
+        Button btnInventory = findViewById(R.id.btnInventory);
+        Button btnProviderReport = findViewById(R.id.btnProviderReport);
         Button btnSchedule = findViewById(R.id.btnSchedule);
         Button btnBadgeSettings = findViewById(R.id.btnBadgeSettings);
+        Button btnManageChildren = findViewById(R.id.btnManageChildren);
+        Button btnInvites = findViewById(R.id.btnProviderInvites);
 
-        btnPEF.setOnClickListener(view -> {
-            presenter.onPEFButtonClicked();
-        });
-        btnBadgeSettings.setOnClickListener(view -> {
-            presenter.onBadgeSettingsClicked();
-        });
-        btnSchedule.setOnClickListener(view -> {
-            presenter.onScheduleButtonClicked();
-        });
-
-
-        logout_button.setOnClickListener(view -> {
-            presenter.onLogoutButtonClicked();
-        });
-
-        check_in_button.setOnClickListener(view -> {
-            presenter.onCheckInButtonClicked();
-        });
+        check_in_button.setOnClickListener(v -> presenter.onCheckInButtonClicked());
         btnCheckInHistory.setOnClickListener(v -> presenter.onCheckInHistoryClicked());
-
         btnLogs.setOnClickListener(v -> presenter.onMedicineLogsClicked());
-        btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
+        btnPEF.setOnClickListener(v -> presenter.onPEFButtonClicked());
 
-        btnProviderReport.setOnClickListener(view -> {
-            presenter.onProviderReportClicked();
-        });
+        btnBadgeSettings.setOnClickListener(v -> presenter.onBadgeSettingsClicked());
+        btnSchedule.setOnClickListener(v -> presenter.onScheduleButtonClicked());
+        btnInventory.setOnClickListener(v -> presenter.onInventoryClicked());
+        btnProviderReport.setOnClickListener(v -> presenter.onProviderReportClicked());
+        btnManageChildren.setOnClickListener(v -> presenter.onManageChildrenClicked());
+        btnInvites.setOnClickListener(v -> presenter.onInvitesClicked());
+
+        logout_button.setOnClickListener(v -> presenter.onLogoutButtonClicked());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (presenter != null) {
+            presenter.loadChildrenDash();
+        }
     }
 
     public void setActiveChild(String id) {
         activeChildId = id;
 
-        // Reload UI using new child
         loadRescueTrend(id, showThirtyDays ? 30 : 7);
         getTodayZone();
         getLastRescueTime();
         getWeeklyRescueCount();
     }
 
-    public void displayChildren(List<String> names) {
-        ArrayAdapter<String> adapter =
+    public void displayChildren(List<ChildSpinnerOption> names) {
+        ArrayAdapter<ChildSpinnerOption> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -144,8 +142,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     }
 
     @Override
-    public void navigateToLoginScreen(){
-        Intent intent = new Intent(this, LoginActivity.class);
+    public void navigateToRoleSelectionScreen(){
+        Intent intent = new Intent(this, RoleLauncherActivity.class);
         startActivity(intent);
         finish();
     }
@@ -168,6 +166,11 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     public void navigateToBadgeSettings() {
         startActivity(new Intent(this, BadgeSettingsActivity.class));
     }
+
+    @Override
+    public void navigateToManageChildren(){
+        startActivity(new Intent(this, ManageChildrenActivity.class));
+    }
     @Override
     public void navigateToPEFEntry() {
         startActivity(new Intent(this, PEFActivity.class));
@@ -186,6 +189,10 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     public void navigateToProviderReport() {
         startActivity(new Intent(this, ProviderReportSelectionActivity.class));
     }
+    @Override
+    public void navigateToInvites() {
+        startActivity(new Intent(this, InvitesActivity.class));
+    }
 
     private void loadRescueTrend(String childId, int days) {
 
@@ -196,9 +203,11 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
 
         // Goes to the rescueLogs branch of the requested child based on the childId
         DatabaseReference rescueRef = mdatabase
+                .child("users")
+                .child("children")
+                .child(childId)
                 .child("medicine")
-                .child("rescue")
-                .child(childId);
+                .child("rescue");
 
         ValueEventListener rescueListener = new ValueEventListener() {
             @Override
@@ -343,6 +352,8 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
     }
 
     public void getTodayZone() {
+        if (activeChildId == null) return;
+
         DatabaseReference pefRef = mdatabase
                 .child("pef")
                 .child(activeChildId);
@@ -363,32 +374,40 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         pefRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot pefReceiver) {
-                double ratio = 0;
+                double lowestRatio = 10;
+                boolean foundRatio = false;
                 for (DataSnapshot child : pefReceiver.getChildren()) {
                     Long timestamp = child.child("timestamp").getValue(Long.class);
                     Integer current = child.child("current").getValue(Integer.class);
-                    Integer pb = child.child("pb").getValue(Integer.class);
+                    Integer pb = child.child("pb_pef").getValue(Integer.class);
 
                     // if valid daya
                     if (timestamp != null && current != null && pb != null &&
                             timestamp >= startOfToday && timestamp <= now) {
 
-                        ratio = ((double) current) / pb;
-                        break;
+                        double ratio = ((double) current) / pb;
+                        foundRatio = true;
+
+                        if (ratio < lowestRatio) {
+                            lowestRatio = ratio; // lowest ratio of the day
+                        }
                     }
                 }
 
-                String zone = "No Data Today";
+                String zone = "No Data";
 
-                if (ratio >= 0.8) {
-                    zone = "Green";
-                }
-                else if (ratio >= 0.5) {
-                    zone = "Yellow";
-                }
+                if (foundRatio)
+                {
+                    if (lowestRatio >= 0.8) {
+                        zone = "Green";
+                    }
+                    else if (lowestRatio >= 0.5) {
+                        zone = "Yellow";
+                    }
 
-                else if (ratio > 0) {
-                    zone = "Red";
+                    else if (lowestRatio > 0) {
+                        zone = "Red";
+                    }
                 }
 
                 tvTodayZoneValue.setText(zone);
@@ -401,9 +420,11 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
 
     public void getLastRescueTime() {
         DatabaseReference rescueRef = mdatabase
+                .child("users")
+                .child("children")
+                .child(activeChildId)
                 .child("medicine")
-                .child("rescue")
-                .child(activeChildId);
+                .child("rescue");
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -440,9 +461,11 @@ public class ParentHomeActivity extends BaseParentActivity implements ParentHome
         long lastWeek = now - ((long)7 * 24 * 60 * 60 * 1000);
 
         DatabaseReference rescueRef = mdatabase
+                .child("users")
+                .child("children")
+                .child(activeChildId)
                 .child("medicine")
-                .child("rescue")
-                .child(activeChildId);
+                .child("rescue");
 
         rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

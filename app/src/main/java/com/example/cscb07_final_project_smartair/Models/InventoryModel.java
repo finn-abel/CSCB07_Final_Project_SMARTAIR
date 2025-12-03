@@ -18,6 +18,7 @@ public class InventoryModel {
         this.presenter = presenter;
     }
 
+    //returns current users children
     public void getChildren() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -55,6 +56,7 @@ public class InventoryModel {
         });
     }
 
+    //returns inventory for given child
     public void getInventory(String childId) {
         if (childId == null || childId.isEmpty()) {
             presenter.onFailure("Invalid child ID.");
@@ -87,6 +89,7 @@ public class InventoryModel {
         });
     }
 
+    //saves inventory item for given child
     public void saveItem(String childId, InventoryItem item) {
         if (childId == null || childId.isEmpty()) {
             presenter.onFailure("Invalid child ID.");
@@ -111,6 +114,7 @@ public class InventoryModel {
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
     }
 
+    // deletes existing medication for given child
     public void deleteItem(String childId, String medicationName) {
         if (childId == null || childId.isEmpty()) {
             presenter.onFailure("Invalid child ID.");

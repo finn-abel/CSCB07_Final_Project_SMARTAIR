@@ -8,6 +8,7 @@ public class ControllerDose extends Data {
     public int breathingAfter;
 
     public ControllerDose() {
+        //empty for FB
     }
 
     public ControllerDose(int doseAmount, int before, int after) {

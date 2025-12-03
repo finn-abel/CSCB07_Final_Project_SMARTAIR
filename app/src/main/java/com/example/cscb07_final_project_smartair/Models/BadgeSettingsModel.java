@@ -21,6 +21,7 @@ public class BadgeSettingsModel {
     }
 
     public void loadChildren() {
+        //get current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             presenter.onFailure("User not logged in.");
@@ -28,6 +29,7 @@ public class BadgeSettingsModel {
         }
 
         String parentID = user.getUid();
+        //get children of current user
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child("parents")
@@ -40,6 +42,7 @@ public class BadgeSettingsModel {
                 List<String> childIDs = new ArrayList<>();
                 List<String> childNames = new ArrayList<>();
 
+                //iterate through children, create list
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     childIDs.add(ds.getKey());
                     String name = ds.child("name").getValue(String.class);
@@ -58,6 +61,7 @@ public class BadgeSettingsModel {
     }
 
     public void loadThresholds(String childID) {
+        //get current thresholds
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child("children")
@@ -85,6 +89,7 @@ public class BadgeSettingsModel {
     }
 
     public void saveThresholds(String childID, BadgeThresholds thresholds) {
+        //get current threshold
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child("children")
@@ -93,12 +98,14 @@ public class BadgeSettingsModel {
                 .child("motivation")
                 .child("thresholds");
 
+        //update thresholds
         ref.setValue(thresholds)
                 .addOnSuccessListener(a -> presenter.onSaveSuccess())
                 .addOnFailureListener(e -> presenter.onFailure(e.getMessage()));
     }
 
     public void loadBadges(String childID) {
+        //get current badges earned
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child("children")
@@ -110,6 +117,7 @@ public class BadgeSettingsModel {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //create list of badges
                 List<Badge> list = new ArrayList<>();
 
                 Boolean perfect = snapshot.child("perfectControllerWeek").getValue(Boolean.class);
@@ -117,6 +125,7 @@ public class BadgeSettingsModel {
                 Boolean lowRescue = snapshot.child("lowRescueMonth").getValue(Boolean.class);
 
                 if (perfect != null && perfect) {
+                    //create perfect week badge
                     list.add(new Badge(
                             "Perfect Controller Week",
                             "Completed a full week of controller doses.",
@@ -125,6 +134,7 @@ public class BadgeSettingsModel {
                 }
 
                 if (technique != null && technique) {
+                    //create technique master badge
                     list.add(new Badge(
                             "Technique Master",
                             "Completed 10 high-quality technique sessions.",
@@ -133,6 +143,7 @@ public class BadgeSettingsModel {
                 }
 
                 if (lowRescue != null && lowRescue) {
+                    //create low rescue badge
                     list.add(new Badge(
                             "Low Rescue Month",
                             "Stayed below rescue usage threshold for 30 days.",

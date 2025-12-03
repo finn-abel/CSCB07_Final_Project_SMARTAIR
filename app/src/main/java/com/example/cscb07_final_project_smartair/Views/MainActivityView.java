@@ -19,12 +19,13 @@ import com.example.cscb07_final_project_smartair.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivityView extends BaseParentActivity implements MainView {
+public class MainActivityView extends BaseActivity implements MainView {
     private MainActivityPresenter presenter;
 
     private LinearLayout badgeContainer;
     private TextView tvControllerStreak;
     private TextView tvTechniqueStreak;
+    private TextView tvNextDose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +49,15 @@ public class MainActivityView extends BaseParentActivity implements MainView {
         badgeContainer = findViewById(R.id.badgeContainer);
         tvControllerStreak = findViewById(R.id.tvControllerStreak);
         tvTechniqueStreak = findViewById(R.id.tvTechniqueStreak);
+        tvNextDose = findViewById(R.id.tvNextDose);
 
         presenter.loadMainPageData();
     }
 
 
     @Override
-    public void navigateToLoginScreen(String role) {
-        Intent intent;
-        if (role.equals("Child")) {
-            intent = new Intent(this, ChildLoginActivity.class);
-        } else {
-            intent = new Intent(this, LoginActivity.class);
-        }
-        startActivity(intent);
+    public void navigateToRoleSelectionScreen() {
+        startActivity(new Intent(this, RoleLauncherActivity.class));
         finish();
     }
 
@@ -116,6 +112,11 @@ public class MainActivityView extends BaseParentActivity implements MainView {
     public void setStreaks(int controllerStreak, int techniqueStreak) {
         tvControllerStreak.setText("Controller Streak: " + controllerStreak + " days");
         tvTechniqueStreak.setText("Technique Streak: " + techniqueStreak + " days");
+    }
+
+    @Override
+    public void displayNextDose(String text) {
+        tvNextDose.setText(text);
     }
 
 }

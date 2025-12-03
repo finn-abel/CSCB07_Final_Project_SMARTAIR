@@ -5,6 +5,7 @@ import static androidx.core.content.ContentProviderCompat.requireContext;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.example.cscb07_final_project_smartair.Presenters.PEFPresenter;
 import com.example.cscb07_final_project_smartair.R;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -32,22 +34,23 @@ public class PEFActivity extends BaseActivity implements PEFView{
         this.presenter = new PEFPresenter(this);
 
         Button enter = findViewById(R.id.enter_pef);
-        Button return_pef = findViewById(R.id.return_pef);
+        //Button return_pef = findViewById(R.id.return_pef);
         select_child = findViewById(R.id.select_child_pef);
         TextView select_child_prompt = findViewById(R.id.select_child_prompt_pef);
 
         if(!isParent()){
             select_child.setVisibility(View.GONE);
             select_child_prompt.setVisibility(View.GONE);
+            presenter.getPEFpb(FirebaseAuth.getInstance().getCurrentUser().getUid());
         } else { presenter.getChildren();}
 
         enter.setOnClickListener(view -> {
             presenter.onEnterClicked();
         });
 
-        return_pef.setOnClickListener(view -> {
-            this.navigateToMainActivity();
-        });
+//        return_pef.setOnClickListener(view -> {
+//            this.navigateToMainActivity();
+//        });
 
     }
 
@@ -66,7 +69,7 @@ public class PEFActivity extends BaseActivity implements PEFView{
     @Override
     public void showSuccess(){
         Toast.makeText(this, "Saved successfully!", Toast.LENGTH_SHORT).show();
-        navigateToMainActivity();
+        // navigateToMainActivity();
     }
 
     @Override
@@ -97,6 +100,19 @@ public class PEFActivity extends BaseActivity implements PEFView{
                 android.R.layout.simple_spinner_item,
                 childrenList);  //create adapter for spinner selections
         select_child.setAdapter(adapter); //set adapter
+
+        select_child.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ChildSpinnerOption selectedChild = (ChildSpinnerOption) parent.getItemAtPosition(position);
+                presenter.getPEFpb(selectedChild.userID);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public ChildSpinnerOption getSpinnerOption(){
