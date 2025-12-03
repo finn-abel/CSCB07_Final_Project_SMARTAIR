@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cscb07_final_project_smartair.Models.ChildLoginModel;
 import com.example.cscb07_final_project_smartair.Presenters.ChildLoginPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
 import com.example.cscb07_final_project_smartair.R;
@@ -35,7 +36,7 @@ public class ChildLoginActivity extends BaseActivity implements ChildLoginView {
         Button sign_in_button = findViewById(R.id.sib);
 
 
-        presenter = new ChildLoginPresenter(this);
+        presenter = new ChildLoginPresenter(this, new ChildLoginModel());
 
 
         sign_in_button.setOnClickListener(view -> {

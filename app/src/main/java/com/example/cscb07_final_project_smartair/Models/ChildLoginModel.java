@@ -21,7 +21,7 @@ public class ChildLoginModel extends LoginModel {
     public void signInUser(String email, String password, OnLoginFinishedListener listener) {
 
 
-        if (email.isEmpty()){
+       /* if (email.isEmpty()){
             listener.onLoginFailure("Username cannot be empty.");
             return;
         }
@@ -29,6 +29,7 @@ public class ChildLoginModel extends LoginModel {
             listener.onLoginFailure("Password cannot be empty.");
             return;
         }
+           */
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

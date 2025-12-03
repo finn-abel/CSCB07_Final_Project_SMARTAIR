@@ -10,15 +10,26 @@ public class ChildLoginPresenter implements LoginModel.OnLoginFinishedListener {
     private ChildLoginView view;
     private ChildLoginModel model;
 
-    public ChildLoginPresenter(ChildLoginView view) {
+    public ChildLoginPresenter(ChildLoginView view, ChildLoginModel model) {
         this.view = view;
-        this.model = new ChildLoginModel();
+        this.model = model;
     }
 
     public void onLoginButtonClicked() {
         String email = view.getEmail();
         String password = view.getPassword();
-
+        if (email.isEmpty() && password.isEmpty()) {
+            view.showValidationError("Please enter login credentials.");
+            return;
+        }
+        else if (email.isEmpty()) {
+            view.showValidationError("Email cannot be empty.");
+            return;
+        }
+        else if (password.isEmpty()) {
+            view.showValidationError("Password cannot be empty.");
+            return;
+        }
         model.signInUser(email, password, this);
     }
 

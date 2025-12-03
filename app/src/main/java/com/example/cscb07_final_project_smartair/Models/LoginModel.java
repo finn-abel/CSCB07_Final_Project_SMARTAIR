@@ -42,6 +42,10 @@ public class LoginModel {
     //Carries out Firebase authentication based on user input to sign in to the app
     public void signInUser(String email, String password, OnLoginFinishedListener listener) {
 
+    /*    if(email.isEmpty() && password.isEmpty()){
+            listener.onLoginFailure("Please enter login credentials.");
+            return;
+        }
         if (email.isEmpty()){
             listener.onLoginFailure("Email cannot be empty.");
             return;
@@ -50,6 +54,7 @@ public class LoginModel {
             listener.onLoginFailure("Password cannot be empty.");
             return;
         }
+         */
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

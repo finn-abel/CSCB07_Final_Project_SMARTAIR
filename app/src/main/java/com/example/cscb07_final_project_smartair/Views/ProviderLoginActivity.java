@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.cscb07_final_project_smartair.Models.ProviderLoginModel;
 import com.example.cscb07_final_project_smartair.Presenters.LoginPresenter;
 import com.example.cscb07_final_project_smartair.Presenters.ProviderLoginPresenter;
 import com.example.cscb07_final_project_smartair.R;
@@ -32,7 +33,7 @@ public class ProviderLoginActivity extends BaseActivity implements ProviderLogin
         Button forgot_password_button = findViewById(R.id.fpb);
 
 
-        presenter = new ProviderLoginPresenter(this);
+        presenter = new ProviderLoginPresenter(this, new ProviderLoginModel());
 
 
         sign_in_button.setOnClickListener(view -> {
