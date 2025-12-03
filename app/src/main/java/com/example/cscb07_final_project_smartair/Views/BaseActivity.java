@@ -262,7 +262,7 @@ public abstract class BaseActivity extends AppCompatActivity implements TriageVi
         Tpresenter.logDecision("EMERGENCY", capture, escalation);
         closeDialog();
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:16476144487")); //have 911 ready to dial
+        intent.setData(Uri.parse("tel:9111")); //have 911 ready to dial
         startActivity(intent);
     }
 
