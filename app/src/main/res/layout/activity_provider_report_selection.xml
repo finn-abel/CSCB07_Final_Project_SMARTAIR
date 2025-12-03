@@ -6,6 +6,88 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".Views.ProviderReportSelectionActivity">
 
+    <TextView
+        android:id="@+id/textView33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="293dp"
+        android:text="Select Filters"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/providerPicker" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/permissionLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView33">
+
+        <CheckBox
+            android:id="@+id/symptomsCheck_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Symptoms"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/adherence_filter" />
+
+        <CheckBox
+            android:id="@+id/triggersCheck_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Triggers"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/symptomsCheck_filter" />
+
+        <CheckBox
+            android:id="@+id/pef_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peak Expiry Flow (PEF)"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/triggersCheck_filter" />
+
+        <CheckBox
+            android:id="@+id/rescueLogs_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Rescue logs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/triage_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Triage incidents"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pef_filter" />
+
+        <CheckBox
+            android:id="@+id/summary_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Summary charts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/triage_filter" />
+
+        <CheckBox
+            android:id="@+id/adherence_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Controller adherence summary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rescueLogs_filter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <include
         android:id="@+id/topBar"
         layout="@layout/view_top_bar"
@@ -82,28 +164,28 @@ tools:context=".Views.ProviderReportSelectionActivity">
     </LinearLayout>
 
     <Button
-    android:id="@+id/btn3Months"
-    android:layout_width="254dp"
-    android:layout_height="62dp"
-    android:layout_marginTop="20dp"
-    android:backgroundTint="#5C8AF2"
-    android:text="3 MONTHS"
-    app:layout_constraintTop_toBottomOf="@+id/providerPicker"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.503"
-    app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/btn3Months"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="440dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="3 MONTHS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/providerPicker" />
 
-<Button
-    android:id="@+id/btn6Months"
-    android:layout_width="254dp"
-    android:layout_height="62dp"
-    android:layout_marginTop="10dp"
-    android:backgroundTint="#5C8AF2"
-    android:text="6 MONTHS"
-    app:layout_constraintTop_toBottomOf="@+id/btn3Months"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.503"
-    app:layout_constraintStart_toStartOf="parent" />
+    <Button
+        android:id="@+id/btn6Months"
+        android:layout_width="254dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#5C8AF2"
+        android:text="6 MONTHS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn3Months" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

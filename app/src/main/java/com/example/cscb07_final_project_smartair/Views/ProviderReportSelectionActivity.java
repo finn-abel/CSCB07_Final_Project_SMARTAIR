@@ -1,31 +1,24 @@
 package com.example.cscb07_final_project_smartair.Views;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.example.cscb07_final_project_smartair.Helpers.ProviderReportGenerator;
 import com.example.cscb07_final_project_smartair.Models.BaseModel;
 import com.example.cscb07_final_project_smartair.Presenters.ProviderReportPresenter;
-import com.example.cscb07_final_project_smartair.Presenters.ProviderReportPresenter;
 import com.example.cscb07_final_project_smartair.R;
+import com.example.cscb07_final_project_smartair.Users.ChildPermissions;
 import com.example.cscb07_final_project_smartair.Users.ChildSpinnerOption;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ProviderReportSelectionActivity extends BaseParentActivity implements  ProviderReportView {
@@ -34,7 +27,6 @@ public class ProviderReportSelectionActivity extends BaseParentActivity implemen
     private Spinner spinnerChild;
     private Spinner spinnerProvider;
     private String selectedChildId;
-    private String selectedProviderId;
     DatabaseReference mdatabase;
 
     @Override
@@ -46,27 +38,62 @@ public class ProviderReportSelectionActivity extends BaseParentActivity implemen
             mdatabase = FirebaseDatabase.getInstance().getReference();
         }
 
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String role = prefs.getString("USER_ROLE", "");
+        //pull role
+
         spinnerChild = findViewById(R.id.SDspinnerChild);
         spinnerProvider = findViewById(R.id.SDspinnerProvider);
         Button btn3Months = findViewById(R.id.btn3Months);
         Button btn6Months = findViewById(R.id.btn6Months);
 
-        presenter = new ProviderReportPresenter(this);
+        //// Filters ////
 
-        String parentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        CheckBox symptoms = findViewById(R.id.symptomsCheck_filter);
+        CheckBox rescue = findViewById(R.id.rescueLogs_filter);
+        CheckBox contrSummary = findViewById(R.id.adherence_filter);
+        CheckBox triggers = findViewById(R.id.triggersCheck_filter);
+        CheckBox pef = findViewById(R.id.pef_filter);
+        CheckBox triage = findViewById(R.id.triage_filter);
+        CheckBox summary = findViewById(R.id.summary_filter);
+
+        ///////////////////
+
+
+
+        presenter = new ProviderReportPresenter(this);
         presenter.loadChildrenProvider();
 
         btn3Months.setOnClickListener(view -> {
             if (selectedChildId != null) {
-                new ProviderReportGenerator().generateReport(this, selectedChildId, 3,
-                        selectedProviderId);
+                ChildPermissions filters = new ChildPermissions();
+                filters.symptoms = symptoms.isChecked();
+                filters.rescueLogs = rescue.isChecked();
+                filters.contrSummary = contrSummary.isChecked();
+                filters.triggers = triggers.isChecked();
+                filters.pef = pef.isChecked();
+                filters.triageIncidents = triage.isChecked();
+                filters.summaryCharts = summary.isChecked();
+
+                presenter.onGenerateClickedParent(this, selectedChildId, 3,
+                        filters);
             }
         });
 
         btn6Months.setOnClickListener(view -> {
             if (selectedChildId != null) {
-                new ProviderReportGenerator().generateReport(this, selectedChildId, 6,
-                        selectedProviderId);
+
+                ChildPermissions filters = new ChildPermissions();
+                filters.symptoms = symptoms.isChecked();
+                filters.rescueLogs = rescue.isChecked();
+                filters.contrSummary = contrSummary.isChecked();
+                filters.triggers = triggers.isChecked();
+                filters.pef = pef.isChecked();
+                filters.triageIncidents = triage.isChecked();
+                filters.summaryCharts = summary.isChecked();
+
+                presenter.onGenerateClickedParent(this, selectedChildId, 3,
+                        filters);
             }
         });
     }
@@ -95,27 +122,23 @@ public class ProviderReportSelectionActivity extends BaseParentActivity implemen
     }
 
     @Override
-    public void displayProviders(List<BaseModel.ProviderSpinnerOption> providers) {
-        Log.d("ProviderSpinner", "Providers: " + providers.size());
-        for (BaseModel.ProviderSpinnerOption p : providers) {
-            Log.d("ProviderSpinner", "Provider: " + p.providerId + " " + p.name);
-        }
-        ArrayAdapter<BaseModel.ProviderSpinnerOption> providerAdapter =
+    public void displayProviders(List<ChildPermissions> providers) {
+        ArrayAdapter<ChildPermissions> providerAdapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, providers);
         providerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinnerProvider.setAdapter(providerAdapter);
 
         spinnerProvider.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                BaseModel.ProviderSpinnerOption selectedProvider =
-                        (BaseModel.ProviderSpinnerOption) parent.getItemAtPosition(pos);
-                selectedProviderId = selectedProvider.providerId;
+                ChildPermissions selected = (ChildPermissions) parent.getItemAtPosition(pos);
+                presenter.onProviderSelected(selected);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedProviderId = null;
+                presenter.selected_provider = null;
             }
         });
     }

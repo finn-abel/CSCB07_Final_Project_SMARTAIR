@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.cscb07_final_project_smartair.Users.Child;
+import com.example.cscb07_final_project_smartair.Users.ChildPermissions;
 import com.example.cscb07_final_project_smartair.Views.ProviderReportSelectionActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -38,7 +40,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class ProviderReportGenerator {
     // I.e. checks if there is enough data for the last 'months' months
 
     public void generateReport(ProviderReportSelectionActivity context, String childId, int months,
-                               String providerId) {
+                               String providerId, ChildPermissions filters) {
 
         if (childId == null)
         {
@@ -83,19 +84,23 @@ public class ProviderReportGenerator {
 
         DatabaseReference triageRef;
 
-        if (providerId != null) {
+        if (providerId != null ) {
             triageRef = FirebaseDatabase.getInstance()
                     .getReference("users") // users folder
                     .child("children") // children folder
                     .child(childId) // child id's folder
                     .child("sharingPerms")
                     .child(providerId); // permissions folder
+
+
         }
 
         else {
             Toast.makeText(context, "No provider selected.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
 
         DatabaseReference symptomRef = FirebaseDatabase.getInstance()
                 .getReference("check_in") // check in folder
@@ -175,7 +180,7 @@ public class ProviderReportGenerator {
                             Integer pb = childZoneSnap.child("pb_pef").getValue(Integer.class);
                             // Integer to allow for null
 
-                            if (zoneTimestamp == null || current == null || pb == null)
+                            if (zoneTimestamp == null || current == null)
                             {
                                 continue; // skip if no values in database
                             }
@@ -194,7 +199,7 @@ public class ProviderReportGenerator {
                                 // If valid day index
                                 if (day >= 0 && day < dailyFrequency.length)
                                 {
-                                    if (pb != 0)
+                                    if (pb != null && pb != 0)
                                     {
                                         zoneEntries
                                                 .add(new Entry(day, (((float) current) / pb) * 100));
@@ -212,8 +217,9 @@ public class ProviderReportGenerator {
                             }
                         }
 
+
                         if (!dataBeforeExists2 || !dataAfterExists2) {
-                            Toast.makeText(context, "Not enough data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Not enough data 2", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -278,9 +284,8 @@ public class ProviderReportGenerator {
                                                 // Calculate planned days
                                                 int plannedDays = 0;
                                                 Calendar calendar = Calendar.getInstance();
-                                                long now = System.currentTimeMillis();
                                                 // increment by days from start time
-                                                for (long time = startTime; time <= now; time += ((long)24 * 60 * 60 * 1000)) {
+                                                for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24 * 60 * 60 * 1000)) {
                                                     calendar.setTimeInMillis(time);
                                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                                                     if (weekdayRequiredDoses.get(dayOfWeek) > 0) {
@@ -308,60 +313,37 @@ public class ProviderReportGenerator {
                                                             if (timestamp < startTime) continue;
                                                             // skip if out of time range
 
-                                                            Calendar cal = Calendar.getInstance();
-                                                            cal.setTimeInMillis(timestamp);
-                                                            cal.set(Calendar.HOUR_OF_DAY, 0);
-                                                            cal.set(Calendar.MINUTE, 0);
-                                                            cal.set(Calendar.SECOND, 0);
-                                                            cal.set(Calendar.MILLISECOND, 0);
-                                                            long dayKey = cal.getTimeInMillis();
+                                                            // make all days' time midnight for consistency
+                                                            calendar.setTimeInMillis(timestamp);
+                                                            calendar.set(Calendar.HOUR_OF_DAY, 0);
+                                                            calendar.set(Calendar.MINUTE, 0);
+                                                            calendar.set(Calendar.SECOND, 0);
+                                                            calendar.set(Calendar.MILLISECOND, 0);
+                                                            long day = calendar.getTimeInMillis();
 
                                                             // update doses per day for 'day' and if no values already
                                                             // on that day, use 0, otherwise get 'day's values
-                                                            dosesPerDay.put(dayKey, dosesPerDay.getOrDefault(dayKey, 0) + doseAmount);
+                                                            dosesPerDay.put(day, dosesPerDay.getOrDefault(day, 0) + doseAmount);
                                                         }
 
                                                         int takenDays = 0;
-                                                        Calendar cal = Calendar.getInstance();
+                                                        for (long time = startTime; time <= System.currentTimeMillis(); time += ((long)24L * 60 * 60 * 1000)) {
+                                                            calendar.setTimeInMillis(time);
+                                                            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                                                            int requiredDose = weekdayRequiredDoses.get(dayOfWeek);
+                                                            if (requiredDose == 0) continue; // not a planned day
+                                                                                             // so not a taken day
 
-                                                        Calendar loopCal = Calendar.getInstance();
-                                                        loopCal.setTimeInMillis(startTime);
+                                                            long dayKey = calendar.getTimeInMillis();
 
-                                                        loopCal.set(Calendar.HOUR_OF_DAY, 0);
-                                                        loopCal.set(Calendar.MINUTE, 0);
-                                                        loopCal.set(Calendar.SECOND, 0);
-                                                        loopCal.set(Calendar.MILLISECOND, 0);
-
-                                                        long end = System.currentTimeMillis();
-
-                                                        while (loopCal.getTimeInMillis() <= end) {
-
-                                                            long dayKey = loopCal.getTimeInMillis();
-
-                                                            int dayOfWeek = loopCal.get(Calendar.DAY_OF_WEEK);
-                                                            int requiredDose = weekdayRequiredDoses.getOrDefault(dayOfWeek, 0);
-
-                                                            if (requiredDose > 0) {
-                                                                int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
-
-                                                                Log.d("DEBUG_TAKEN_DAYS",
-                                                                        "Date: " + new Date(dayKey).toString() +
-                                                                                " requiredDose: " + requiredDose +
-                                                                                " takenDose: " + takenDose);
-
-                                                                if (takenDose >= requiredDose) {
-                                                                    takenDays++;
-                                                                }
-                                                            }
-
-                                                            loopCal.add(Calendar.DAY_OF_YEAR, 1);
+                                                            // find doses taken on dayKey's day
+                                                            int takenDose = dosesPerDay.getOrDefault(dayKey, 0);
+                                                            if (takenDose >= requiredDose) takenDays++;
                                                         }
-
-                                                        Log.d("TakenDays", "Final Taken Days = " + takenDays);
 
                                                         int finalTakenDays = takenDays;
 
-                                                        Log.d("TakenDays", "TakenDays: " + finalTakenDays);
+                                                        Log.d("TakenDays", "TakenDays: " + finalPlannedDays);
                                                         // Checks if permissions are enabled for triage sharing
                                                         triageRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -378,13 +360,15 @@ public class ProviderReportGenerator {
                                                                         public void onTriageIncidentsLoaded(ArrayList<String> triageList) {
 
 
-                                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays, finalPlannedDays, finalTakenDays);
+                                                                            generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays, finalPlannedDays, finalTakenDays,
+                                                                                    filters);
                                                                         }
                                                                     });
                                                                 }
 
                                                                 else {
-                                                                    generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays, finalPlannedDays, finalTakenDays);
+                                                                    generatePdf(context, childId, months, dailyFrequency, zoneEntries, name, triageList, totalProblemDays, finalPlannedDays, finalTakenDays,
+                                                                            filters);
                                                                 }
                                                             }
 
@@ -507,7 +491,8 @@ public class ProviderReportGenerator {
 
     public void generatePdf(Context context, String childId, int months, int[] dailyFrequency,
                             ArrayList<Entry> zoneEntries, String name, ArrayList<String> triageList,
-                            int totalProblemDays, int plannedDays, int takenDays) {
+                            int totalProblemDays, int plannedDays, int takenDays,
+                            ChildPermissions perms) {
 
         // Creates an object for the PDF document
         PdfDocument document = new PdfDocument();
@@ -515,10 +500,16 @@ public class ProviderReportGenerator {
         // Creates a paint variable to use for writing text to the PDF
         Paint paint = new Paint();
 
+        int pageWidth = 612;
+        int pageHeight = 792;
+        int margin = 50;
+        int currentY = 50;  //cursor for page
+
         // Creates page dimensions, and number of pages
         // Letter size page
         PdfDocument.PageInfo pageInfo = new PdfDocument
-                .PageInfo.Builder(612, 792, 1).create();
+                .PageInfo.Builder(pageWidth, pageHeight, 1).create();
+
 
         // Creates start page
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -530,280 +521,331 @@ public class ProviderReportGenerator {
         paint.setTextSize(24);
         paint.setFakeBoldText(true);
 
-        canvas.drawText("Provider Report", 50, 50, paint);
+        canvas.drawText("Provider Report", 50, currentY, paint);
+        currentY += 30;
 
         paint.setTextSize(20);
-        canvas.drawText("Child: " + name, 50, 80, paint);
-        canvas.drawText("Period: Last " + months + " Months", 50, 110, paint);
+        canvas.drawText("Child: " + name, 50, currentY, paint);
+        currentY += 30;
+        canvas.drawText("Period: Last " + months + " Months", 50, currentY, paint);
+        currentY += 50;
 
-        canvas.drawText("Rescue Frequency (Usage By Day)", 50, 160, paint);
+        /////// RESCUE LOGS ////////
 
-        // Rescue frequency, time series chart
-        LineChart lineChart = new LineChart(context);
-        lineChart.getDescription().setEnabled(false);
-        lineChart.getAxisRight().setEnabled(false);
-        lineChart.getXAxis().setDrawAxisLine(true);
-        lineChart.getXAxis().setDrawLabels(true);
-        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setTextSize(8f);
-        lineChart.getAxisLeft().setTextSize(8f);
-        lineChart.getLegend().setEnabled(false);
+        if (perms.rescueLogs) {
 
-        YAxis leftAxis = lineChart.getAxisLeft();
-        leftAxis.setAxisMinimum(0f);
-        lineChart.getXAxis().setDrawGridLines(false);
-        lineChart.getAxisLeft().setDrawGridLines(false);
-        lineChart.getAxisLeft().setGranularity(1f); // one unit increments
-        lineChart.getAxisLeft().setGranularityEnabled(true);
 
-        ArrayList<Entry> entries = new ArrayList<>();
+            if (currentY + 350 > pageHeight - margin) { //check for next page
+                document.finishPage(page);
+                pageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, document.getPages().size() + 1).create();
+                page = document.startPage(pageInfo);
+                canvas = page.getCanvas();
+                currentY = 50; // Reset cursor
+            }
 
-        for (int i = 0; i < dailyFrequency.length; i++) {
-            entries.add(new Entry(i, dailyFrequency[i]));
+
+            canvas.drawText("Rescue Frequency (Usage By Day)", 50, currentY, paint);
+            currentY += 20;
+
+            // Rescue frequency, time series chart
+            LineChart lineChart = new LineChart(context);
+            lineChart.getDescription().setEnabled(false);
+            lineChart.getAxisRight().setEnabled(false);
+            lineChart.getXAxis().setDrawAxisLine(true);
+            lineChart.getXAxis().setDrawLabels(true);
+            lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            lineChart.getXAxis().setTextSize(8f);
+            lineChart.getAxisLeft().setTextSize(8f);
+            lineChart.getLegend().setEnabled(false);
+
+            YAxis leftAxis = lineChart.getAxisLeft();
+            leftAxis.setAxisMinimum(0f);
+            lineChart.getXAxis().setDrawGridLines(false);
+            lineChart.getAxisLeft().setDrawGridLines(false);
+            lineChart.getAxisLeft().setGranularity(1f); // one unit increments
+            lineChart.getAxisLeft().setGranularityEnabled(true);
+
+            ArrayList<Entry> entries = new ArrayList<>();
+
+            for (int i = 0; i < dailyFrequency.length; i++) {
+                entries.add(new Entry(i, dailyFrequency[i]));
+            }
+
+            LineDataSet lineDataSet = new LineDataSet(entries, "Rescue Frequency");
+            lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            lineDataSet.setColor(Color.parseColor("#5C8AF2"));
+            lineDataSet.setLineWidth(2f);
+            lineDataSet.setDrawCircles(false);
+            lineDataSet.setDrawValues(false);
+
+            LineData lineData = new LineData(lineDataSet);
+
+            lineChart.setData(lineData);
+
+            int width = 500;
+            int height = 300;
+
+            lineChart.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
+
+            lineChart.layout(0, 0, width, height);
+
+            Bitmap bitmap = createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas bitmapCanvas = new Canvas(bitmap);
+
+            lineChart.draw(bitmapCanvas);
+            canvas.drawBitmap(bitmap, margin, currentY, null);
+
+            currentY += height + 40;
+
+            // End of rescue frequency
         }
-
-        LineDataSet lineDataSet = new LineDataSet(entries, "Rescue Frequency");
-        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        lineDataSet.setColor(Color.parseColor("#5C8AF2"));
-        lineDataSet.setLineWidth(2f);
-        lineDataSet.setDrawCircles(false);
-        lineDataSet.setDrawValues(false);
-
-        LineData lineData = new LineData(lineDataSet);
-
-        lineChart.setData(lineData);
-
-        int width = 500;
-        int height = 300;
-
-        lineChart.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
-
-        lineChart.layout(0, 0, width, height);
-
-        Bitmap bitmap = createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas bitmapCanvas = new Canvas(bitmap);
-
-        lineChart.draw(bitmapCanvas);
-        canvas.drawBitmap(bitmap, 50, 150, null);
-        // End of rescue frequency
 
         // Controller adherence, pie chart
-        PieChart pieChart = new PieChart(context);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setDrawEntryLabels(false);
-        pieChart.getLegend().setEnabled(false);
 
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        if (perms.contrSummary) {
 
-        pieEntries.add(new PieEntry((float)takenDays, "Taken"));
-        pieEntries.add(new PieEntry((float)plannedDays, "Planned"));
 
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Controller Adherence");
-        pieDataSet.setColors(
-                Color.parseColor("#5C8AF2"),
-                Color.parseColor("#D3D3D3")); // Gray for missed
-        pieDataSet.setValueTextSize(10f);
-        pieDataSet.setValueTextColor(Color.WHITE);
-
-        PieData pieData = new PieData(pieDataSet);
-        pieChart.setData(pieData);
-
-        // Change floats to ints when displayed on the chart
-        pieData.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return String.format("%.0f", value);
+            if (currentY + 350 > pageHeight - margin) { //check for next page
+                document.finishPage(page);
+                pageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, document.getPages().size() + 1).create();
+                page = document.startPage(pageInfo);
+                canvas = page.getCanvas();
+                currentY = 50;
             }
-        });
 
-        int pieWidth = 300;
-        int pieHeight = 300;
+            int missedDays = plannedDays - takenDays;
 
-        pieChart.measure(View.MeasureSpec.makeMeasureSpec(pieWidth, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(pieHeight, View.MeasureSpec.EXACTLY));
+            PieChart pieChart = new PieChart(context);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.setDrawEntryLabels(false);
+            pieChart.getLegend().setEnabled(false);
 
-        pieChart.layout(0, 0, pieWidth, pieHeight);
+            ArrayList<PieEntry> pieEntries = new ArrayList<>();
 
-        Bitmap pieBitmap = createBitmap(pieWidth, pieHeight, Bitmap.Config.ARGB_8888);
-        Canvas pieBitmapCanvas = new Canvas(pieBitmap);
+            pieEntries.add(new PieEntry((float) takenDays, "Taken"));
+            pieEntries.add(new PieEntry((float) missedDays, "Missed"));
 
-        pieChart.draw(pieBitmapCanvas);
+            PieDataSet pieDataSet = new PieDataSet(pieEntries, "Controller Adherence");
+            pieDataSet.setColors(
+                    Color.parseColor("#5C8AF2"),
+                    Color.parseColor("#D3D3D3")); // Gray for missed
+            pieDataSet.setValueTextSize(10f);
+            pieDataSet.setValueTextColor(Color.WHITE);
 
-        canvas.drawText("Controller Adherence (Days Taken/Planned)", 50, 490, paint);
-        canvas.drawBitmap(pieBitmap, 50, 500, null);
-        // End of controller adherence
+            PieData pieData = new PieData(pieDataSet);
+            pieChart.setData(pieData);
 
-        document.finishPage(page); // End of page 1
+            // Change floats to ints when displayed on the chart
+            pieData.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return String.format("%.0f", value);
+                }
+            });
 
-        // Create page 2
-        PdfDocument.PageInfo pageInfo2 = new PdfDocument
-                .PageInfo.Builder(612, 792, 2).create();
-        PdfDocument.Page page2 = document.startPage(pageInfo2);
-        Canvas canvas2 = page2.getCanvas();
+            int pieWidth = 300;
+            int pieHeight = 300;
 
-        // Symptom burden
-        canvas2.drawText("Symptom Burden (Problem Days)", 50, 50, paint);
-        canvas2.drawText("Total Problem Days: " + totalProblemDays, 50, 80, paint);
-        // End of symptom burden
+            pieChart.measure(View.MeasureSpec.makeMeasureSpec(pieWidth, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(pieHeight, View.MeasureSpec.EXACTLY));
 
-        // Zone distribution over time, time series chart
-        LineChart zoneChart = new LineChart(context);
-        zoneChart.getDescription().setEnabled(false);
-        zoneChart.getAxisRight().setEnabled(false);
-        zoneChart.getXAxis().setDrawAxisLine(true);
-        zoneChart.getXAxis().setDrawLabels(true);
-        zoneChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        zoneChart.getXAxis().setTextSize(8f);
-        zoneChart.getXAxis().setAxisMinimum(0f);
-        zoneChart.getAxisLeft().setTextSize(8f);
-        zoneChart.getLegend().setEnabled(false);
+            pieChart.layout(0, 0, pieWidth, pieHeight);
 
-        YAxis leftZoneAxis = zoneChart.getAxisLeft();
-        leftZoneAxis.setAxisMinimum(0f);
-        leftZoneAxis.setAxisMaximum(100f);
-        zoneChart.getXAxis().setDrawGridLines(false);
-        zoneChart.getAxisLeft().setDrawGridLines(false);
-        zoneChart.getAxisLeft().setGranularity(10f); // 10 unit increments
-        zoneChart.getAxisLeft().setGranularityEnabled(true);
+            Bitmap pieBitmap = createBitmap(pieWidth, pieHeight, Bitmap.Config.ARGB_8888);
+            Canvas pieBitmapCanvas = new Canvas(pieBitmap);
 
-        int totalDays = months * 30;
+            pieChart.draw(pieBitmapCanvas);
 
-        float[] zoneValues = new float[totalDays];
-
-        for (Entry entry : zoneEntries) {
-            int dayIndex = (int) entry.getX();
-            if (dayIndex >= 0 && dayIndex < totalDays) {
-                zoneValues[dayIndex] = entry.getY();
-            }
+            canvas.drawText("Controller Adherence (Days Used/Missed)", margin, currentY, paint);
+            currentY += 20;
+            canvas.drawBitmap(pieBitmap, margin, currentY, null);
+            currentY += 300 + 40;
+            // End of controller adherence
         }
 
-        ArrayList<Entry> finalZoneEntries = new ArrayList<>();
-        for (int i = 0; i < totalDays; i++) {
-            finalZoneEntries.add(new Entry(i, zoneValues[i]));
-        }
-        // The above part ensures that all days that do not have a zone value will have
-        // a zone value of 0, which will indicate that there is no data for that day
 
-        zoneChart.getXAxis().setAxisMaximum(totalDays);
+        ///// Symptom burden //////
 
-        LineDataSet zoneDataSet = new LineDataSet(finalZoneEntries, "Zone Distribution Over Time");
-        zoneDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        zoneDataSet.setColor(Color.parseColor("#5C8AF2"));
-        zoneDataSet.setLineWidth(2f);
-        zoneDataSet.setDrawCircles(false);
-        zoneDataSet.setDrawValues(false);
-
-        LineData zoneData = new LineData(zoneDataSet);
-
-        zoneChart.setData(zoneData);
-
-        // Change floats to ints when displayed on the chart
-        zoneData.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return String.valueOf((int) value);
+        if (perms.symptoms) {
+            if (currentY + 100 > pageHeight - margin) { //check for next page
+                document.finishPage(page);
+                pageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, document.getPages().size() + 1).create();
+                page = document.startPage(pageInfo);
+                canvas = page.getCanvas();
+                currentY = 50;
             }
-        });
+            canvas.drawText("Symptom Burden (Problem Days)", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("Total Problem Days: " + totalProblemDays, margin, currentY, paint);
+            currentY += 40;
+        }// End of symptom burden
 
-        int zoneWidth = 500;
-        int zoneHeight = 300;
 
-        zoneChart.measure(View.MeasureSpec.makeMeasureSpec(zoneWidth, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(zoneHeight, View.MeasureSpec.EXACTLY));
+        if (perms.summaryCharts) {
 
-        zoneChart.layout(0, 0, zoneWidth, zoneHeight);
+            if (currentY + 350 > pageHeight - margin) {
+                document.finishPage(page);
+                page = document.startPage(new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, document.getPages().size() + 1).create());
+                canvas = page.getCanvas();
+                currentY = 50;
+            }
 
-        Bitmap zoneBitmap = createBitmap(zoneWidth, zoneHeight, Bitmap.Config.ARGB_8888);
-        Canvas zoneBitmapCanvas = new Canvas(zoneBitmap);
+            // Zone distribution over time, time series chart
+            LineChart zoneChart = new LineChart(context);
+            zoneChart.getDescription().setEnabled(false);
+            zoneChart.getAxisRight().setEnabled(false);
+            zoneChart.getXAxis().setDrawAxisLine(true);
+            zoneChart.getXAxis().setDrawLabels(true);
+            zoneChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            zoneChart.getXAxis().setTextSize(8f);
+            zoneChart.getXAxis().setAxisMinimum(0f);
+            zoneChart.getAxisLeft().setTextSize(8f);
+            zoneChart.getLegend().setEnabled(false);
 
-        zoneChart.draw(zoneBitmapCanvas);
-        canvas2.drawText("Zone Distribution Over Time (Zone By Day)", 50, 120, paint);
-        canvas2.drawText("Zone Percentage Breakdown", 50, 150, paint);
-        canvas2.drawText("  Green:      ≥80%", 50, 180, paint);
-        canvas2.drawText("  Yellow:     50%-79%", 50, 210, paint);
-        canvas2.drawText("  Red:          1%-50%", 50, 240, paint);
-        canvas2.drawText("  No Data:   0%", 50, 270, paint);
-        canvas2.drawBitmap(zoneBitmap, 50, 280, null);
+            YAxis leftZoneAxis = zoneChart.getAxisLeft();
+            leftZoneAxis.setAxisMinimum(0f);
+            leftZoneAxis.setAxisMaximum(100f);
+            zoneChart.getXAxis().setDrawGridLines(false);
+            zoneChart.getAxisLeft().setDrawGridLines(false);
+            zoneChart.getAxisLeft().setGranularity(10f); // 10 unit increments
+            zoneChart.getAxisLeft().setGranularityEnabled(true);
+
+            int totalDays = months * 30;
+
+            float[] zoneValues = new float[totalDays];
+
+            for (Entry entry : zoneEntries) {
+                int dayIndex = (int) entry.getX();
+                if (dayIndex >= 0 && dayIndex < totalDays) {
+                    zoneValues[dayIndex] = entry.getY();
+                }
+            }
+
+            ArrayList<Entry> finalZoneEntries = new ArrayList<>();
+            for (int i = 0; i < totalDays; i++) {
+                finalZoneEntries.add(new Entry(i, zoneValues[i]));
+            }
+            // The above part ensures that all days that do not have a zone value will have
+            // a zone value of 0, which will indicate that there is no data for that day
+
+            zoneChart.getXAxis().setAxisMaximum(totalDays);
+
+            LineDataSet zoneDataSet = new LineDataSet(finalZoneEntries, "Zone Distribution Over Time");
+            zoneDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            zoneDataSet.setColor(Color.parseColor("#5C8AF2"));
+            zoneDataSet.setLineWidth(2f);
+            zoneDataSet.setDrawCircles(false);
+            zoneDataSet.setDrawValues(false);
+
+            LineData zoneData = new LineData(zoneDataSet);
+
+            zoneChart.setData(zoneData);
+
+            // Change floats to ints when displayed on the chart
+            zoneData.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return String.valueOf((int) value);
+                }
+            });
+
+            int zoneWidth = 500;
+            int zoneHeight = 300;
+
+            zoneChart.measure(View.MeasureSpec.makeMeasureSpec(zoneWidth, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(zoneHeight, View.MeasureSpec.EXACTLY));
+
+            zoneChart.layout(0, 0, zoneWidth, zoneHeight);
+
+            Bitmap zoneBitmap = createBitmap(zoneWidth, zoneHeight, Bitmap.Config.ARGB_8888);
+            Canvas zoneBitmapCanvas = new Canvas(zoneBitmap);
+
+            zoneChart.draw(zoneBitmapCanvas);
+            canvas.drawText("Zone Distribution Over Time (Zone By Day)", margin, currentY, paint);
+            currentY += 20;
+            canvas.drawText("Zone Percentage Breakdown", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("  Green:      ≥80%", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("  Yellow:     50%-79%", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("  Red:          1%-50%", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("  No Data:   0%", margin, currentY, paint);
+            currentY += 10;
+            canvas.drawBitmap(zoneBitmap, margin, currentY, null);
+            currentY += 300 + 40;
+        }
         // End of zone distribution over time
 
         // Notable triage incidents, checklist chart
-        if (!triageList.isEmpty()) {
-            document.finishPage(page2); // End of page 2
+        if (perms.triageIncidents && !triageList.isEmpty()) {
 
-            // Create page 3
-            PdfDocument.PageInfo pageInfo3 = new PdfDocument
-                    .PageInfo.Builder(612, 792, 2).create();
-            PdfDocument.Page page3 = document.startPage(pageInfo3);
-            Canvas canvas3 = page3.getCanvas();
+            if (currentY + 350 > pageHeight - margin) {
+                document.finishPage(page);
+                page = document.startPage(new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, document.getPages().size() + 1).create());
+                canvas = page.getCanvas();
+                currentY = 50;
+            }
 
-            canvas3.drawText("Notable Triage Incidents", 50, 50, paint);
-            canvas3.drawText("Note: N/A indicates no data.", 50, 80, paint);
-            canvas3.drawText("RA: Rescue Attempts", 50, 110, paint);
+
+            canvas.drawText("Notable Triage Incidents", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("Note: N/A indicates no data.", margin, currentY, paint);
+            currentY += 30;
+            canvas.drawText("RA: Rescue Attempts", margin, currentY, paint);
+            currentY += 30;
 
             paint.setTextSize(12);
 
-            canvas3.drawText("Incident", 50, 140, paint);
-            canvas3.drawText("Chest", 120, 140, paint);
-            canvas3.drawText("Lips", 190, 140, paint);
-            canvas3.drawText("PEF", 240, 140, paint);
-            canvas3.drawText("RA", 280, 140, paint);
-            canvas3.drawText("Speak", 320, 140, paint);
-            canvas3.drawText("Decision", 380, 140, paint);
-            canvas3.drawText("Guidance", 480, 140, paint);
-
-            int y = 170;
+            canvas.drawText("Incident", margin, currentY, paint);
+            canvas.drawText("Chest", 120, currentY, paint);
+            canvas.drawText("Lips", 190, currentY, paint);
+            canvas.drawText("PEF", 240, currentY, paint);
+            canvas.drawText("RA", 280, currentY, paint);
+            canvas.drawText("Speak", 320, currentY, paint);
+            canvas.drawText("Decision", 380, currentY, paint);
+            canvas.drawText("Guidance", 480, currentY, paint);
+            currentY += 30;
 
             for (int i = 0; i < triageList.size(); i++) {
+                if (currentY > pageHeight - margin) {
+                    document.finishPage(page);
+                    page = document.startPage(new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, document.getPages().size() + 1).create());
+                    canvas = page.getCanvas();
+                    currentY = 50;
+                }
                 String triageIncident = triageList.get(i);
 
                 String[] triageParts = triageIncident.split("!!");
 
                 // add the associated check marks and info
-                canvas3.drawText(String.valueOf(i + 1), 50, y, paint); // incident number
-                canvas3.drawText(triageParts[0], 120, y, paint); // chest
-                canvas3.drawText(triageParts[1], 190, y, paint); // lips
-                canvas3.drawText(triageParts[2], 240, y, paint); // speak
-                canvas3.drawText(triageParts[3], 280, y, paint); // pef
-                canvas3.drawText(triageParts[4], 320, y, paint); // rescue attempts
-                canvas3.drawText(triageParts[3], 380, y, paint); // decision
-                canvas3.drawText(triageParts[4], 480, y, paint); // guidance
+                canvas.drawText(String.valueOf(i + 1), 50, currentY, paint); // incident number
+                canvas.drawText(triageParts[0], 120, currentY, paint); // chest
+                canvas.drawText(triageParts[1], 190, currentY, paint); // lips
+                canvas.drawText(triageParts[2], 240, currentY, paint); // speak
+                canvas.drawText(triageParts[3], 280, currentY, paint); // pef
+                canvas.drawText(triageParts[4], 320, currentY, paint); // rescue attempts
+                canvas.drawText(triageParts[3], 380, currentY, paint); // decision
+                canvas.drawText(triageParts[4], 480, currentY, paint); // guidance
 
-                y += 30;
+                currentY += 25;
 
                 // If the page is full, continue creating new pages as needed
-
-                if (y > 700) {
-                    document.finishPage(page3);
-                    page3 = document.startPage(pageInfo3); // same name so easier to close
-                    canvas3 = page3.getCanvas();
-
-                    y = 50;
-
-                    canvas3.drawText("Incident", 50, 50, paint);
-                    canvas3.drawText("Chest", 120, 50, paint);
-                    canvas3.drawText("Lips", 190, 50, paint);
-                    canvas3.drawText("PEF", 240, 50, paint);
-                    canvas3.drawText("RA", 280, 50, paint);
-                    canvas3.drawText("Speak", 320, 50, paint);
-                    canvas3.drawText("Decision", 380, 50, paint);
-                    canvas3.drawText("Guidance", 480, 50, paint);
-
-                    y = 80;
-                }
             }
 
-            document.finishPage(page3); // end of page 3
+        } else {
+            canvas.drawText("No Notable Triage Incidents", 50, currentY, paint);
+            currentY+= 30;
         }
 
-        else {
-            canvas2.drawText("No Notable Triage Incidents", 50, 620, paint);
-            document.finishPage(page2); // End of page 2
-        }
+        document.finishPage(page);
 
+        String filename = "Provider_Report" + System.currentTimeMillis() +".pdf";
         // Download the pdf into the downloads folder
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment
-                .DIRECTORY_DOWNLOADS), "Provider_Report.pdf");
+                .DIRECTORY_DOWNLOADS),filename);
 
         try {
             // Check if it writes the PDF
