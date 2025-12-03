@@ -126,8 +126,8 @@ public class CheckInActivity extends BaseActivity implements CheckInView{
 
     @Override
     public void navigateToMainScreen() {
-        startActivity(new Intent(this, MainActivityView.class));
-        finish();
+        //startActivity(new Intent(this, MainActivityView.class));
+        //finish();
     }
 
 
