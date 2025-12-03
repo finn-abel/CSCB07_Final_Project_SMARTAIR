@@ -7,7 +7,9 @@ public class Invite extends Data {
     public String childId;
     public long expiresAt;
 
-    public Invite() {}
+    public Invite() {
+        //empty for FB
+    }
 
     public Invite(String inviteCode, String childId, long expiresAt) {
         super(System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getUid(), "invite");

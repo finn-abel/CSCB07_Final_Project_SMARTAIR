@@ -8,7 +8,9 @@ public class RescueDose extends Data {
     public int breathingAfter;
     public int shortnessOfBreath;
 
-    public RescueDose() {}
+    public RescueDose() {
+        //empty for FB
+    }
 
     public RescueDose(int doseAmount, int breathingBefore, int breathingAfter, int shortnessOfBreath) {
         super(System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getUid(), "rescueDose");

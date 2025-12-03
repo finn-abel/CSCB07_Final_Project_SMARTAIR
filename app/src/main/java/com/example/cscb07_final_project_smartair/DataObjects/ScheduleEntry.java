@@ -5,7 +5,9 @@ public class ScheduleEntry {
     public int doseAmount;
     public String note;
 
-    public ScheduleEntry() {}
+    public ScheduleEntry() {
+        //empty for FB
+    }
 
     public ScheduleEntry(String time, int doseAmount, String note) {
         this.time = time;

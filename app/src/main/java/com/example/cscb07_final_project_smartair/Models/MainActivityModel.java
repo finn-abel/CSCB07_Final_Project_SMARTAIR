@@ -32,6 +32,7 @@ public class MainActivityModel {
         mAuth.signOut();
     }
 
+    //controller function to build everything
     public void loadBadgesAndStreaks(MainDataCallback callback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -49,6 +50,7 @@ public class MainActivityModel {
         loadNextDose(childId, callback);
     }
 
+    // loads all earned badges for given child
     private void loadBadges(String childId, MainDataCallback callback) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
@@ -61,7 +63,6 @@ public class MainActivityModel {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 List<Badge> list = new ArrayList<>();
 
                 Boolean perfect = snapshot.child("perfectControllerWeek").getValue(Boolean.class);
@@ -94,7 +95,6 @@ public class MainActivityModel {
 
                 callback.onBadgesLoaded(list);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onFailure(error.getMessage());
@@ -102,6 +102,7 @@ public class MainActivityModel {
         });
     }
 
+    // loads streaks for given child
     private void loadStreaks(String childId, MainDataCallback callback) {
         DatabaseReference streakRef = FirebaseDatabase.getInstance()
                 .getReference("users/children/" + childId + "/medicine/motivation/streaks");
@@ -127,7 +128,6 @@ public class MainActivityModel {
 
                 callback.onStreaksLoaded(controller, technique);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onFailure(error.getMessage());
@@ -135,6 +135,7 @@ public class MainActivityModel {
         });
     }
 
+    //load next dose for given childs schedule
     private void loadNextDose(String childId, MainDataCallback callback) {
         String today = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date());
 
@@ -149,7 +150,6 @@ public class MainActivityModel {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 if (!snapshot.exists()) {
                     callback.onNextDoseLoaded("No doses scheduled today.");
                     return;
@@ -199,6 +199,7 @@ public class MainActivityModel {
             }
         });
     }
+    //callback interface used for controller method
     public interface MainDataCallback {
         void onBadgesLoaded(List<Badge> badges);
         void onStreaksLoaded(int controllerStreak, int techniqueStreak);

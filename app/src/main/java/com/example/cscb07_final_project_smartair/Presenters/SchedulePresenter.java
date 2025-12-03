@@ -29,7 +29,7 @@ public class SchedulePresenter {
     }
 
     public void loadChildren() {
-        model.fetchChildren();
+        model.getChildren();
     }
 
     public void loadChildrenDash() {

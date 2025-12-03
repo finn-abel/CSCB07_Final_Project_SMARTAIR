@@ -25,11 +25,13 @@ public class MedicineLogsModel {
         this.context = context;
     }
 
+    //returns logged in users id
     private String getUid() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        return (user != null) ? user.getUid() : null;
+        return (user != null) ? user.getUid() : null; // ternary cuz im nice like that
     }
 
+    // loads all children for logged in user
     public void loadChildren() {
         String uid = getUid();
         if (uid == null) {
@@ -40,6 +42,7 @@ public class MedicineLogsModel {
         SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String role = prefs.getString("USER_ROLE", "");
 
+        //if current user is a child return itself
         if (role.equals("CHILD")) {
             presenter.onChildrenLoaded(Collections.singletonList(uid), Collections.singletonList("You"));
             return;
@@ -74,6 +77,7 @@ public class MedicineLogsModel {
         });
     }
 
+    // log controller dose for given child
     public void logController(String childId, int doseAmount, int before, int after) {
         ControllerDose log = new ControllerDose(doseAmount, before, after);
         DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -97,6 +101,7 @@ public class MedicineLogsModel {
                         presenter.onFailure(e.getMessage()));
     }
 
+    //log rescue dose for given child
     public void logRescue(String childId, int doseAmount, int before, int after, int sob) {
         RescueDose log = new RescueDose(doseAmount, before, after, sob);
         DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -121,6 +126,7 @@ public class MedicineLogsModel {
                         presenter.onFailure(e.getMessage()));
     }
 
+    // reduce inventory for given child when dosage taken, used marked medicine from inventory
     private void reduceInventory(String childId, String medType, int amountToReduce) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users/children/" + childId + "/medicine/inventory");

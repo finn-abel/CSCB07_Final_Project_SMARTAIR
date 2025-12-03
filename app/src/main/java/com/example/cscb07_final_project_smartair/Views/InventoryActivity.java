@@ -138,7 +138,7 @@ public class InventoryActivity extends BaseParentActivity implements InventoryVi
         controller.setOnClickListener(typeClickListener);
 
         if (existingItem != null) {
-            title.setText("Edit Medication");
+            title.setText("         Edit Medication         ");
 
             name.setText(existingItem.medicationName);
             total.setText(String.valueOf(existingItem.totalAmount));
@@ -166,7 +166,7 @@ public class InventoryActivity extends BaseParentActivity implements InventoryVi
             delete.setOnClickListener(v -> presenter.deleteItem(existingItem));
 
         } else {
-            title.setText("Add Medication");
+            title.setText("         Add Medication         ");
             delete.setVisibility(View.GONE);
 
             rescue.setChecked(false);

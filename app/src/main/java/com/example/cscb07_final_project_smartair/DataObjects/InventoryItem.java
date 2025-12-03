@@ -13,6 +13,7 @@ public class InventoryItem extends Data {
     public String childId;
 
     public InventoryItem() {
+        //empty for FB
     }
 
     public InventoryItem(String childId, String medicationName, int totalAmount, int amountLeft, long purchaseDate, long expiryDate, String medType) {

@@ -19,6 +19,7 @@ public class ProviderHomeModel {
         this.presenter = presenter;
     }
 
+    // loads provider info
     public void linkChildWithCode(String inviteCode) {
         FirebaseUser provider = FirebaseAuth.getInstance().getCurrentUser();
         if (provider == null) {
@@ -49,8 +50,9 @@ public class ProviderHomeModel {
         });
     }
 
+    // find child with matching invite code, adds child id to providers branch
+    // and sets default permissions for provider in child branch
     private void proceedWithLink(String inviteCode, String providerId, String providerName) {
-
         DatabaseReference childrenRef = FirebaseDatabase.getInstance()
                 .getReference("users/children");
 

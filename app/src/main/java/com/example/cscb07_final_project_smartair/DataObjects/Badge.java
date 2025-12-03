@@ -7,6 +7,7 @@ public class Badge {
     public long timestamp;
 
     public Badge() {
+        //empty for FB
     }
 
     public Badge(String title, String description, int iconRes) {

@@ -20,6 +20,7 @@ public class InvitesModel {
         this.presenter = presenter;
     }
 
+    //load parents children
     public void loadChildren() {
         FirebaseUser parent = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -51,6 +52,7 @@ public class InvitesModel {
         });
     }
 
+    //load invite code for given child
     public void loadInvitesForChild(String childId) {
 
         DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -78,6 +80,7 @@ public class InvitesModel {
         });
     }
 
+    //generate invite code for given child
     public void generateInvite(String childId) {
         // Generate 10-char random code
         StringBuilder sb = new StringBuilder();
@@ -102,6 +105,7 @@ public class InvitesModel {
                         presenter.onFailure(e.getMessage()));
     }
 
+    //deletes invite code for given child
     public void revokeInvite(String childId, String code) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users/children/" + childId + "/invites")
