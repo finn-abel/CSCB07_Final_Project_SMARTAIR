@@ -12,8 +12,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnTopNav"
-        android:layout_width="70dp"
-        android:layout_height="45dp"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
         android:text="≡"
         android:textSize="30sp"
         android:textColor="@android:color/white"
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SMARTAIR"
-        android:textSize="30sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:layout_marginTop="12dp"
@@ -41,10 +41,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/triage_button"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:text="HBA"
-        android:textSize="12sp"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:text="HAVING TROUBLE"
+        android:textSize="8.5sp"
         android:textColor="@android:color/white"
         android:backgroundTint="@color/danger_red"
         android:layout_marginTop="12dp"
