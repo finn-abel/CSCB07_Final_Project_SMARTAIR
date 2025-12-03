@@ -13,7 +13,7 @@ public class ProviderHomeActivity extends BaseActivity implements ProviderHomeVi
     private ProviderHomePresenter presenter;
     private EditText etInviteCode;
     private Button btnSubmitInviteCode;
-    private Button btnProviderReport;
+    //private Button btnProviderReport;
     private Button logoutButton;
 
     @Override
@@ -25,11 +25,11 @@ public class ProviderHomeActivity extends BaseActivity implements ProviderHomeVi
 
         etInviteCode = findViewById(R.id.etInviteCode);
         btnSubmitInviteCode = findViewById(R.id.btnSubmitInviteCode);
-        btnProviderReport = findViewById(R.id.btnProviderReport);
+        //btnProviderReport = findViewById(R.id.btnProviderReport);
         logoutButton = findViewById(R.id.logout);
 
         btnSubmitInviteCode.setOnClickListener(v -> presenter.onLinkChildClicked());
-        btnProviderReport.setOnClickListener(v -> presenter.onProviderReportButtonClicked());
+        //btnProviderReport.setOnClickListener(v -> presenter.onProviderReportButtonClicked());
         logoutButton.setOnClickListener(v -> presenter.onLogoutButtonClicked());
     }
 
